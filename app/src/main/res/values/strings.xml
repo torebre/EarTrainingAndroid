@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EarTrainingAndroid</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="play">Play</string>
+    <string name="generate">Generate</string>
+    <string name="ok">OK</string>
+
+</resources>
