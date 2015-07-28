@@ -8,19 +8,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 
-import kjipo.com.eartrainingandroid.R;
+import javax.inject.Inject;
 
 
 public class MainActivity extends Activity {
     private CustomWebViewClient noteViewClient;
-    private SequenceGenerator sequenceGenerator;
-
-
+    @Inject
+    SequenceGenerator sequenceGenerator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ((EarTrainingApplication)getApplication()).inject(this);
+
     }
 
     @Override
@@ -29,7 +30,6 @@ public class MainActivity extends Activity {
         WebView myWebView = (WebView) findViewById(R.id.noteView);
         noteViewClient = new CustomWebViewClient();
         noteViewClient.attachWebView(myWebView);
-        sequenceGenerator = new SequenceGenerator();
     }
 
     public void generateSequence(View view) {

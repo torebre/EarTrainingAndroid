@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
@@ -17,9 +18,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.0'
+    compile('com.kjipo:TimeSeriesRules:0.1.80') {
+        // There is a problem with multiple implementations class
+        // belonging to the logging framework being included, so
+        // do not drag in the transitive dependencies from there here
+        exclude group: 'org.slf4j'
+        changing = true;
+    }
+
+    compile('com.kjipo:noteGenerator:0.4-SNAPSHOT') {
+        exclude group: 'org.slf4j'
+        changing = true;
+    }
+
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
+    testCompile 'junit:junit:4.12'
 }

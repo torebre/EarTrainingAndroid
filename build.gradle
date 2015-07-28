@@ -15,5 +15,21 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+
+        // This project has some dependencies I just have in my local Maven cache, so
+        // Gradle needs to look there as well
+        mavenLocal()
+
     }
 }
+
+
+
+configurations.all {
+    resolutionStrategy {
+        // Do not cache changing modules, since I might be working
+        // on them in parallell
+        cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
