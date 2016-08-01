@@ -7,5 +7,16 @@
     <string name="play">Play</string>
     <string name="generate">Generate</string>
     <string name="ok">OK</string>
+    <string name="btnTest">Test</string>
+
+    <string-array name="options_array">
+        <item>Options</item>
+        <item>Note View</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="action_websearch">Web search</string>
 
 </resources>

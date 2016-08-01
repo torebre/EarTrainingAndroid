@@ -10,4 +10,8 @@ public enum MidiMessages {
     MidiMessages(int message) {
         this.message = message;
     }
+
+    public byte getMessageAsByte() {
+        return (byte)message;
+    }
 }

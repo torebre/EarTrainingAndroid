@@ -13,7 +13,7 @@ public final class MidiTrackBuilder {
     private int ticksPerQuarterNote;
     private int deltaWaiting = -1;
     private int microsecondsPerMidiQuarterNote;
-    private List<Integer> midiMessages = new ArrayList<Integer>();
+    private List<Integer> midiMessages = new ArrayList<>();
 
 
     private MidiTrackBuilder() {
@@ -61,7 +61,7 @@ public final class MidiTrackBuilder {
 
     public MidiTrackBuilder addNoteOn(int pitch, int velocity) {
         writeDelta();
-        midiMessages.add(com.kjipo.midi.MidiMessages.NOTE_ON.message);
+        midiMessages.add(MidiMessages.NOTE_ON.message);
         midiMessages.add(pitch);
         midiMessages.add(velocity);
         return this;
@@ -70,7 +70,7 @@ public final class MidiTrackBuilder {
 
     public MidiTrackBuilder addNoteOff(int pitch, int velocity) {
         writeDelta();
-        midiMessages.add(com.kjipo.midi.MidiMessages.NOTE_OFF.message);
+        midiMessages.add(MidiMessages.NOTE_OFF.message);
         midiMessages.add(pitch);
         midiMessages.add(velocity);
         return this;

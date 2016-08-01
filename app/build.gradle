@@ -2,13 +2,12 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.kjipo.eartrainingandroid"
-        minSdkVersion 19
-        targetSdkVersion 22
+        minSdkVersion 23
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -18,31 +17,42 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
-
+    productFlavors {
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile('com.kjipo:TimeSeriesRules:0.1.80') {
-        // There is a problem with multiple implementations class
-        // belonging to the logging framework being included, so
-        // do not drag in the transitive dependencies from there here
-        exclude group: 'org.slf4j'
-        changing = true;
-    }
+    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
 
-    compile('com.kjipo:noteGenerator:0.4-SNAPSHOT') {
-        exclude group: 'org.slf4j'
-        changing = true;
-    }
+    // TODO Is this library needed now?
 
-    compile 'com.squareup.dagger:dagger:1.2.2'
-    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
+//    compile('com.kjipo:TimeSeriesRules:0.1.80') {
+//        // There is a problem with multiple implementations class
+//        // belonging to the logging framework being included, so
+//        // do not drag in the transitive dependencies from there here
+//        exclude group: 'org.slf4j'
+//        changing = true;
+//    }
+//    compile('com.kjipo:noteGenerator:0.4-SNAPSHOT') {
+//        exclude group: 'org.slf4j'
+//        changing = true;
+//    }
+
+    compile 'com.squareup.dagger:dagger:1.2.5'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.5'
+    compile 'com.google.code.gson:gson:2.6.2'
     testCompile 'junit:junit:4.12'
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+//    testCompile group: 'org.assertj', name: 'assertj-core', version: '2.5.0'
+
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '1.7.1'
+
+
 }
