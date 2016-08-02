@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playTest(View view) {
-        midiPlayer.playTest();
+//        midiPlayer.playTest();
     }
 
 

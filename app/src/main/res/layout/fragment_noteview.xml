@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/noteview_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/noteView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></WebView>
+
+    <Button
+        android:id="@+id/btnPlay"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/noteView"
+        android:onClick="generateSequence"
+        android:text="@string/generate" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btnPlay"
+        android:layout_toRightOf="@id/btnPlay"
+        android:onClick="playSequence"
+        android:text="@string/play" />
+
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btnTest"
+        android:layout_toRightOf="@id/btnTest"
+        android:onClick="playTest"
+        android:text="@string/btnTest" />
+
+</RelativeLayout>

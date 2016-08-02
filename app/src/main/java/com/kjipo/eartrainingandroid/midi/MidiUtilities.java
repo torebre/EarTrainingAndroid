@@ -18,7 +18,9 @@ public final class MidiUtilities {
         MidiTrackBuilder builder = MidiTrackBuilder.createNewInstance();
         builder.setTempo(sequence.getTempoInMillisecondsPerQuarterNote());
         int currentPoint = 0;
-        Multimap<Integer, Note> pendingOffEvents = MultimapBuilder.treeKeys().arrayListValues().build();
+        Multimap<Integer, Note> pendingOffEvents = MultimapBuilder.treeKeys()
+                .arrayListValues()
+                .build();
 
 
         for (Note note : sequence.getNotes()) {
@@ -43,6 +45,9 @@ public final class MidiUtilities {
 
             // TODO Is 0 a valid pitch?
             if (note.getPitch() >= 0) {
+
+                System.out.println("Found pitch: " +note.getPitch());
+
                 builder.addNoteOn(note.getPitch(), note.getVelocity());
                 pendingOffEvents.put(note.getStartWithinBar() + note.getDurationWithinBar(), note);
             }
@@ -82,7 +87,7 @@ public final class MidiUtilities {
 
 
         // TODO For now just jump down to the MIDI messages
-        for (int i = 36; i < midiData.length - 4; ++i) {
+        for (int i = 37; i < midiData.length - 4; ++i) {
 //            byte currentByte = midiData[i];
 
             deltaTime = midiData[i];
@@ -144,6 +149,13 @@ public final class MidiUtilities {
 //            throw new IllegalStateException(e);
 //        }
 
+    }
+
+
+
+    public static double pitchToFrequency(double pitch) {
+        double semitones = pitch - MidiConstants.CONCERT_A_PITCH;
+        return MidiConstants.CONCERT_A_FREQUENCY * Math.pow(2.0, semitones / 12.0);
     }
 
 
