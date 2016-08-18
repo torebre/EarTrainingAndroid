@@ -1,6 +1,8 @@
 package com.kjipo.eartrainingandroid.midi;
 
 
+import android.util.Log;
+
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.Gson;
@@ -98,6 +100,9 @@ public final class MidiUtilities {
             }
 
             if (midiData[i] == MidiMessages.NOTE_ON.getMessageAsByte()) {
+
+                Log.i("Midi", "Note on: " +midiData[i]);
+
                 byte pitch = midiData[i++];
                 // TODO Use velocity
                 ++i;

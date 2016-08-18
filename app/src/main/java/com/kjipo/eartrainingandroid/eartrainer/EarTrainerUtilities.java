@@ -1,7 +1,13 @@
 package com.kjipo.eartrainingandroid.eartrainer;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.kjipo.eartrainingandroid.data.ClefType;
+import com.kjipo.eartrainingandroid.data.ElementType;
+import com.kjipo.eartrainingandroid.data.Note;
 import com.kjipo.eartrainingandroid.data.Sequence;
+import com.kjipo.eartrainingandroid.data.SequenceBuilder;
 
 public final class EarTrainerUtilities {
 
@@ -12,9 +18,8 @@ public final class EarTrainerUtilities {
 
 
     public static String transformToJson(Sequence sequence) {
-
-        // TODO Current just a hardcoded sequence used for testing
-        return "{\"clef\":\"TREBLE\",\"timeSignatureNominator\":4,\"timeSignatureDenominator\":4,\"notes\":[{\"id\":0,\"pitch\":60,\"cumulativeDuration\":0,\"elementType\":\"HALFNOTE\"},{\"id\":1,\"pitch\":64,\"cumulativeDuration\":2,\"elementType\":\"HALFNOTE\"},{\"id\":2,\"pitch\":-1,\"cumulativeDuration\":0,\"elementType\":\"BAR_LINE\"},{\"id\":3,\"pitch\":62,\"cumulativeDuration\":0,\"elementType\":\"QUARTERNOTE\"},{\"id\":4,\"pitch\":61,\"cumulativeDuration\":1,\"elementType\":\"QUARTERNOTE\"},{\"id\":5,\"pitch\":60,\"cumulativeDuration\":2,\"elementType\":\"HALFNOTE\"},{\"id\":6,\"pitch\":-1,\"cumulativeDuration\":0,\"elementType\":\"BAR_LINE\"},{\"id\":7,\"pitch\":70,\"cumulativeDuration\":0,\"elementType\":\"HALFNOTE\"},{\"id\":8,\"pitch\":69,\"cumulativeDuration\":2,\"elementType\":\"HALFNOTE\"},{\"id\":9,\"pitch\":-1,\"cumulativeDuration\":0,\"elementType\":\"BAR_LINE\"},{\"id\":10,\"pitch\":66,\"cumulativeDuration\":0,\"elementType\":\"HALFNOTE\"},{\"id\":11,\"pitch\":62,\"cumulativeDuration\":2,\"elementType\":\"HALFNOTE\"},{\"id\":12,\"pitch\":-1,\"cumulativeDuration\":0,\"elementType\":\"BAR_LINE\"},{\"id\":13,\"pitch\":64,\"cumulativeDuration\":0,\"elementType\":\"QUARTERNOTE\"}],\"durationOfBar\":4}";
+        Gson gson = new Gson();
+        return gson.toJson(sequence);
     }
 
 
@@ -23,6 +28,21 @@ public final class EarTrainerUtilities {
         // TODO
         return null;
     }
+
+
+
+    public static void main(String args[]) {
+        Sequence sequence = SequenceBuilder.createSequence()
+                .setTimeSignatureDenominator(4)
+                .setTimeSignatureNominator(4)
+                .setClefType(ClefType.TREBLE)
+                .setDurationOfBar(4)
+                .addNote(new Note(1, 60, 1, ElementType.HALFNOTE, 4))
+                .build();
+        System.out.println(EarTrainerUtilities.transformToJson(sequence));
+
+    }
+
 
 
 }

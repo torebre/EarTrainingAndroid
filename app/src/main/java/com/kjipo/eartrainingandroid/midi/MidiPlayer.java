@@ -102,6 +102,7 @@ public class MidiPlayer {
                         int numFrames = buffer.length / SAMPLES_PER_FRAME;
                         for (int i = 0; i < numFrames; i++) {
                             float level = notePlayer.incrementAndGetPhase();
+                            level = transformToSineWave(level);
                             int offset = i * SAMPLES_PER_FRAME;
                             for (int jf = 0; jf < SAMPLES_PER_FRAME; jf++) {
                                 buffer[offset + jf] += level; // output * level;
@@ -146,10 +147,44 @@ public class MidiPlayer {
             currentlyPlaying.put(onPitch, notePlayer);
         }
         for (Integer offPitch : playerEvent.getOffPitches()) {
-            NotePlayer notePlayer = new NotePlayer(offPitch);
+//            NotePlayer notePlayer = new NotePlayer(offPitch);
             currentlyPlaying.remove(offPitch);
         }
 
     }
+
+
+    // Factorial constants.
+    private static final float IF3 = 1.0f / (2 * 3);
+    private static final float IF5 = IF3 / (4 * 5);
+    private static final float IF7 = IF5 / (6 * 7);
+    private static final float IF9 = IF7 / (8 * 9);
+    private static final float IF11 = IF9 / (10 * 11);
+
+
+    private static float transformToSineWave(float phase) {
+        // Convert raw sawtooth to sine.
+//            float phase = incrementWrapPhase();
+        return fastSin(phase); // * getAmplitude();
+    }
+
+
+    /**
+     * Calculate sine using Taylor expansion. Do not use values outside the range.
+     *
+     * @param currentPhase in the range of -1.0 to +1.0 for one cycle
+     */
+    public static float fastSin(float currentPhase) {
+
+        /* Wrap phase back into region where results are more accurate. */
+        float yp = (currentPhase > 0.5f) ? 1.0f - currentPhase
+                : ((currentPhase < (-0.5f)) ? (-1.0f) - currentPhase : currentPhase);
+
+        float x = (float) (yp * Math.PI);
+        float x2 = (x * x);
+        /* Taylor expansion out to x**11/11! factored into multiply-adds */
+        return x * (x2 * (x2 * (x2 * (x2 * ((x2 * (-IF11)) + IF9) - IF7) + IF5) - IF3) + 1);
+    }
+
 
 }

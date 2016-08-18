@@ -7,11 +7,13 @@ public class Note {
     private final int startWithinBar;
     private final ElementType elementType;
     private final int durationWithinBar;
+    private boolean joinNext;
 
     private int velocity = 127;
 
 
-    public Note(int id, int pitch, int startWithinBar, ElementType elementType, int durationWithinBar) {
+    public Note(int id, int pitch, int startWithinBar, ElementType elementType,
+                int durationWithinBar) {
         this.id = id;
         this.pitch = pitch;
         this.startWithinBar = startWithinBar;
@@ -52,5 +54,13 @@ public class Note {
 
     public void setVelocity(int velocity) {
         this.velocity = velocity;
+    }
+
+    public boolean isJoinNext() {
+        return joinNext;
+    }
+
+    public void setJoinNext(boolean joinNext) {
+        this.joinNext = joinNext;
     }
 }
