@@ -9,15 +9,9 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SequenceGenerator.class, EarTrainer.class}
+        injects = {MainActivity.class, EarTrainer.class}
 )
 public class MainModule {
-
-    @Provides
-    @SuppressWarnings("unused")
-    public SequenceGenerator provideSequenceGenerator() {
-        return new SequenceGenerator();
-    }
 
     @Provides
     @SuppressWarnings("unused")

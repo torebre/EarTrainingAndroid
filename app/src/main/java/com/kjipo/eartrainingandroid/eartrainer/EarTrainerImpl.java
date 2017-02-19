@@ -3,24 +3,27 @@ package com.kjipo.eartrainingandroid.eartrainer;
 
 import com.kjipo.eartrainingandroid.data.Sequence;
 
-import javax.inject.Inject;
-
 
 public class EarTrainerImpl implements EarTrainer {
-    @Inject
-    SequenceGenerator sequenceGenerator;
+    private final SequenceGenerator sequenceGenerator;
+
+
+    public EarTrainerImpl() {
+        this.sequenceGenerator = new SequenceGenerator();
+    }
 
 
 
     @Override
     public Sequence generateNextSequence() {
         sequenceGenerator.createNewSequence();
-//        return sequenceGenerator.getCurrentSequenceAsJson();
+        return sequenceGenerator.getCurrentSequence();
+    }
 
 
-        // TODO
-        return null;
-
+    @Override
+    public Sequence getCurrentSequence() {
+        return sequenceGenerator.getCurrentSequence();
     }
 
 }

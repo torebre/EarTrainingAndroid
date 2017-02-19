@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 public class ScoreFragment extends Fragment {
 
 
-
     public ScoreFragment() {
 
 

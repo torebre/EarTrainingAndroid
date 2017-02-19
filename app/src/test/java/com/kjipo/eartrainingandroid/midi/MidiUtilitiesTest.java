@@ -6,9 +6,12 @@ import com.kjipo.eartrainingandroid.data.ElementType;
 import com.kjipo.eartrainingandroid.data.Note;
 import com.kjipo.eartrainingandroid.data.Sequence;
 import com.kjipo.eartrainingandroid.data.SequenceBuilder;
+import com.kjipo.eartrainingandroid.eartrainer.EarTrainerImpl;
 import com.kjipo.eartrainingandroid.eartrainer.SequenceGenerator;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class MidiUtilitiesTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MidiUtilitiesTest.class);
 
 
     @Test
@@ -50,8 +54,6 @@ public class MidiUtilitiesTest {
                 .setDurationOfBar(4)
                 .addNote(new Note(1, 60, 1, ElementType.QUARTERNOTE, 4))
                 .build();
-
-
 
         byte midiData[] = MidiUtilities.transformSequenceToMidiFormat(sequence);
 
@@ -108,6 +110,27 @@ public class MidiUtilitiesTest {
 
 
     }
+
+
+
+    @Test
+    public void testTransformSequenceToMidiFormat() {
+        EarTrainerImpl earTrainer = new EarTrainerImpl();
+
+        for(int i = 0; i < 100; ++i) {
+            Sequence sequence = earTrainer.generateNextSequence();
+            try {
+                MidiUtilities.transformSequenceToMidiFormat(sequence);
+            }
+            catch(RuntimeException e) {
+                LOGGER.error("Sequence caused exception: {}", sequence);
+                throw e;
+            }
+        }
+    }
+
+
+
 
 
     private static String[] getBytesAsHexadecimal(byte bytes[]) {

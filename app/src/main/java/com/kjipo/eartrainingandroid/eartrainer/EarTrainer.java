@@ -7,6 +7,8 @@ import com.kjipo.eartrainingandroid.data.Sequence;
 public interface EarTrainer {
 
 
+    Sequence getCurrentSequence();
+
     Sequence generateNextSequence();
 
 

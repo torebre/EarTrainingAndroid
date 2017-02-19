@@ -45,15 +45,15 @@ public class MainActivity extends AppCompatActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private String navigationDrawerItems[];
-    private CustomWebViewClient noteViewClient;
-    @Inject
-    SequenceGenerator sequenceGenerator;
     @Inject
     EarTrainer earTrainer;
     @Inject
     MidiPlayer midiPlayer;
 
     private MediaPlayer mediaPlayer;
+
+    private NoteViewFragment noteViewFragment;
+
 
     private CharSequence actionBarTitle = "";
     private CharSequence title;
@@ -67,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        noteViewFragment = new NoteViewFragment();
+
         ((EarTrainingApplication) getApplication()).inject(this);
+
 
         setupSequenceGenerator();
 
@@ -119,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupSequenceGenerator() {
         // TODO Populate the sequence generator with previous history
-        sequenceGenerator.createNewSequence();
-
+        earTrainer.generateNextSequence();
     }
 
 
@@ -182,60 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void generateSequence(View view) {
-        noteViewClient.loadNoteSequence(EarTrainerUtilities.transformToJson(earTrainer.generateNextSequence()));
-    }
-
-    public void playSequence(View view) {
-        try {
-            Log.e("Test10", "Test10");
-            MediaPlayer mediaPlayer = getMediaPlayer();
-            mediaPlayer.reset();
-//        mediaPlayer.setDataSource(getApplicationContext(), myUri);
-
-            Log.e("Test20", "Test20");
-
-            File temp = File.createTempFile("midiSeq", "mid", getCacheDir());
-            temp.deleteOnExit();
-
-            Log.e("Test21", "Test21");
-
-            FileOutputStream fos = new FileOutputStream(temp);
-            fos.write(MidiUtilities.transformSequenceToMidiFormat(sequenceGenerator.getCurrentSequence()));
-            fos.close();
-
-            Log.e("Test11", "Test11");
-
-            FileInputStream fis = new FileInputStream(temp);
-            mediaPlayer.setDataSource(fis.getFD());
-
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-
-            Log.e("Test12", "Test12");
-
-        }
-        catch(IOException e) {
-            Log.e("eartraining", "IOException", e);
-        }
-    }
-
-    public void playTest(View view) {
-//        midiPlayer.playTest();
-    }
-
-
-    private MediaPlayer getMediaPlayer() {
-        if (mediaPlayer == null) {
-            Log.e("Test30", "Test30");
-
-            mediaPlayer = new MediaPlayer();
-            Log.e("Test31", "Test31");
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        }
-        return mediaPlayer;
-    }
-
 
     @Override
     public void onStop() {
@@ -289,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch(position) {
             case NOTEVIEW_FRAGMENT_POSITION:
-                fragment = new NoteViewFragment();
+                fragment = noteViewFragment;
                 break;
 
             case SCORE_FRAGMENT_POSITION:
@@ -309,14 +258,15 @@ public class MainActivity extends AppCompatActivity {
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-
         Log.i("Test", "Replacing with: " +fragment);
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+        FragmentTransaction fragmentTransaction = fragmentManager
+                .beginTransaction()
                 .replace(R.id.frame_layout, fragment);
 
 ////        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
         drawerList.setItemChecked(position, true);
         setTitle(navigationDrawerItems[position]);
         drawerLayout.closeDrawer(drawerList);
@@ -327,6 +277,28 @@ public class MainActivity extends AppCompatActivity {
         actionBarTitle = title;
         getSupportActionBar().setTitle(title);
     }
+
+
+
+    public void playSequence(View view) {
+        try {
+
+
+            System.out.println("Sequence to play: " +earTrainer.getCurrentSequence());
+
+            System.out.println("Sequence as JSON: " +MidiUtilities.transformSequenceToJson(earTrainer.getCurrentSequence()));
+
+            midiPlayer.playSequence(MidiUtilities.transformSequenceToMidiFormat(earTrainer.getCurrentSequence()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateSequence(View view) {
+        noteViewFragment.loadNoteSequence(EarTrainerUtilities.transformToJson(earTrainer.generateNextSequence()));
+    }
+
+
 
 
 }

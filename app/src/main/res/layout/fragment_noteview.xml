@@ -7,7 +7,7 @@
     <WebView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/noteView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></WebView>
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/btnPlay"
@@ -26,13 +26,27 @@
         android:onClick="playSequence"
         android:text="@string/play" />
 
-    <Button
-        android:id="@+id/btnTest"
-        android:layout_width="96dp"
+    <RadioButton
+        android:text="RadioButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/btnTest"
-        android:layout_toRightOf="@id/btnTest"
-        android:onClick="playTest"
-        android:text="@string/btnTest" />
+        android:layout_alignTop="@+id/radioButton"
+        android:layout_toEndOf="@+id/radioButton"
+        android:id="@+id/radioButton2" />
+
+    <RadioButton
+        android:text="RadioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="37dp"
+        android:id="@+id/radioButton"/>
+
+    <RadioButton
+        android:text="RadioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/radioButton2"
+        android:layout_toEndOf="@+id/radioButton2"
+        android:id="@+id/radioButton3" />
 
 </RelativeLayout>

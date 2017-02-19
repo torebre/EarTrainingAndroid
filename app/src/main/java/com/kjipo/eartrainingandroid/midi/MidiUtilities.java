@@ -16,10 +16,30 @@ import java.util.List;
 public final class MidiUtilities {
 
 
+    private static class MidiEvent {
+        private final int note;
+        private final int time;
+        private final boolean on;
+
+
+
+        private MidiEvent(int note, int time, boolean on) {
+            this.note = note;
+            this.time = time;
+            this.on = on;
+        }
+
+
+    }
+
+
     public static byte[] transformSequenceToMidiFormat(Sequence sequence) {
         MidiTrackBuilder builder = MidiTrackBuilder.createNewInstance();
         builder.setTempo(sequence.getTempoInMillisecondsPerQuarterNote());
         int currentPoint = 0;
+
+        List<MidiEvent> events = new ArrayList<>();
+
         Multimap<Integer, Note> pendingOffEvents = MultimapBuilder.treeKeys()
                 .arrayListValues()
                 .build();
@@ -30,10 +50,30 @@ public final class MidiUtilities {
             switch (note.getElementType()) {
                 case BAR_LINE:
                     currentPoint = 0;
+                    break;
+
+
+                case QUARTERNOTE:
+
+
+
+
+                    break;
+
+
+                case HALFNOTE:
+
+
+                    break;
+
+                case WHOLE_NOTE:
+
+                    break;
+
 
                 default:
                     if (note.getStartWithinBar() < currentPoint) {
-                        // We make an assumtion that the notes are ordered by
+                        // We make an assumption that the notes are ordered by
                         // increasing start points
                         throw new RuntimeException("At point: " + currentPoint + ". Going backwards in: " + sequence);
                     }
@@ -48,7 +88,7 @@ public final class MidiUtilities {
             // TODO Is 0 a valid pitch?
             if (note.getPitch() >= 0) {
 
-                System.out.println("Found pitch: " +note.getPitch());
+                System.out.println("Found pitch: " + note.getPitch());
 
                 builder.addNoteOn(note.getPitch(), note.getVelocity());
                 pendingOffEvents.put(note.getStartWithinBar() + note.getDurationWithinBar(), note);
@@ -101,7 +141,7 @@ public final class MidiUtilities {
 
             if (midiData[i] == MidiMessages.NOTE_ON.getMessageAsByte()) {
 
-                Log.i("Midi", "Note on: " +midiData[i]);
+                Log.i("Midi", "Note on: " + midiData[i]);
 
                 byte pitch = midiData[i++];
                 // TODO Use velocity
@@ -155,7 +195,6 @@ public final class MidiUtilities {
 //        }
 
     }
-
 
 
     public static double pitchToFrequency(double pitch) {

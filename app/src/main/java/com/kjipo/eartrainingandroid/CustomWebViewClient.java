@@ -27,7 +27,7 @@ public class CustomWebViewClient extends WebViewClient {
             public boolean onTouch(View v, MotionEvent event) {
 
                 // TODO Just here for testing
-                Log.i("note", "Event: " +event);
+                Log.e("note", "Event: " +event);
 
                 return false;
 
