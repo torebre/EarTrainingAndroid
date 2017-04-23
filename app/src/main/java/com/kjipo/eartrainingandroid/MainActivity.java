@@ -2,7 +2,6 @@ package com.kjipo.eartrainingandroid;
 
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -21,21 +20,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.kjipo.eartrainingandroid.eartrainer.EarTrainer;
 import com.kjipo.eartrainingandroid.eartrainer.EarTrainerUtilities;
-import com.kjipo.eartrainingandroid.eartrainer.SequenceGenerator;
 import com.kjipo.eartrainingandroid.midi.MidiPlayer;
 import com.kjipo.eartrainingandroid.midi.MidiUtilities;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -76,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setupSequenceGenerator();
 
         title = actionBarTitle = getTitle();
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout)findViewById(R.id.main_screen);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         navigationDrawerItems = getResources().getStringArray(R.array.options_array);
 

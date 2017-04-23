@@ -11,7 +11,6 @@ public class SequenceBuilder {
     public void insertTemporalElement(TemporalElement temporalElement, int position) {
         // TODO
 
-        currentSequence.addNote();
 
 
 
