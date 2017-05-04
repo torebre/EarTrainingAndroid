@@ -13,7 +13,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 
-public class MidiPlayer {
+public class MidiPlayer implements MidiPlayerInterface {
     public static final int SAMPLES_PER_FRAME = 2;
     public static final int BYTES_PER_SAMPLE = 4; // float
     public static final int BYTES_PER_FRAME = SAMPLES_PER_FRAME * BYTES_PER_SAMPLE;

@@ -8,12 +8,10 @@ import android.media.midi.MidiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,10 +24,12 @@ import android.widget.ListView;
 
 import com.kjipo.eartrainingandroid.eartrainer.EarTrainer;
 import com.kjipo.eartrainingandroid.eartrainer.EarTrainerUtilities;
-import com.kjipo.eartrainingandroid.midi.MidiPlayer;
+import com.kjipo.eartrainingandroid.midi.MidiPlayerInterface;
 import com.kjipo.eartrainingandroid.midi.MidiUtilities;
 
 import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     EarTrainer earTrainer;
     @Inject
-    MidiPlayer midiPlayer;
+    MidiPlayerInterface midiPlayer;
 
     private MediaPlayer mediaPlayer;
 
@@ -54,22 +54,25 @@ public class MainActivity extends AppCompatActivity {
     private final static int NOTEVIEW_FRAGMENT_POSITION = 1;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         noteViewFragment = new NoteViewFragment();
-
-        ((EarTrainingApplication) getApplication()).inject(this);
-
-
         setupSequenceGenerator();
 
         title = actionBarTitle = getTitle();
-        drawerLayout = (DrawerLayout)findViewById(R.id.main_screen);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
+
+
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_screen);
+
+
+
+//        drawerList = (ListView) findViewById(R.id.left_drawer);
         navigationDrawerItems = getResources().getStringArray(R.array.options_array);
 
         drawerList.setAdapter(new ArrayAdapter<>(this,
@@ -77,22 +80,23 @@ public class MainActivity extends AppCompatActivity {
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+//        setSupportActionBar(myToolbar);
 
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        /*
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         drawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                drawerLayout,         /* DrawerLayout object */
-//                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
+                this,
+                drawerLayout,
+//                R.drawable.ic_drawer,
+                R.string.drawer_open,
+                R.string.drawer_close
         ) {
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(title);
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
+        */
 
     }
 
@@ -167,11 +172,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        MidiManager m = (MidiManager)getApplicationContext().getSystemService(Context.MIDI_SERVICE);
+        MidiManager m = (MidiManager) getApplicationContext().getSystemService(Context.MIDI_SERVICE);
         MidiDeviceInfo[] infos = m.getDevices();
 
-        Log.i("Test", "MIDI devices2: " +infos.length);
-        for(MidiDeviceInfo midiDeviceInfo : infos) {
+        Log.i("Test", "MIDI devices2: " + infos.length);
+        for (MidiDeviceInfo midiDeviceInfo : infos) {
             Log.i("Test", midiDeviceInfo.toString());
         }
 
@@ -181,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
@@ -224,11 +229,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Swaps fragments in the main content view */
+    /**
+     * Swaps fragments in the main content view
+     */
     private void selectItem(int position) {
         Fragment fragment = null;
 
-        switch(position) {
+        switch (position) {
             case NOTEVIEW_FRAGMENT_POSITION:
                 fragment = noteViewFragment;
                 break;
@@ -250,14 +257,14 @@ public class MainActivity extends AppCompatActivity {
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Log.i("Test", "Replacing with: " +fragment);
+        Log.i("Test", "Replacing with: " + fragment);
 
-        FragmentTransaction fragmentTransaction = fragmentManager
-                .beginTransaction()
-                .replace(R.id.frame_layout, fragment);
+//        FragmentTransaction fragmentTransaction = fragmentManager
+//                .beginTransaction()
+//                .replace(R.id.frame_layout, fragment);
 
 ////        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+//        fragmentTransaction.commit();
 
         drawerList.setItemChecked(position, true);
         setTitle(navigationDrawerItems[position]);
@@ -271,14 +278,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void playSequence(View view) {
         try {
 
 
-            System.out.println("Sequence to play: " +earTrainer.getCurrentSequence());
+            System.out.println("Sequence to play: " + earTrainer.getCurrentSequence());
 
-            System.out.println("Sequence as JSON: " +MidiUtilities.transformSequenceToJson(earTrainer.getCurrentSequence()));
+            System.out.println("Sequence as JSON: " + MidiUtilities.transformSequenceToJson(earTrainer.getCurrentSequence()));
 
             midiPlayer.playSequence(MidiUtilities.transformSequenceToMidiFormat(earTrainer.getCurrentSequence()));
         } catch (InterruptedException e) {
@@ -289,8 +295,6 @@ public class MainActivity extends AppCompatActivity {
     public void generateSequence(View view) {
         noteViewFragment.loadNoteSequence(EarTrainerUtilities.transformToJson(earTrainer.generateNextSequence()));
     }
-
-
 
 
 }

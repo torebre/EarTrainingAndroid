@@ -1,27 +1,21 @@
 package com.kjipo.eartrainingandroid;
 
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainer;
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainerImpl;
-import com.kjipo.eartrainingandroid.eartrainer.SequenceGenerator;
-import com.kjipo.eartrainingandroid.midi.MidiPlayer;
 
+import android.app.Activity;
+
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
+import dagger.android.ActivityKey;
+import dagger.android.AndroidInjector;
+import dagger.multibindings.IntoMap;
 
-@Module(
-        injects = {MainActivity.class, EarTrainer.class}
-)
-public class MainModule {
+//@Module(subcomponents = {IMainActivitySubcomponent.class})
+public abstract class MainModule {
 
-    @Provides
-    @SuppressWarnings("unused")
-    public EarTrainer provideEarTrainer() {
-        return new EarTrainerImpl();
-    }
 
-    @Provides
-    public MidiPlayer provideMidiPlayer() {
-        return new MidiPlayer();
-    }
+//    @Binds
+//    @IntoMap
+//    @ActivityKey(MainActivity.class)
+//    abstract AndroidInjector.Factory<? extends Activity> bindYourActivityInjectorFactory(IMainActivitySubcomponent.Builder builder);
 
 }
