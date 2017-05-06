@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EarTrainingAndroid</string>
+    <string name="app_name">Ear Training</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -18,5 +18,9 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="action_websearch">Web search</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>

@@ -1,34 +1,21 @@
 package com.kjipo.eartrainingandroid;
 
 
-import android.app.Activity;
 import android.app.Application;
 
-import javax.inject.Inject;
 
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasDispatchingActivityInjector;
-
-
-public class EarTrainingApplication extends Application { // implements HasDispatchingActivityInjector {
-//    @Inject
-//    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
-
+public class EarTrainingApplication extends Application {
     private MainComponent mainComponent;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        // TODO
-
-
+        mainComponent = DaggerMainComponent.create();
     }
 
 
-//    @Override
-//    public DispatchingAndroidInjector<Activity> activityInjector() {
-//        return null;
-//    }
+    public MainComponent getMainComponent() {
+        return mainComponent;
+    }
 }

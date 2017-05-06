@@ -14,7 +14,6 @@ public class CustomWebViewClient extends WebViewClient {
     private NoteVisualizerInterface noteVisualizerInterface;
 
 
-
     protected void attachWebView(WebView webView) {
         this.webView = webView;
 
@@ -27,7 +26,7 @@ public class CustomWebViewClient extends WebViewClient {
             public boolean onTouch(View v, MotionEvent event) {
 
                 // TODO Just here for testing
-                Log.e("note", "Event: " +event);
+                Log.e("note", "Event: " + event);
 
                 return false;
 
@@ -40,19 +39,11 @@ public class CustomWebViewClient extends WebViewClient {
     }
 
 
-    @Override
-    public void onUnhandledInputEvent(WebView view, InputEvent event) {
-        super.onUnhandledInputEvent(view, event);
-
-        // TODO Just here for testing
-        Log.i("note", "Event: " +event);
-    }
-
-    @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        view.loadUrl(url);
-        return true;
-    }
+//    @Override
+//    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//        view.loadUrl(url);
+//        return true;
+//    }
 
     public void loadNoteSequence(String noteSequence) {
         webView.loadUrl("javascript:noteView.drawNotes(" + noteSequence + ")");

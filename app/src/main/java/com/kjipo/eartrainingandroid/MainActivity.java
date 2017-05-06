@@ -6,21 +6,21 @@ import android.media.MediaPlayer;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.kjipo.eartrainingandroid.eartrainer.EarTrainer;
 import com.kjipo.eartrainingandroid.eartrainer.EarTrainerUtilities;
@@ -29,14 +29,9 @@ import com.kjipo.eartrainingandroid.midi.MidiUtilities;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
 
-
-public class MainActivity extends AppCompatActivity {
-    private DrawerLayout drawerLayout;
-    private ListView drawerList;
-    private ActionBarDrawerToggle drawerToggle;
-    private String navigationDrawerItems[];
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     @Inject
     EarTrainer earTrainer;
     @Inject
@@ -50,71 +45,42 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence actionBarTitle = "";
     private CharSequence title;
 
-    private final static int SCORE_FRAGMENT_POSITION = 0;
-    private final static int NOTEVIEW_FRAGMENT_POSITION = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
+        ((EarTrainingApplication) getApplication()).getMainComponent().inject(this);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_act);
 
         noteViewFragment = new NoteViewFragment();
         setupSequenceGenerator();
 
         title = actionBarTitle = getTitle();
 
+        setContentView(R.layout.main_act);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.main_screen);
-
-
-
-//        drawerList = (ListView) findViewById(R.id.left_drawer);
-        navigationDrawerItems = getResources().getStringArray(R.array.options_array);
-
-        drawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, navigationDrawerItems));
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(myToolbar);
-
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        /*
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        drawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-//                R.drawable.ic_drawer,
-                R.string.drawer_open,
-                R.string.drawer_close
-        ) {
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(title);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
+        });
 
-            public void onDrawerOpened(View drawerView) {
-                // TODO
-                getSupportActionBar().setTitle("Test"); // actionBarTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        drawerLayout.setDrawerListener(drawerToggle);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
-        */
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
     }
 
@@ -122,6 +88,32 @@ public class MainActivity extends AppCompatActivity {
         // TODO Populate the sequence generator with previous history
         earTrainer.generateNextSequence();
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
     @Override
@@ -131,41 +123,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-//        // Handle action buttons
-//        switch(item.getItemId()) {
-//            case R.id.action_websearch:
-//                // create intent to perform web search for this planet
-//                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-//                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-//                // catch event that there's no activity to handle intent
-//                if (intent.resolveActivity(getPackageManager()) != null) {
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-//                }
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-
-        return true;
-    }
 
 
     @Override
@@ -222,54 +179,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-    /**
-     * Swaps fragments in the main content view
-     */
-    private void selectItem(int position) {
-        Fragment fragment = null;
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
 
-        switch (position) {
-            case NOTEVIEW_FRAGMENT_POSITION:
-                fragment = noteViewFragment;
-                break;
+        } else if (id == R.id.nav_slideshow) {
 
-            case SCORE_FRAGMENT_POSITION:
-                fragment = new ScoreFragment();
-                break;
+        } else if (id == R.id.nav_manage) {
 
-            default:
-                // TODO
+        } else if (id == R.id.nav_share) {
 
-                break;
+        } else if (id == R.id.nav_send) {
+
         }
 
-//        Bundle args = new Bundle();
-//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//        fragment.setArguments(args);
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Log.i("Test", "Replacing with: " + fragment);
-
-//        FragmentTransaction fragmentTransaction = fragmentManager
-//                .beginTransaction()
-//                .replace(R.id.frame_layout, fragment);
-
-////        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
-
-        drawerList.setItemChecked(position, true);
-        setTitle(navigationDrawerItems[position]);
-        drawerLayout.closeDrawer(drawerList);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
+
+
 
     @Override
     public void setTitle(CharSequence title) {
