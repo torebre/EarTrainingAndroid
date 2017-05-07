@@ -1,11 +1,11 @@
-package com.kjipo.eartrainingandroid.eartrainer;
+package com.kjipo.eartraining.eartrainer;
 
 
-import com.kjipo.eartrainingandroid.data.ClefType;
-import com.kjipo.eartrainingandroid.data.ElementType;
-import com.kjipo.eartrainingandroid.data.Note;
-import com.kjipo.eartrainingandroid.data.Sequence;
-import com.kjipo.eartrainingandroid.data.SequenceBuilder;
+import com.kjipo.eartraining.data.ClefType;
+import com.kjipo.eartraining.data.ElementType;
+import com.kjipo.eartraining.data.Note;
+import com.kjipo.eartraining.data.Sequence;
+import com.kjipo.eartraining.data.SequenceBuilder;
 
 import org.junit.Test;
 

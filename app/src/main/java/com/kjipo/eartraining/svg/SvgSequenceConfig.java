@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid.svg;
+package com.kjipo.eartraining.svg;
 
 public class SvgSequenceConfig {
     private final int barWidth;

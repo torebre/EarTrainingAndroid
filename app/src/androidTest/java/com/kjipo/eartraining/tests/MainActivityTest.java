@@ -1,9 +1,9 @@
-package com.kjipo.eartrainingandroid.tests;
+package com.kjipo.eartraining.tests;
 
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.kjipo.eartrainingandroid.MainActivity;
+import com.kjipo.eartraining.MainActivity;
 
 public class MainActivityTest
             extends ActivityInstrumentationTestCase2<MainActivity> {

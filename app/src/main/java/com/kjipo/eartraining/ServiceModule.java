@@ -1,10 +1,10 @@
-package com.kjipo.eartrainingandroid;
+package com.kjipo.eartraining;
 
 
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainer;
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainerImpl;
-import com.kjipo.eartrainingandroid.midi.MidiPlayer;
-import com.kjipo.eartrainingandroid.midi.MidiPlayerInterface;
+import com.kjipo.eartraining.eartrainer.EarTrainer;
+import com.kjipo.eartraining.eartrainer.EarTrainerImpl;
+import com.kjipo.eartraining.midi.MidiPlayer;
+import com.kjipo.eartraining.midi.MidiPlayerInterface;
 
 import javax.inject.Singleton;
 

@@ -1,7 +1,7 @@
-package com.kjipo.eartrainingandroid.eartrainer;
+package com.kjipo.eartraining.eartrainer;
 
 
-import com.kjipo.eartrainingandroid.data.Sequence;
+import com.kjipo.eartraining.data.Sequence;
 
 import org.junit.Test;
 

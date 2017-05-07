@@ -1,13 +1,12 @@
-package com.kjipo.eartrainingandroid.midi;
+package com.kjipo.eartraining.midi;
 
 
-import com.kjipo.eartrainingandroid.data.ClefType;
-import com.kjipo.eartrainingandroid.data.ElementType;
-import com.kjipo.eartrainingandroid.data.Note;
-import com.kjipo.eartrainingandroid.data.Sequence;
-import com.kjipo.eartrainingandroid.data.SequenceBuilder;
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainerImpl;
-import com.kjipo.eartrainingandroid.eartrainer.SequenceGenerator;
+import com.kjipo.eartraining.data.ClefType;
+import com.kjipo.eartraining.data.ElementType;
+import com.kjipo.eartraining.data.Note;
+import com.kjipo.eartraining.data.Sequence;
+import com.kjipo.eartraining.data.SequenceBuilder;
+import com.kjipo.eartraining.eartrainer.EarTrainerImpl;
 
 import org.junit.Test;
 import org.slf4j.Logger;

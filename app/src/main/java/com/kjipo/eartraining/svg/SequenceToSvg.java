@@ -1,9 +1,7 @@
-package com.kjipo.eartrainingandroid.svg;
+package com.kjipo.eartraining.svg;
 
 
-import com.google.gson.Gson;
-import com.kjipo.eartrainingandroid.data.Note;
-import com.kjipo.eartrainingandroid.data.Sequence;
+import com.kjipo.eartraining.data.Note;
 
 import java.util.List;
 

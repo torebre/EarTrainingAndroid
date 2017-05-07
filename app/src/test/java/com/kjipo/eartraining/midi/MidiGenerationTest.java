@@ -1,8 +1,8 @@
-package com.kjipo.eartrainingandroid.midi;
+package com.kjipo.eartraining.midi;
 
 
-import com.kjipo.eartrainingandroid.data.Sequence;
-import com.kjipo.eartrainingandroid.eartrainer.SequenceGenerator;
+import com.kjipo.eartraining.data.Sequence;
+import com.kjipo.eartraining.eartrainer.SequenceGenerator;
 
 import org.junit.Test;
 

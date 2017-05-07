@@ -1,10 +1,7 @@
-package com.kjipo.eartrainingandroid.eartrainer;
+package com.kjipo.eartraining.eartrainer;
 
 
-import com.kjipo.eartrainingandroid.data.Sequence;
-
-import dagger.Module;
-
+import com.kjipo.eartraining.data.Sequence;
 
 
 public class EarTrainerImpl implements EarTrainer {

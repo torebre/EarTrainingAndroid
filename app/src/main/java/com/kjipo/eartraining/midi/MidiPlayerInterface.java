@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid.midi;
+package com.kjipo.eartraining.midi;
 
 
 public interface MidiPlayerInterface {

@@ -1,8 +1,7 @@
-package com.kjipo.eartrainingandroid.eartrainer;
+package com.kjipo.eartraining.eartrainer;
 
 
-import com.kjipo.eartrainingandroid.data.Note;
-import com.kjipo.eartrainingandroid.data.Sequence;
+import com.kjipo.eartraining.data.Sequence;
 
 public class SequenceBuilder {
     private Sequence currentSequence;

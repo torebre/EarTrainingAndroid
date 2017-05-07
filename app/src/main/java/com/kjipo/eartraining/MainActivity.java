@@ -1,6 +1,7 @@
-package com.kjipo.eartrainingandroid;
+package com.kjipo.eartraining;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.midi.MidiDeviceInfo;
@@ -9,29 +10,39 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainer;
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainerUtilities;
-import com.kjipo.eartrainingandroid.midi.MidiPlayerInterface;
-import com.kjipo.eartrainingandroid.midi.MidiUtilities;
+import com.kjipo.eartraining.adapter.TransitionListenerAdapter;
+import com.kjipo.eartraining.eartrainer.EarTrainer;
+import com.kjipo.eartraining.eartrainer.EarTrainerUtilities;
+import com.kjipo.eartraining.helper.TransitionHelper;
+import com.kjipo.eartraining.midi.MidiPlayerInterface;
+import com.kjipo.eartraining.midi.MidiUtilities;
+import com.kjipo.eartraining.score.ScoreActivity;
 
 import javax.inject.Inject;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Button btnScore;
+
     @Inject
     EarTrainer earTrainer;
     @Inject
@@ -40,11 +51,6 @@ public class MainActivity extends AppCompatActivity
     private MediaPlayer mediaPlayer;
 
     private NoteViewFragment noteViewFragment;
-
-
-    private CharSequence actionBarTitle = "";
-    private CharSequence title;
-
 
 
     @Override
@@ -56,8 +62,6 @@ public class MainActivity extends AppCompatActivity
 
         noteViewFragment = new NoteViewFragment();
         setupSequenceGenerator();
-
-        title = actionBarTitle = getTitle();
 
         setContentView(R.layout.main_act);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -81,6 +85,26 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        btnScore = (Button) findViewById(R.id.btnScore);
+        btnScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.getWindow().getSharedElementExitTransition().addListener(
+                        new TransitionListenerAdapter() {
+                            @Override
+                            public void onTransitionEnd(Transition transition) {
+                                MainActivity.this.finish();
+                            }
+                        });
+
+                final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(MainActivity.this, true,
+                        new Pair<>(view, MainActivity.this.getString(R.string.transition_score)));
+                @SuppressWarnings("unchecked")
+                ActivityOptionsCompat activityOptions = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(MainActivity.this, pairs);
+                ScoreActivity.start(MainActivity.this, activityOptions);
+            }
+        });
 
     }
 
@@ -115,14 +139,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_websearch, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
 
     @Override
@@ -203,12 +225,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    @Override
-    public void setTitle(CharSequence title) {
-        actionBarTitle = title;
-        getSupportActionBar().setTitle(title);
-    }
+//    @Override
+//    public void setTitle(CharSequence title) {
+//        actionBarTitle = title;
+//        getSupportActionBar().setTitle(title);
+//    }
 
 
     public void playSequence(View view) {

@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid.eartrainer;
+package com.kjipo.eartraining.eartrainer;
 
 
 import java.util.List;

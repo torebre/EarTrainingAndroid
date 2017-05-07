@@ -1,10 +1,5 @@
-package com.kjipo.eartrainingandroid.midi;
+package com.kjipo.eartraining.midi;
 
-
-import com.kjipo.eartrainingandroid.data.Sequence;
-import com.kjipo.eartrainingandroid.eartrainer.EarTrainerImpl;
-
-import org.junit.Test;
 
 public class MidiUtilitesTest {
 

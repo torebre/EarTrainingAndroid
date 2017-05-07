@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid.data;
+package com.kjipo.eartraining.data;
 
 
 public final class SequenceUtilities {

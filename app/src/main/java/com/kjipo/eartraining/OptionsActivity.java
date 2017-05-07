@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid;
+package com.kjipo.eartraining;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid.midi;
+package com.kjipo.eartraining.midi;
 
 
 import android.util.Log;
@@ -6,8 +6,8 @@ import android.util.Log;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.Gson;
-import com.kjipo.eartrainingandroid.data.Note;
-import com.kjipo.eartrainingandroid.data.Sequence;
+import com.kjipo.eartraining.data.Note;
+import com.kjipo.eartraining.data.Sequence;
 
 import java.util.ArrayList;
 import java.util.List;

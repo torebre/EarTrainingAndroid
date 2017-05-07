@@ -1,4 +1,4 @@
-package com.kjipo.eartrainingandroid.midi;
+package com.kjipo.eartraining.midi;
 
 
 
@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
