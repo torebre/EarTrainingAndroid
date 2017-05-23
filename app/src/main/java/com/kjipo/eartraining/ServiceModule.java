@@ -14,7 +14,6 @@ import dagger.Provides;
 @Module
 public class ServiceModule {
 
-
     @Provides
     @Singleton
     public EarTrainer provideEarTrainer() {

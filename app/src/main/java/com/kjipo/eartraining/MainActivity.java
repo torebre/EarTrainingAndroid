@@ -1,7 +1,6 @@
 package com.kjipo.eartraining;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.midi.MidiDeviceInfo;
@@ -34,6 +33,7 @@ import com.kjipo.eartraining.helper.TransitionHelper;
 import com.kjipo.eartraining.midi.MidiPlayerInterface;
 import com.kjipo.eartraining.midi.MidiUtilities;
 import com.kjipo.eartraining.score.ScoreActivity;
+import com.kjipo.eartraining.svg.SvgSequenceConfig;
 
 import javax.inject.Inject;
 

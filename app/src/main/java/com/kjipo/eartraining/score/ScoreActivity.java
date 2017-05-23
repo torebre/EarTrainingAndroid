@@ -14,9 +14,22 @@ import android.webkit.WebView;
 
 import com.kjipo.eartraining.CustomWebViewClient;
 import com.kjipo.eartraining.R;
+import com.kjipo.eartraining.eartrainer.EarTrainer;
+import com.kjipo.eartraining.midi.MidiPlayerInterface;
+import com.kjipo.eartraining.svg.SequenceToSvg;
+
+import javax.inject.Inject;
 
 
 public class ScoreActivity extends AppCompatActivity {
+
+    @Inject
+    EarTrainer earTrainer;
+    @Inject
+    MidiPlayerInterface midiPlayer;
+    @Inject
+    SequenceToSvg sequenceToSvg;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +39,7 @@ public class ScoreActivity extends AppCompatActivity {
         WebView myWebView = (WebView) findViewById(R.id.score);
         CustomWebViewClient noteViewClient = new CustomWebViewClient();
         noteViewClient.attachWebView(myWebView);
+
     }
 
     public static void start(Activity activity, ActivityOptionsCompat options) {
