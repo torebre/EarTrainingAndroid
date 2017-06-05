@@ -7,7 +7,7 @@ android {
     buildToolsVersion '25.0.1'
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        applicationId "com.kjipo.eartrainingandroid"
+        applicationId 'com.kjipo.eartraining'
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
@@ -33,23 +33,18 @@ android {
 }
 
 dependencies {
-//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
-
     compile 'com.android.support:design:25.3.1'
-
-
     compile 'com.google.dagger:dagger:2.10'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     compile 'com.google.dagger:dagger-android:2.10'
     compile 'com.google.dagger:dagger-android-support:2.10'
     provided 'javax.annotation:jsr250-api:1.0'
-
     // if you use the support libraries
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.10'
     compile 'com.google.code.gson:gson:2.7'
-
     testCompile 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     //    testCompile group: 'org.assertj', name: 'assertj-core', version: '2.5.0'
@@ -60,30 +55,20 @@ dependencies {
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     compile 'ch.qos.logback:logback-classic:1.1.7'
     compile 'com.google.guava:guava:20.0'
-
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-dom
-    testCompile(group: 'org.apache.xmlgraphics', name: 'batik-dom', version: '1.9')
-
+    testCompile 'org.apache.xmlgraphics:batik-dom:1.9'
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svg-dom
-    testCompile(group: 'org.apache.xmlgraphics', name: 'batik-svg-dom', version: '1.9')
-
+    testCompile 'org.apache.xmlgraphics:batik-svg-dom:1.9'
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-anim
-    testCompile(group: 'org.apache.xmlgraphics', name: 'batik-anim', version: '1.9')
-
+    testCompile 'org.apache.xmlgraphics:batik-anim:1.9'
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-i18n
-    testCompile(group: 'org.apache.xmlgraphics', name: 'batik-i18n', version: '1.9')
-
+    testCompile 'org.apache.xmlgraphics:batik-i18n:1.9'
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-util
-    testCompile(group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.9')
-
+    testCompile 'org.apache.xmlgraphics:batik-util:1.9'
     // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-constants
-    testCompile group: 'org.apache.xmlgraphics', name: 'batik-constants', version: '1.9'
-
-
-
+    testCompile 'org.apache.xmlgraphics:batik-constants:1.9'
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    androidTestCompile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
