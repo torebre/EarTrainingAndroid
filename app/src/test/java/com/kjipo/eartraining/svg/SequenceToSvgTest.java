@@ -103,7 +103,7 @@ public class SequenceToSvgTest {
 
     }
 
-    
+
 
     private static void addPath(Document document, Node node, String path) {
         Element path1 = document.createElementNS(SVG_NAMESPACE_URI, "path");

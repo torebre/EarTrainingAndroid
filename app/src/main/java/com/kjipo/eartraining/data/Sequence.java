@@ -5,17 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * The point of a Sequence is to collect the information about a sequence
- * of notes that is needed to render them in the NoteViewer.
- *
- * The representation should offload the renderer. The renderer should
- * be able to easily go through a sequence and lay out elements, and not
- * do computations that could be done earlier.
- *
- * Sequence-classes will be serialized to JSON.
- *
- */
 public final class Sequence {
     private ClefType clef;
     private int timeSignatureNominator;

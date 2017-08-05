@@ -55,19 +55,6 @@ dependencies {
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     compile 'ch.qos.logback:logback-classic:1.1.7'
     compile 'com.google.guava:guava:20.0'
-    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-dom
-    testCompile 'org.apache.xmlgraphics:batik-dom:1.9'
-    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svg-dom
-    testCompile 'org.apache.xmlgraphics:batik-svg-dom:1.9'
-    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-anim
-    testCompile 'org.apache.xmlgraphics:batik-anim:1.9'
-    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-i18n
-    testCompile 'org.apache.xmlgraphics:batik-i18n:1.9'
-    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-util
-    testCompile 'org.apache.xmlgraphics:batik-util:1.9'
-    // https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-constants
-    testCompile 'org.apache.xmlgraphics:batik-constants:1.9'
-    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
     androidTestCompile 'com.android.support.test:runner:0.5'

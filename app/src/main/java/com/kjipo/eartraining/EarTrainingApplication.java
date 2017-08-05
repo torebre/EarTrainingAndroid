@@ -5,8 +5,6 @@ import android.app.Application;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kjipo.eartraining.eartrainer.EarTrainerImpl;
-import com.kjipo.eartraining.svg.Glyphs;
 import com.kjipo.eartraining.svg.SvgModule;
 
 import java.io.BufferedReader;
