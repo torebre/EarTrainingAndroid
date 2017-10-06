@@ -3,15 +3,17 @@ apply plugin: 'kotlin-android'
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         applicationId 'com.kjipo.eartraining'
         minSdkVersion 23
-        targetSdkVersion 25
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -27,25 +29,54 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
+
+    // Support libraries
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    // Architecture components
+    compile "android.arch.lifecycle:runtime:$rootProject.architectureComponentsVersion"
+    compile "android.arch.lifecycle:extensions:$rootProject.architectureComponentsVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.architectureComponentsVersion"
+    compile "android.arch.persistence.room:runtime:$rootProject.architectureComponentsVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
+    compile "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
+
+
+
     //    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
+//    compile 'com.android.support:support-v4:25.3.1'
+//    compile 'com.android.support:appcompat-v7:25.3.1'
+//    compile 'com.android.support:design:25.3.1'
     compile 'com.google.dagger:dagger:2.10'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     compile 'com.google.dagger:dagger-android:2.10'
     compile 'com.google.dagger:dagger-android-support:2.10'
     provided 'javax.annotation:jsr250-api:1.0'
+
+
+
+
+
+
+    // RxJava
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
+
+
+
+
     // if you use the support libraries
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.10'
     compile 'com.google.code.gson:gson:2.7'
-    testCompile 'junit:junit:4.12'
+//    testCompile 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     //    testCompile group: 'org.assertj', name: 'assertj-core', version: '2.5.0'
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
@@ -55,18 +86,55 @@ dependencies {
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     compile 'ch.qos.logback:logback-classic:1.1.7'
     compile 'com.google.guava:guava:20.0'
-    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
-    androidTestCompile 'com.android.support:support-annotations:25.3.1'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+
+
+    // Dependencies for local unit tests
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+    testCompile "android.arch.core:core-testing:$rootProject.architectureComponentsVersion"
+
+    // Resolve conflicts between main and local unit tests
+    testCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    testCompile "com.android.support:support-core-utils:$rootProject.supportLibraryVersion"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    androidTestCompile "com.android.support.test:rules:$rootProject.ext.runnerVersion"
+    androidTestCompile "android.arch.persistence.room:testing:$rootProject.architectureComponentsVersion"
+    androidTestCompile "android.arch.core:core-testing:$rootProject.architectureComponentsVersion"
+
+    // Dependencies for Android unit tests
+    androidTestCompile "junit:junit:$rootProject.ext.junitVersion"
+    androidTestCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    // Espresso UI Testing
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+
+    // Resolve conflicts between main and test APK:
+    androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:design:$rootProject.supportLibraryVersion"
+
+//    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
+//    androidTestCompile 'com.android.support:support-annotations:25.3.1'
+//    androidTestCompile 'com.android.support.test:runner:0.5'
+//    androidTestCompile 'com.android.support.test:rules:0.5'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+
     // Optional -- Hamcrest library
     //androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     // Optional -- UI testing with Espresso
     //androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     // Optional -- UI testing with UI Automator
     //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

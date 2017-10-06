@@ -8,18 +8,17 @@ import dagger.Provides;
 
 @Module
 public class SvgModule {
-    private final Glyphs glyphs;
 
 
-    public SvgModule(Glyphs glyphs) {
-        this.glyphs = glyphs;
+    public SvgModule() {
+
     }
 
 
     @Provides
     @Singleton
     public SequenceToSvg getSequenceToSvg() {
-        return new SequenceToSvg(glyphs);
+        return new SequenceToSvg();
     }
 
 }

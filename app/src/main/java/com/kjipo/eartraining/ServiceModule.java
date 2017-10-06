@@ -5,6 +5,7 @@ import com.kjipo.eartraining.eartrainer.EarTrainer;
 import com.kjipo.eartraining.eartrainer.EarTrainerImpl;
 import com.kjipo.eartraining.midi.MidiPlayer;
 import com.kjipo.eartraining.midi.MidiPlayerInterface;
+import com.kjipo.eartraining.midistream.MidiStream;
 
 import javax.inject.Singleton;
 
@@ -24,7 +25,7 @@ public class ServiceModule {
     @Provides
     @Singleton
     public MidiPlayerInterface provideMidiPlayer() {
-        return new MidiPlayer();
+        return new MidiStream();
     }
 
 

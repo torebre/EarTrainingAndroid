@@ -1,10 +1,7 @@
 package com.kjipo.eartraining;
 
 
-import android.content.Context;
-import android.media.MediaPlayer;
-import android.media.midi.MidiDeviceInfo;
-import android.media.midi.MidiManager;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,15 +22,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.kjipo.eartraining.adapter.TransitionListenerAdapter;
 import com.kjipo.eartraining.eartrainer.EarTrainer;
 import com.kjipo.eartraining.eartrainer.EarTrainerUtilities;
 import com.kjipo.eartraining.helper.TransitionHelper;
 import com.kjipo.eartraining.midi.MidiPlayerInterface;
-import com.kjipo.eartraining.midi.MidiUtilities;
 import com.kjipo.eartraining.score.ScoreActivity;
-import com.kjipo.eartraining.svg.SvgSequenceConfig;
 
 import javax.inject.Inject;
 
@@ -48,8 +44,6 @@ public class MainActivity extends AppCompatActivity
     @Inject
     MidiPlayerInterface midiPlayer;
 
-    private MediaPlayer mediaPlayer;
-
     private NoteViewFragment noteViewFragment;
 
 
@@ -59,6 +53,10 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_act);
+
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+            Toast.makeText(MainActivity.this, "No MIDI support", Toast.LENGTH_LONG).show();
+        }
 
         noteViewFragment = new NoteViewFragment();
         setupSequenceGenerator();
@@ -151,13 +149,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        MidiManager m = (MidiManager) getApplicationContext().getSystemService(Context.MIDI_SERVICE);
-        MidiDeviceInfo[] infos = m.getDevices();
-
-        Log.i("Test", "MIDI devices2: " + infos.length);
-        for (MidiDeviceInfo midiDeviceInfo : infos) {
-            Log.i("Test", midiDeviceInfo.toString());
-        }
+        midiPlayer.setup(getApplicationContext());
 
     }
 
@@ -165,10 +157,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+
     }
 
     @Override
@@ -233,17 +222,8 @@ public class MainActivity extends AppCompatActivity
 
 
     public void playSequence(View view) {
-        try {
+        // TODO
 
-
-            System.out.println("Sequence to play: " + earTrainer.getCurrentSequence());
-
-            System.out.println("Sequence as JSON: " + MidiUtilities.transformSequenceToJson(earTrainer.getCurrentSequence()));
-
-            midiPlayer.playSequence(MidiUtilities.transformSequenceToMidiFormat(earTrainer.getCurrentSequence()));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void generateSequence(View view) {

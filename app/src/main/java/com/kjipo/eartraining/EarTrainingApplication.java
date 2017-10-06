@@ -24,27 +24,12 @@ public class EarTrainingApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
 
+        mainComponent = DaggerMainComponent.builder()
+                .serviceModule(new ServiceModule())
+                .svgModule(new SvgModule())
+                .build();
 
-
-        try(InputStream inputStream =  getAssets().open(GLYPH_URL);
-        Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            BufferedReader bufferedReader = new BufferedReader(reader)) {
-            Glyphs glyphs = gson.fromJson(bufferedReader, Glyphs.class);
-
-            mainComponent = DaggerMainComponent.builder()
-                    .serviceModule(new ServiceModule())
-                    .svgModule(new SvgModule(glyphs))
-                    .build();
-
-        } catch (IOException e) {
-            // TODO Use logger
-            e.printStackTrace();
-
-            throw new RuntimeException(e);
-        }
 
     }
 

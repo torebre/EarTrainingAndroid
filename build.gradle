@@ -1,12 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.1.2-3'
+    ext.kotlin_version = '1.1.2-4'
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta7'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -16,22 +17,29 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
-
-        // This project has some dependencies I just have in my local Maven cache, so
-        // Gradle needs to look there as well
-        mavenLocal()
-
     }
 }
 
+ext {
+    // Sdk and tools
+    minSdkVersion = 14
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.1'
 
-
-//configurations.all {
-//    resolutionStrategy {
-//        // Do not cache changing modules, since I might be working
-//        // on them in parallell
-//        cacheChangingModulesFor 0, 'seconds'
-//    }
-//}
-
+    // App dependencies
+    supportLibraryVersion = '26.0.2'
+    guavaVersion = '18.0'
+    junitVersion = '4.12'
+    mockitoVersion = '1.10.19'
+    powerMockito = '1.6.2'
+    hamcrestVersion = '1.3'
+    runnerVersion = '1.0.1'
+    rulesVersion = '1.0.1'
+    espressoVersion = '3.0.1'
+    architectureComponentsVersion = "1.0.0-alpha9"
+    rxjavaVersion = "2.1.3"
+    rxandroidVersion = "2.0.1"
+}
