@@ -1,13 +1,13 @@
 package com.kjipo.eartraining;
 
 
+import android.databinding.BindingAdapter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 
 public class CustomWebViewClient extends WebViewClient {
     private WebView webView;

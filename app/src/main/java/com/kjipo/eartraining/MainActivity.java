@@ -1,12 +1,15 @@
 package com.kjipo.eartraining;
 
 
+import android.arch.lifecycle.LifecycleRegistry;
+import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MotionEventCompat;
@@ -31,11 +34,19 @@ import com.kjipo.eartraining.helper.TransitionHelper;
 import com.kjipo.eartraining.midi.MidiPlayerInterface;
 import com.kjipo.eartraining.score.ScoreActivity;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+
+public class MainActivity extends AppCompatActivity implements LifecycleRegistryOwner, HasSupportFragmentInjector {
+    private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
     private Button btnScore;
 
@@ -44,13 +55,15 @@ public class MainActivity extends AppCompatActivity
     @Inject
     MidiPlayerInterface midiPlayer;
 
-    private NoteViewFragment noteViewFragment;
+    @Inject
+    NavigationController navigationController;
+
+    @Inject
+    NoteViewFragment noteViewFragment;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        ((EarTrainingApplication) getApplication()).getMainComponent().inject(this);
-
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_act);
 
@@ -58,7 +71,13 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "No MIDI support", Toast.LENGTH_LONG).show();
         }
 
-        noteViewFragment = new NoteViewFragment();
+        // TODO
+
+//        if(savedInstanceState == null) {
+//            navigationController.navigateToStart();
+//        }
+
+
         setupSequenceGenerator();
 
         setContentView(R.layout.main_act);
@@ -81,7 +100,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // TODO Commented out because of compilation
+//        navigationView.setNavigationItemSelectedListener(this);
 
         btnScore = (Button) findViewById(R.id.btnScore);
         btnScore.setOnClickListener(new View.OnClickListener() {
@@ -231,4 +251,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public LifecycleRegistry getLifecycle() {
+        return lifecycleRegistry;
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
+    }
 }

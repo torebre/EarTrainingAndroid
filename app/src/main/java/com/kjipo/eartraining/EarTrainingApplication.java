@@ -1,22 +1,23 @@
 package com.kjipo.eartraining;
 
 
+import android.app.Activity;
 import android.app.Application;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.kjipo.eartraining.svg.SvgModule;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 
 
-public class EarTrainingApplication extends Application {
-    private MainComponent mainComponent;
+public class EarTrainingApplication extends Application implements HasActivityInjector {
+
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
+
 
     private static final String GLYPH_URL = "file:///android_asset/js/glyphs.json";
 
@@ -25,16 +26,20 @@ public class EarTrainingApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        mainComponent = DaggerMainComponent.builder()
-                .serviceModule(new ServiceModule())
-                .svgModule(new SvgModule())
-                .build();
+        AppInjector.init(this);
+
+//        mainComponent = DaggerMainComponent.builder()
+//                .serviceModule(new ServiceModule())
+//                .svgModule(new SvgModule())
+//                .build();
 
 
     }
 
 
-    public MainComponent getMainComponent() {
-        return mainComponent;
+
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
     }
 }
