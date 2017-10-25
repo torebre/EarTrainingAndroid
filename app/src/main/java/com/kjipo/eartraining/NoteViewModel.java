@@ -5,12 +5,10 @@ import android.webkit.WebViewClient;
 
 import javax.inject.Inject;
 
-public class NoteViewModel { // extends ViewModel {
+public class NoteViewModel extends ViewModel {
 
 
-
-
-
+    @Inject
     NoteViewModel() {
 
 

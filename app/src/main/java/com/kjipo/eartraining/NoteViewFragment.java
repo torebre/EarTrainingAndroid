@@ -19,8 +19,8 @@ import javax.inject.Inject;
 
 public class NoteViewFragment extends LifecycleFragment implements Injectable {
 
-//    @Inject
-//    ViewModelProvider.Factory viewModelFactory;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
 
 //    private CustomWebViewClient noteViewClient;

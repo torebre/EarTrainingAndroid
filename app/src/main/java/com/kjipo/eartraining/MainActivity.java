@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     @Inject
     NavigationController navigationController;
 
-    @Inject
     NoteViewFragment noteViewFragment;
 
 

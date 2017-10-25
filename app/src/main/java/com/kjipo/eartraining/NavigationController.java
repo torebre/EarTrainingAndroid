@@ -10,10 +10,9 @@ public class NavigationController {
     private FragmentManager fragmentManager;
 
 
-//    @Inject
-    public NavigationController() { //MainActivity mainActivity) {
-//        containerId = R.id
-//        fragmentManager = mainActivity.getFragmentManager();
+    @Inject
+    public NavigationController(MainActivity mainActivity) {
+        fragmentManager = mainActivity.getFragmentManager();
     }
 
 
