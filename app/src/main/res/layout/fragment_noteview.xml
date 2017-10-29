@@ -1,52 +1,40 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/noteview_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <WebView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/noteView"
+    <RelativeLayout
+        android:id="@+id/noteview_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnPlay"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/noteView"
-        android:onClick="generateSequence"
-        android:text="@string/generate" />
+        <WebView
+            android:id="@+id/noteView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btnGenerate" />
+        />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/btnPlay"
-        android:layout_toRightOf="@id/btnPlay"
-        android:onClick="playSequence"
-        android:text="@string/play" />
+        <Button
+            android:id="@+id/btnGenerate"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="25dp"
+            android:text="@string/generate" />
 
-    <RadioButton
-        android:text="RadioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/radioButton"
-        android:layout_toEndOf="@+id/radioButton"
-        android:id="@+id/radioButton2" />
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/btnGenerate"
+            android:layout_alignBottom="@+id/btnGenerate"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="22dp"
+            android:text="@string/play" />
 
-    <RadioButton
-        android:text="RadioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="37dp"
-        android:id="@+id/radioButton"/>
+    </RelativeLayout>
 
-    <RadioButton
-        android:text="RadioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/radioButton2"
-        android:layout_toEndOf="@+id/radioButton2"
-        android:id="@+id/radioButton3" />
-
-</RelativeLayout>
+</layout>

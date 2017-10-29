@@ -6,20 +6,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <!--<android.support.constraint.ConstraintLayout-->
-        <!--android:id="@+id/constraint_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <!--<Button-->
-            <!--android:id="@+id/btnScore"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/button"-->
-            <!--tools:layout_editor_absoluteY="585dp"-->
-            <!--tools:layout_editor_absoluteX="-490dp" />-->
-    <!--</android.support.constraint.ConstraintLayout>-->
-
     <include layout="@layout/app_bar_main" android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -27,5 +13,17 @@
         android:layout_width="wrap_content" android:layout_height="match_parent"
         android:layout_gravity="start" android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main" app:menu="@menu/activity_main_drawer" />
+
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="MergeRootFrame"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
 
 </android.support.v4.widget.DrawerLayout>

@@ -5,9 +5,9 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         applicationId 'com.kjipo.eartraining'
         minSdkVersion 23
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -32,7 +32,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '26.0.2'
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -49,33 +51,20 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
     compile "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
 
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
-
-    //    compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile 'com.android.support:support-v4:25.3.1'
-//    compile 'com.android.support:appcompat-v7:25.3.1'
-//    compile 'com.android.support:design:25.3.1'
-    compile 'com.google.dagger:dagger:2.10'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
-    compile 'com.google.dagger:dagger-android:2.10'
-    compile 'com.google.dagger:dagger-android-support:2.10'
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'
-
-
-
-
-
 
     // RxJava
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
     compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
 
 
-
-
-    // if you use the support libraries
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.10'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.1'
 //    testCompile 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     //    testCompile group: 'org.assertj', name: 'assertj-core', version: '2.5.0'
@@ -137,7 +126,4 @@ dependencies {
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
 }

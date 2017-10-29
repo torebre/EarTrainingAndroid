@@ -19,13 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button"
-            tools:layout_editor_absoluteY="585dp"
-            tools:layout_editor_absoluteX="-490dp" />
     </android.support.constraint.ConstraintLayout>
 
     <!--<include layout="@layout/app_bar_main" android:layout_width="match_parent"-->

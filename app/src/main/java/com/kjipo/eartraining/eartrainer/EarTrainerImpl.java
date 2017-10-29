@@ -3,7 +3,10 @@ package com.kjipo.eartraining.eartrainer;
 
 import com.kjipo.eartraining.data.Sequence;
 
+import javax.inject.Singleton;
 
+
+@Singleton
 public class EarTrainerImpl implements EarTrainer {
     private final SequenceGenerator sequenceGenerator;
 

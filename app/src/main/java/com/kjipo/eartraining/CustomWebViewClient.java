@@ -17,37 +17,29 @@ public class CustomWebViewClient extends WebViewClient {
         this.webView = webView;
 
         webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl("file:///android_asset/noteView.html");
-        webView.loadUrl("file:///android_asset/test_output3.html");
+        webView.loadUrl("file:///android_asset/noteView.html");
 
-        String script = "var s2 = Snap(1000, 1000);\n" +
-                "var bigCircle = s2.circle(10, 10, 10);\n" +
-                "bigCircle.attr({\n" +
-                "    fill: \"#bada55\",\n" +
-                "    stroke: \"#000\",\n" +
-                "    strokeWidth: 5\n" +
-                "});" +
-                "console.log(\"Test20\");";
+//        webView.loadUrl("file:///android_asset/test_output3.html");
+//        String script = "var s2 = Snap(1000, 1000);\n" +
+//                "var bigCircle = s2.circle(10, 10, 10);\n" +
+//                "bigCircle.attr({\n" +
+//                "    fill: \"#bada55\",\n" +
+//                "    stroke: \"#000\",\n" +
+//                "    strokeWidth: 5\n" +
+//                "});" +
+//                "console.log(\"Test20\");";
 
-        Log.i("Test", "Evaluating Javascript");
-        webView.evaluateJavascript(script, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                Log.i("Test", "Received value: " +value);
-            }
-        });
+//        Log.i("Test", "Evaluating Javascript");
+//        webView.evaluateJavascript(script, (ValueCallback<String>) value -> Log.i("Test", "Received value: " +value));
 
 
-        webView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        webView.setOnTouchListener((v, event) -> {
 
-                // TODO Just here for testing
-                Log.e("note", "Event: " + event);
+            // TODO Just here for testing
+            Log.e("note", "Event: " + event);
 
-                return false;
+            return false;
 
-            }
         });
 
         NoteVisualizerInterface visualizerInterface = new NoteVisualizerInterface();

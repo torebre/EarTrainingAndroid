@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -18,12 +16,8 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.kjipo.eartraining.CustomWebViewClient;
-import com.kjipo.eartraining.EarTrainingApplication;
-import com.kjipo.eartraining.MainActivity;
 import com.kjipo.eartraining.R;
-import com.kjipo.eartraining.adapter.TransitionListenerAdapter;
 import com.kjipo.eartraining.eartrainer.EarTrainer;
-import com.kjipo.eartraining.helper.TransitionHelper;
 import com.kjipo.eartraining.midi.MidiPlayerInterface;
 import com.kjipo.eartraining.svg.SequenceToSvg;
 
@@ -52,7 +46,7 @@ public class ScoreActivity extends AppCompatActivity {
         CustomWebViewClient noteViewClient = new CustomWebViewClient();
         noteViewClient.attachWebView(myWebView);
 
-        final Button btnPlay = (Button) findViewById(R.id.btnPlay);
+        final Button btnPlay = (Button) findViewById(R.id.btnGenerate);
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
