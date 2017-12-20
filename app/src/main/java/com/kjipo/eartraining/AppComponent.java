@@ -2,6 +2,9 @@ package com.kjipo.eartraining;
 
 import android.app.Application;
 
+import com.kjipo.eartraining.score.ScoreActivityModule;
+import com.kjipo.eartraining.svg.SvgModule;
+
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
@@ -13,7 +16,10 @@ import dagger.android.AndroidInjectionModule;
         AndroidInjectionModule.class,
         AppModule.class,
         MainActivityModule.class,
-        ViewModelModule.class
+//        SvgModule.class,
+//        ServiceModule.class,
+        ViewModelModule.class,
+        ScoreActivityModule.class
 })
 public interface AppComponent {
     @Component.Builder

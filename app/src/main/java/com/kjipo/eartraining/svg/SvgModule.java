@@ -1,8 +1,6 @@
 package com.kjipo.eartraining.svg;
 
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,7 +14,7 @@ public class SvgModule {
 
 
     @Provides
-    @Singleton
+//    @Singleton
     public SequenceToSvg getSequenceToSvg() {
         return new SequenceToSvg();
     }
