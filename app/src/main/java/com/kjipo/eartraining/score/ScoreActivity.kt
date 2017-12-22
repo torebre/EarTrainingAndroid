@@ -4,6 +4,7 @@ package com.kjipo.eartraining.score
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
@@ -40,8 +41,12 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         setContentView(R.layout.score_act)
 
-        val myWebView = findViewById<View>(R.id.score) as WebView
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
 
+
+        val myWebView = findViewById<View>(R.id.score) as WebView
 
         val noteViewClient = CustomWebViewClient()
         noteViewClient.attachWebView(myWebView)
@@ -49,7 +54,7 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val btnPlay = findViewById<Button>(R.id.btnGenerate)
         btnPlay.setOnClickListener {
             Log.i("Playing note", "Test")
-            midiPlayer!!.noteOn(60)
+            midiPlayer.noteOn(60)
 
             val script = "var s2 = Snap(1000, 1000);\n" +
                     "var bigCircle = s2.circle(10, 10, 10);\n" +
@@ -64,18 +69,18 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
             myWebView.evaluateJavascript(script) { value -> Log.i("Test2", "Received value: " + value) }
         }
 
-        midiPlayer!!.setup(applicationContext)
+        midiPlayer.setup(applicationContext)
 
     }
 
     override fun onStart() {
         super.onStart()
-        midiPlayer!!.start()
+        midiPlayer.start()
     }
 
     override fun onStop() {
         super.onStop()
-        midiPlayer!!.stop()
+        midiPlayer.stop()
     }
 
     companion object {
