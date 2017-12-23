@@ -109,5 +109,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
-    compile 'com.github.torebre:eartraining:1d7460e'
+    compile 'com.github.torebre:eartraining:b4ecd62'
 }
