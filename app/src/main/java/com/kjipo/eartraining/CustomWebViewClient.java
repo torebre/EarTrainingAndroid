@@ -1,6 +1,7 @@
 package com.kjipo.eartraining;
 
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,6 +13,7 @@ public class CustomWebViewClient extends WebViewClient {
     private WebView webView;
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void attachWebView(WebView webView) {
         this.webView = webView;
 

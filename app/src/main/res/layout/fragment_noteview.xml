@@ -35,6 +35,14 @@
             android:layout_marginEnd="22dp"
             android:text="@string/play" />
 
+        <Button
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noteView"
+            android:layout_centerHorizontal="true"
+            android:text="Record" />
+
     </RelativeLayout>
 
 </layout>

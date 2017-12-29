@@ -1,5 +1,7 @@
 package com.kjipo.eartraining;
 
+import com.kjipo.eartraining.recorder.Recorder;
+
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
@@ -12,6 +14,9 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract NoteViewFragment contributeNoteViewFragment();
+
+    @ContributesAndroidInjector
+    abstract Recorder contributeRecorderFragment();
 
 
 }

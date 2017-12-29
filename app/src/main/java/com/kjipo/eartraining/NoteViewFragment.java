@@ -1,12 +1,15 @@
 package com.kjipo.eartraining;
 
 
-import android.arch.lifecycle.LifecycleFragment;
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,22 +18,25 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.kjipo.eartraining.eartrainer.EarTrainerUtilities;
+import com.kjipo.eartraining.recorder.Recorder;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 
-public class NoteViewFragment extends LifecycleFragment implements Injectable {
+public class NoteViewFragment extends Fragment implements Injectable {
+
+    private static final int AUDIO_ECHO_REQUEST = 0;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    @Inject
+    Recorder recorder;
 
     private CustomWebViewClient noteViewClient;
 
     private NoteViewModel noteViewModel;
-
-//    AutoClearedValue<<NoteviewFragem> binding;
 
 
     android.databinding.DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
@@ -52,9 +58,11 @@ public class NoteViewFragment extends LifecycleFragment implements Injectable {
 
         Button playButton = rootView.findViewById(R.id.btnPlay);
         Button generateButton = rootView.findViewById(R.id.btnGenerate);
+        Button recordButton = rootView.findViewById(R.id.btnRecord);
 
         playButton.setOnClickListener(l -> playSequence());
         generateButton.setOnClickListener(l -> generateSequence());
+        recordButton.setOnClickListener(l -> record());
 
         return rootView;
     }
@@ -62,15 +70,9 @@ public class NoteViewFragment extends LifecycleFragment implements Injectable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstance) {
         super.onActivityCreated(savedInstance);
-
-        noteViewModel = ViewModelProviders.of(this, viewModelFactory).get(NoteViewModel.class);
-
-
-
+        noteViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(NoteViewModel.class);
     }
-
-
-
 
     public void loadNoteSequence(String sequenceAsJson) {
         noteViewClient.loadNoteSequence(sequenceAsJson);
@@ -94,6 +96,20 @@ public class NoteViewFragment extends LifecycleFragment implements Injectable {
 
     public void generateSequence() {
         loadNoteSequence(EarTrainerUtilities.transformToJson(noteViewModel.generateNextSequence()));
+    }
+
+
+    public void record() {
+        int status = ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.RECORD_AUDIO);
+        if (status != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    AUDIO_ECHO_REQUEST);
+            return;
+        }
+        recorder.recordAudio();
     }
 
 

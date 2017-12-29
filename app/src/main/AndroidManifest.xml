@@ -6,6 +6,8 @@
         android:name="android.software.midi"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:name="com.kjipo.eartraining.EarTrainingApplication"
         android:allowBackup="true"
@@ -23,7 +25,7 @@
         </activity>
         <!--<activity android:name=".OptionsActivity"></activity>-->
 
-        <activity android:name="com.kjipo.eartraining.score.ScoreActivity"/>
+        <activity android:name="com.kjipo.eartraining.score.ScoreActivity" />
 
     </application>
 

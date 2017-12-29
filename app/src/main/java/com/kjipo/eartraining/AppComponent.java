@@ -18,6 +18,7 @@ import dagger.android.AndroidInjectionModule;
         MainActivityModule.class,
 //        SvgModule.class,
 //        ServiceModule.class,
+        FragmentBuildersModule.class,
         ViewModelModule.class,
         ScoreActivityModule.class
 })

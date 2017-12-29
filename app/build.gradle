@@ -38,6 +38,13 @@ android {
     dataBinding {
         enabled = true
     }
+
+    externalNativeBuild {
+        cmake {
+            // todo: need to disable REVERT for fast audio recording
+            path 'src/main/cpp/CMakeLists.txt'
+        }
+    }
 }
 
 dependencies {
@@ -68,10 +75,9 @@ dependencies {
 
 
     compile 'com.google.code.gson:gson:2.8.1'
-    testCompile 'org.assertj:assertj-core:1.7.1'
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'ch.qos.logback:logback-classic:1.1.7'
-    compile 'com.google.guava:guava:20.0'
+    testCompile 'org.assertj:assertj-core:3.6.1'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile group: 'com.google.guava', name: 'guava', version: '23.6-android'
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"

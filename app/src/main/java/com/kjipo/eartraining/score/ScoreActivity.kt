@@ -1,9 +1,11 @@
 package com.kjipo.eartraining.score
 
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -18,6 +20,7 @@ import com.kjipo.eartraining.CustomWebViewClient
 import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
+import com.kjipo.eartraining.recorder.Recorder
 import com.kjipo.eartraining.svg.SequenceToSvg
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -26,6 +29,9 @@ import javax.inject.Inject
 
 
 class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
+
+    private val AUDIO_ECHO_REQUEST = 0
+
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
@@ -34,6 +40,8 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var midiPlayer: MidiPlayerInterface
     @Inject
     lateinit var sequenceToSvg: SequenceToSvg
+    @Inject
+    lateinit var recorder: Recorder
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +75,12 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
             Log.i("Test", "Evaluating Javascript")
             myWebView.evaluateJavascript(script) { value -> Log.i("Test2", "Received value: " + value) }
+        }
+
+
+        val recordButton = findViewById<Button>(R.id.btnRecord)
+        recordButton.setOnClickListener {
+            record()
         }
 
         midiPlayer.setup(applicationContext)
@@ -107,5 +121,27 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         // TODO Why does returning the object without a cast not work?
         return dispatchingAndroidInjector as AndroidInjector<Fragment>
     }
+
+
+    fun record() {
+        Log.i("Record", "Record button pressed")
+
+        val status = ActivityCompat.checkSelfPermission(applicationContext,
+                Manifest.permission.RECORD_AUDIO)
+        if (status != PackageManager.PERMISSION_GRANTED) {
+
+            Log.i("Record", "Requesting permissions")
+
+            ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    AUDIO_ECHO_REQUEST)
+            return
+        }
+
+        Log.i("Record", "Calling recordAudio")
+        recorder.recordAudio()
+    }
+
 
 }
