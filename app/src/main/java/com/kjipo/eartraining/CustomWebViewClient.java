@@ -19,6 +19,10 @@ public class CustomWebViewClient extends WebViewClient {
 
         webView.getSettings().setJavaScriptEnabled(true);
 
+        // This is to fit the entire page on the screen
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+
 //        webView.loadUrl("file:///android_asset/noteView.html");
 
         webView.loadData(SvgToolsKt.createHtmlDocumentString(ScoreExample.INSTANCE.getTestScore()), "text/html", "UTF-8");

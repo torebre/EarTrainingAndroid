@@ -56,35 +56,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        if(savedInstanceState == null) {
-//            navigationController.navigateToNoteView();
+        if (savedInstanceState == null) {
             navigationController.startScoreActivity();
         }
-
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-////        navigationView.setNavigationItemSelectedListener(this);
-//
-//        btnScore = (Button) findViewById(R.id.btnScore);
-//        btnScore.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MainActivity.this.getWindow().getSharedElementExitTransition().addListener(
-//                        new TransitionListenerAdapter() {
-//                            @Override
-//                            public void onTransitionEnd(Transition transition) {
-//                                MainActivity.this.finish();
-//                            }
-//                        });
-//
-//                final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(MainActivity.this, true,
-//                        new Pair<>(view, MainActivity.this.getString(R.string.transition_score)));
-//                @SuppressWarnings("unchecked")
-//                ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-//                        .makeSceneTransitionAnimation(MainActivity.this, pairs);
-//                ScoreActivity.start(MainActivity.this, activityOptions);
-//            }
-//        });
 
     }
 
@@ -126,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     @Override
     protected void onStart() {
         super.onStart();
-
 
 
     }

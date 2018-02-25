@@ -13,9 +13,7 @@ public class ScoreFragment extends Fragment {
 
     public ScoreFragment() {
 
-
     }
-
 
 
     @Override
