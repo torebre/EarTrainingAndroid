@@ -60,9 +60,9 @@ public class NoteViewFragment extends Fragment implements Injectable {
         Button generateButton = rootView.findViewById(R.id.btnGenerate);
         Button recordButton = rootView.findViewById(R.id.btnRecord);
 
-        playButton.setOnClickListener(l -> playSequence());
-        generateButton.setOnClickListener(l -> generateSequence());
-        recordButton.setOnClickListener(l -> record());
+//        playButton.setOnClickListener(l -> playSequence());
+//        generateButton.setOnClickListener(l -> generateSequence());
+//        recordButton.setOnClickListener(l -> record());
 
         return rootView;
     }
@@ -74,11 +74,9 @@ public class NoteViewFragment extends Fragment implements Injectable {
                 .get(NoteViewModel.class);
     }
 
-    public void loadNoteSequence(String sequenceAsJson) {
-        noteViewClient.loadNoteSequence(sequenceAsJson);
-
-
-    }
+//    public void loadNoteSequence(String sequenceAsJson) {
+//        noteViewClient.loadNoteSequence(sequenceAsJson);
+//    }
 
     public void playSequence() {
 //        try {
@@ -94,9 +92,9 @@ public class NoteViewFragment extends Fragment implements Injectable {
 //        }
     }
 
-    public void generateSequence() {
-        loadNoteSequence(EarTrainerUtilities.transformToJson(noteViewModel.generateNextSequence()));
-    }
+//    public void generateSequence() {
+//        loadNoteSequence(EarTrainerUtilities.transformToJson(noteViewModel.generateNextSequence()));
+//    }
 
 
     public void record() {

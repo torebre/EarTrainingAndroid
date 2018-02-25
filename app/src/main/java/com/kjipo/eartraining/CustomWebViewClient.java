@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.kjipo.eartraining.score.ScoreExample;
+import com.kjipo.svg.RenderingSequence;
 import com.kjipo.svg.SvgToolsKt;
 
 public class CustomWebViewClient extends WebViewClient {
@@ -42,8 +43,11 @@ public class CustomWebViewClient extends WebViewClient {
         webView.setWebViewClient(this);
     }
 
-    public void loadNoteSequence(String noteSequence) {
-        webView.loadUrl("javascript:noteView.drawNotes(" + noteSequence + ")");
+    public void loadNoteSequence(RenderingSequence renderingSequence) {
+        webView.loadData(SvgToolsKt.createHtmlDocumentString(renderingSequence), "text/html", "UTF-8");
     }
+
+
+
 
 }

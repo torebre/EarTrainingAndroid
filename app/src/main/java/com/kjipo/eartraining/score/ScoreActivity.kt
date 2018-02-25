@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
 import android.widget.Button
@@ -49,9 +50,8 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         setContentView(R.layout.score_act)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+        // TODO Is this necessary?
+        WebView.setWebContentsDebuggingEnabled(true);
 
 
         val myWebView = findViewById<View>(R.id.score) as WebView
@@ -59,7 +59,7 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val noteViewClient = CustomWebViewClient()
         noteViewClient.attachWebView(myWebView)
 
-        val btnPlay = findViewById<Button>(R.id.btnGenerate)
+        val btnPlay = findViewById<Button>(R.id.btnPlay)
         btnPlay.setOnClickListener {
             Log.i("Playing note", "Test")
             midiPlayer.noteOn(60)
@@ -81,6 +81,12 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val recordButton = findViewById<Button>(R.id.btnRecord)
         recordButton.setOnClickListener {
             record()
+        }
+
+        val generateButton = findViewById<Button>(R.id.btnGenerate)
+        generateButton.setOnClickListener {
+            val sequence = earTrainer.generateNextSequence()
+            noteViewClient.loadNoteSequence(sequenceToSvg.transformToSvg(sequence))
         }
 
         midiPlayer.setup(applicationContext)
@@ -141,6 +147,38 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         Log.i("Record", "Calling recordAudio")
         recorder.recordAudio()
+    }
+
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        // TODO Just here to check when this event is triggered
+
+        val action = event.action
+
+        when (action) {
+            MotionEvent.ACTION_DOWN -> {
+                Log.d("debug", "Action was DOWN")
+                return true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                Log.d("debug", "Action was MOVE")
+                return true
+            }
+            MotionEvent.ACTION_UP -> {
+                Log.d("debug", "Action was UP")
+                return true
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                Log.d("debug", "Action was CANCEL")
+                return true
+            }
+            MotionEvent.ACTION_OUTSIDE -> {
+                Log.d("debug", "Movement occurred outside bounds " + "of current screen element")
+                return true
+            }
+            else -> return super.onTouchEvent(event)
+        }
     }
 
 

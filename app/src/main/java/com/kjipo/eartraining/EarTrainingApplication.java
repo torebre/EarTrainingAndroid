@@ -4,8 +4,6 @@ package com.kjipo.eartraining;
 import android.app.Activity;
 import android.app.Application;
 
-import com.kjipo.eartraining.svg.SvgModule;
-
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -27,15 +25,7 @@ public class EarTrainingApplication extends Application implements HasActivityIn
         super.onCreate();
 
         AppInjector.init(this);
-
-//        mainComponent = DaggerMainComponent.builder()
-//                .serviceModule(new ServiceModule())
-//                .svgModule(new SvgModule())
-//                .build();
-
-
     }
-
 
 
     @Override

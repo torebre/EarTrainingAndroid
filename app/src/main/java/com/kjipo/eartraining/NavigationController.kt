@@ -31,9 +31,6 @@ constructor(mainActivity: MainActivity) {
     fun startScoreActivity() {
         val intent = Intent(mainActivity, ScoreActivity::class.java)
         mainActivity.startActivity(intent)
-
-
-
     }
 
 

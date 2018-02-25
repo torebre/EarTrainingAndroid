@@ -111,34 +111,34 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        // TODO Just here to check when this event is triggered
-
-        int action = event.getAction();
-
-        switch (action) {
-            case (MotionEvent.ACTION_DOWN):
-                Log.d("debug", "Action was DOWN");
-                return true;
-            case (MotionEvent.ACTION_MOVE):
-                Log.d("debug", "Action was MOVE");
-                return true;
-            case (MotionEvent.ACTION_UP):
-                Log.d("debug", "Action was UP");
-                return true;
-            case (MotionEvent.ACTION_CANCEL):
-                Log.d("debug", "Action was CANCEL");
-                return true;
-            case (MotionEvent.ACTION_OUTSIDE):
-                Log.d("debug", "Movement occurred outside bounds " +
-                        "of current screen element");
-                return true;
-            default:
-                return super.onTouchEvent(event);
-        }
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//
+//        // TODO Just here to check when this event is triggered
+//
+//        int action = event.getAction();
+//
+//        switch (action) {
+//            case (MotionEvent.ACTION_DOWN):
+//                Log.d("debug", "Action was DOWN");
+//                return true;
+//            case (MotionEvent.ACTION_MOVE):
+//                Log.d("debug", "Action was MOVE");
+//                return true;
+//            case (MotionEvent.ACTION_UP):
+//                Log.d("debug", "Action was UP");
+//                return true;
+//            case (MotionEvent.ACTION_CANCEL):
+//                Log.d("debug", "Action was CANCEL");
+//                return true;
+//            case (MotionEvent.ACTION_OUTSIDE):
+//                Log.d("debug", "Movement occurred outside bounds " +
+//                        "of current screen element");
+//                return true;
+//            default:
+//                return super.onTouchEvent(event);
+//        }
+//    }
 
     @Override
     public LifecycleRegistry getLifecycle() {
