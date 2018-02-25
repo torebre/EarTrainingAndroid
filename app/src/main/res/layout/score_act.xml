@@ -19,41 +19,39 @@
 
         <WebView
             android:id="@+id/score"
-            android:layout_width="368dp"
-            android:layout_height="523dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="467dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.823"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:setWebViewClient="@{customWebView.customWebViewClient}" />
+            app:setWebViewClient="@{customWebView.customWebViewClient}"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp" />
 
         <Button
             android:id="@+id/btnGenerate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:text="Generate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/score" />
+            app:layout_constraintLeft_toRightOf="@+id/btnRecord"
+            app:layout_constraintRight_toLeftOf="@+id/btnGenerate" />
 
         <Button
             android:id="@+id/btnRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:text="Record"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteY="514dp" />
+            app:layout_constraintRight_toLeftOf="@+id/btnPlay"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>
