@@ -1,18 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'maven'
-//apply plugin: 'kotlin-kapt'
 
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId 'com.kjipo.eartraining'
         minSdkVersion 23
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -74,7 +73,7 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
 
 
-    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.google.code.gson:gson:2.8.2'
     testCompile 'org.assertj:assertj-core:3.6.1'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile group: 'com.google.guava', name: 'guava', version: '23.6-android'
@@ -113,7 +112,8 @@ dependencies {
     androidTestImplementation "com.android.support:design:$rootProject.supportLibraryVersion"
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'com.github.torebre:eartraining:b4ecd62'
+    compile 'com.github.torebre:eartraining:bc9dba8'
+
 }

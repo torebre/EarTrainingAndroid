@@ -13,26 +13,26 @@ object ScoreExample {
 
                 note {
                     note = NoteType.C
-                    duration = 24
+                    duration = Duration.HALF
                     beamGroup = 1
                 }
 
                 note {
                     note = NoteType.H
-                    duration = 24
+                    duration = Duration.QUARTER
                     beamGroup = 1
                 }
 
                 note {
                     note = NoteType.C
                     octave = 8
-                    duration = 48
+                    duration = Duration.QUARTER
                 }
 
                 note {
                     note = NoteType.C
                     octave = 4
-                    duration = 24
+                    duration = Duration.HALF
                 }
 
             }
@@ -41,12 +41,12 @@ object ScoreExample {
             bar {
                 note {
                     note = NoteType.C
-                    duration = 24
+                    duration = Duration.QUARTER
                 }
 
                 note {
                     note = NoteType.F
-                    duration = 48
+                    duration = Duration.QUARTER
                 }
 
             }

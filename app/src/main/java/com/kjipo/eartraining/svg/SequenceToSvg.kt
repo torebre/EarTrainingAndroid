@@ -11,7 +11,7 @@ class SequenceToSvg {
 
     fun transformToSvg(sequence: Sequence?): RenderingSequence {
         if (sequence == null) {
-            return RenderingSequence(emptyList())
+            return RenderingSequence(emptyList(), ViewBox(0, 0, 0, 0))
         }
 
         Log.i("SVG", "Notes: " + sequence.notes)
@@ -25,19 +25,19 @@ class SequenceToSvg {
 
                 note {
                     note = NoteType.A
-                    duration = 24
+                    duration = Duration.QUARTER
                 }
 
                 note {
                     note = NoteType.H
-                    duration = 24
+                    duration = Duration.HALF
                     beamGroup = 1
                 }
 
                 note {
                     note = NoteType.C
                     octave = 7
-                    duration = 48
+                    duration = Duration.HALF
                 }
 
 
