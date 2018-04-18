@@ -6,12 +6,12 @@ apply plugin: 'maven'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId 'com.kjipo.eartraining'
         minSdkVersion 23
-        targetSdkVersion 23
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -49,44 +49,44 @@ android {
 dependencies {
 
     // Support libraries
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    api "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    api "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    api "com.android.support:design:$rootProject.supportLibraryVersion"
     // Architecture components
-    compile "android.arch.lifecycle:runtime:$rootProject.architectureComponentsVersion"
-    compile "android.arch.lifecycle:extensions:$rootProject.architectureComponentsVersion"
+    api "android.arch.lifecycle:runtime:$rootProject.architectureComponentsVersion"
+    api "android.arch.lifecycle:extensions:$rootProject.architectureComponentsVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.architectureComponentsVersion"
-    compile "android.arch.persistence.room:runtime:$rootProject.architectureComponentsVersion"
+    api "android.arch.persistence.room:runtime:$rootProject.architectureComponentsVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
-    compile "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
+    api "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
 
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
-    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    api "com.google.dagger:dagger:$rootProject.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    compile "com.google.dagger:dagger-android:$rootProject.daggerVersion"
-    compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
-    provided 'javax.annotation:jsr250-api:1.0'
+    api "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    api "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
     // RxJava
-    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
-    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
+    api "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+    api "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
 
 
-    compile 'com.google.code.gson:gson:2.8.2'
-    testCompile 'org.assertj:assertj-core:3.6.1'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile group: 'com.google.guava', name: 'guava', version: '23.6-android'
+    api 'com.google.code.gson:gson:2.8.2'
+    testImplementation 'org.assertj:assertj-core:3.6.1'
+    api 'org.slf4j:slf4j-api:1.7.25'
+    api group: 'com.google.guava', name: 'guava', version: '23.6-android'
 
     // Dependencies for local unit tests
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
-    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
-    testCompile "android.arch.core:core-testing:$rootProject.architectureComponentsVersion"
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    testImplementation "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+    testImplementation "android.arch.core:core-testing:$rootProject.architectureComponentsVersion"
 
     // Resolve conflicts between main and local unit tests
-    testCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
-    testCompile "com.android.support:support-core-utils:$rootProject.supportLibraryVersion"
+    testImplementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    testImplementation "com.android.support:support-core-utils:$rootProject.supportLibraryVersion"
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation "com.android.support.test:runner:$rootProject.ext.runnerVersion"
@@ -111,9 +111,9 @@ dependencies {
     androidTestImplementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     androidTestImplementation "com.android.support:design:$rootProject.supportLibraryVersion"
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api 'com.android.support.constraint:constraint-layout:1.0.2'
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'com.github.torebre:eartraining:bc9dba8'
+    api 'com.github.torebre.eartraining:noteVisualizer:bc9dba8'
 
 }
