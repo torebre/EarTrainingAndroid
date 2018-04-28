@@ -44,6 +44,24 @@ android {
             path 'src/main/cpp/CMakeLists.txt'
         }
     }
+
+
+    sourceSets {
+        main {
+            // let gradle pack the shared library into apk
+            jniLibs.srcDirs = ['../module/lib']
+        }
+    }
+
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86_64' // 'armeabi-v7a', 'mips'
+        }
+    }
+
 }
 
 dependencies {

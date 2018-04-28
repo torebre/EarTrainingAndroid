@@ -13,7 +13,8 @@ import javax.inject.Inject;
 public class Recorder extends Fragment {
 
     static {
-        System.loadLibrary("native-audio");
+//        System.loadLibrary("native-audio");
+        System.loadLibrary("essentia-interface");
     }
 
     public static native void createEngine();
@@ -25,6 +26,8 @@ public class Recorder extends Fragment {
     public static native void shutdown();
 
     public static native int getFD();
+
+    public static native void initializeEssentia();
 
 
     private ParcelFileDescriptor.AutoCloseInputStream underlyingStream;
@@ -64,7 +67,9 @@ public class Recorder extends Fragment {
 
 
     public void recordAudio() {
-        recordAudioInternal();
+//        recordAudioInternal();
+
+        initializeEssentia();
 
 
     }
