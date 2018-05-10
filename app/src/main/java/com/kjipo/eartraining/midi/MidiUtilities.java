@@ -3,10 +3,7 @@ package com.kjipo.eartraining.midi;
 
 import android.util.Log;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import com.google.gson.Gson;
-import com.kjipo.eartraining.data.Note;
 import com.kjipo.eartraining.data.Sequence;
 
 import java.util.ArrayList;
@@ -14,94 +11,6 @@ import java.util.List;
 
 
 public final class MidiUtilities {
-
-
-    private static class MidiEvent {
-        private final int note;
-        private final int time;
-        private final boolean on;
-
-
-
-        private MidiEvent(int note, int time, boolean on) {
-            this.note = note;
-            this.time = time;
-            this.on = on;
-        }
-
-
-    }
-
-
-    public static byte[] transformSequenceToMidiFormat(Sequence sequence) {
-        MidiTrackBuilder builder = MidiTrackBuilder.createNewInstance();
-        builder.setTempo(sequence.getTempoInMillisecondsPerQuarterNote());
-        int currentPoint = 0;
-
-        List<MidiEvent> events = new ArrayList<>();
-
-        Multimap<Integer, Note> pendingOffEvents = MultimapBuilder.treeKeys()
-                .arrayListValues()
-                .build();
-
-
-        for (Note note : sequence.getNotes()) {
-
-            switch (note.getElementType()) {
-                case BAR_LINE:
-                    currentPoint = 0;
-                    break;
-
-
-                case QUARTERNOTE:
-
-
-
-
-                    break;
-
-
-                case HALFNOTE:
-
-
-                    break;
-
-                case WHOLE_NOTE:
-
-                    break;
-
-
-                default:
-                    if (note.getStartWithinBar() < currentPoint) {
-                        // We make an assumption that the notes are ordered by
-                        // increasing start points
-                        throw new RuntimeException("At point: " + currentPoint + ". Going backwards in: " + sequence);
-                    }
-                    currentPoint = note.getStartWithinBar();
-            }
-
-
-// TODO Handle off events
-//            Map.Entry<Integer, Collection<Note>> offEvents =
-
-
-            // TODO Is 0 a valid pitch?
-            if (note.getPitch() >= 0) {
-
-                System.out.println("Found pitch: " + note.getPitch());
-
-                builder.addNoteOn(note.getPitch(), note.getVelocity());
-                pendingOffEvents.put(note.getStartWithinBar() + note.getDurationWithinBar(), note);
-            }
-
-
-        }
-
-
-        // TODO Handle remaining off events
-
-        return builder.build();
-    }
 
 
     public static String transformSequenceToJson(Sequence sequence) {
@@ -130,7 +39,6 @@ public final class MidiUtilities {
 
         // TODO For now just jump down to the MIDI messages
         for (int i = 37; i < midiData.length - 4; ++i) {
-//            byte currentByte = midiData[i];
 
             deltaTime = midiData[i];
             if (deltaTime != 0) {
@@ -156,44 +64,6 @@ public final class MidiUtilities {
         }
 
         return playerEvents;
-
-
-//        ByteArrayOutputStream output = new ByteArrayOutputStream(midiMessages.size()); // TODO Should have a little more initial capacity
-//
-//        try {
-//            output.write(new byte[]{
-//                    0x4d, 0x54, 0x68, 0x64, 0x00, 0x00, 0x00, 0x06,
-//                    0x00, 0x00,
-//                    0x00, 0x01,
-//                    0x00, (byte) ticksPerQuarterNote,
-//            });
-//
-//            // Write header
-//            output.write(new byte[]{0x4D, 0x54, 0x72, 0x6B});
-//
-//            byte tempo[] = splitLengthIntoBytes(microsecondsPerMidiQuarterNote);
-//            byte tempoAndTimeSignature[] = new byte[]{
-//                    // Tempo
-//                    0x00, (byte) 0xFF, 0x51, 0x03, tempo[1], tempo[2], tempo[3],
-//                    // Time signature
-//                    0x00, (byte) 0xFF, 0x58, 0x04, (byte) timeSignatureNominator, (byte) timeSignatureDenominator, 24, 8, // TODO Figure out the meaning of the last two numbers
-//            };
-//
-//            // Now write the length of the MIDI messages
-//            output.write(splitLengthIntoBytes(midiMessages.size() + 4 + tempoAndTimeSignature.length));
-//            output.write(tempoAndTimeSignature);
-//
-//            // Write the midi messages
-//            for (int message : midiMessages) {
-//                output.write((byte) message);
-//            }
-//
-//            // Write end of track
-//            output.write(new byte[]{0x01, (byte) 0xFF, 0x2F, 0x00});
-//        } catch (IOException e) {
-//            throw new IllegalStateException(e);
-//        }
-
     }
 
 

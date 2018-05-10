@@ -44,7 +44,10 @@ public class CustomWebViewClient extends WebViewClient {
     }
 
     public void loadNoteSequence(RenderingSequence renderingSequence) {
-        webView.loadData(SvgToolsKt.createHtmlDocumentString(renderingSequence), "text/html", "UTF-8");
+        String htmlString = SvgToolsKt.createHtmlDocumentString(renderingSequence);
+
+        webView.loadUrl("about:blank");
+        webView.loadData(htmlString, "text/html", "UTF-8");
     }
 
 

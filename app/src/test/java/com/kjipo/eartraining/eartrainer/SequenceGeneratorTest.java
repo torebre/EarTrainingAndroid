@@ -18,6 +18,11 @@ public class SequenceGeneratorTest {
         assertThat(sequence).isNotNull();
         assertThat(sequence.getTimeSignatureDenominator()).isNotEqualTo(0);
         assertThat(sequence.getTimeSignatureNominator()).isNotEqualTo(0);
+        assertThat(sequence.getPitchSequence()).isNotEmpty();
+        assertThat(sequence.getRenderingSequence()).isNotNull();
+
+
+        System.out.println("Rendering sequence: " +sequence.getRenderingSequence());
     }
 
     @Test

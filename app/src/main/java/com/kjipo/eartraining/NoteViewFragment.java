@@ -74,27 +74,6 @@ public class NoteViewFragment extends Fragment implements Injectable {
                 .get(NoteViewModel.class);
     }
 
-//    public void loadNoteSequence(String sequenceAsJson) {
-//        noteViewClient.loadNoteSequence(sequenceAsJson);
-//    }
-
-    public void playSequence() {
-//        try {
-//
-//
-//            System.out.println("Sequence to play: " + earTrainer.getCurrentSequence());
-//
-//            System.out.println("Sequence as JSON: " + MidiUtilities.transformSequenceToJson(earTrainer.getCurrentSequence()));
-//
-//            midiPlayer.playSequence(MidiUtilities.transformSequenceToMidiFormat(earTrainer.getCurrentSequence()));
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-//    public void generateSequence() {
-//        loadNoteSequence(EarTrainerUtilities.transformToJson(noteViewModel.generateNextSequence()));
-//    }
 
 
     public void record() {

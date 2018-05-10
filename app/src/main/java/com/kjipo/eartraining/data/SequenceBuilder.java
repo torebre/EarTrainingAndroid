@@ -1,6 +1,8 @@
 package com.kjipo.eartraining.data;
 
 
+import com.kjipo.svg.RenderingSequence;
+
 public final class SequenceBuilder {
     private Sequence sequence;
 
@@ -15,11 +17,6 @@ public final class SequenceBuilder {
 
     public SequenceBuilder setClefType(ClefType clefType) {
         sequence.setClef(clefType);
-        return this;
-    }
-
-    public SequenceBuilder addNote(Note note) {
-        sequence.addNote(note);
         return this;
     }
 
@@ -41,6 +38,16 @@ public final class SequenceBuilder {
     public SequenceBuilder setTempoInMillisecondsPerQuarterNote(
             int tempoInMillisecondsPerQuarterNote) {
         sequence.setTempoInMillisecondsPerQuarterNote(tempoInMillisecondsPerQuarterNote);
+        return this;
+    }
+
+    public SequenceBuilder addPitch(Pitch pitch) {
+        sequence.addPitch(pitch);
+        return this;
+    }
+
+    public SequenceBuilder addRenderingSequence(RenderingSequence renderingSequence) {
+        sequence.setRenderingSequence(renderingSequence);
         return this;
     }
 

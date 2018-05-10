@@ -9,8 +9,8 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class FragmentBuildersModule {
 
 
-    @ContributesAndroidInjector
-    abstract ScoreFragment contributeScoreFragment();
+//    @ContributesAndroidInjector
+//    abstract ScoreFragment contributeScoreFragment();
 
     @ContributesAndroidInjector
     abstract NoteViewFragment contributeNoteViewFragment();

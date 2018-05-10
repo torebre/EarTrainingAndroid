@@ -2,21 +2,17 @@ package com.kjipo.eartraining;
 
 
 import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 import javax.annotation.Nullable;
@@ -27,7 +23,7 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
 
-public class MainActivity extends AppCompatActivity implements LifecycleRegistryOwner, HasSupportFragmentInjector {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
     @Inject
@@ -53,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         if (savedInstanceState == null) {
@@ -100,45 +96,13 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-
     }
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//
-//        // TODO Just here to check when this event is triggered
-//
-//        int action = event.getAction();
-//
-//        switch (action) {
-//            case (MotionEvent.ACTION_DOWN):
-//                Log.d("debug", "Action was DOWN");
-//                return true;
-//            case (MotionEvent.ACTION_MOVE):
-//                Log.d("debug", "Action was MOVE");
-//                return true;
-//            case (MotionEvent.ACTION_UP):
-//                Log.d("debug", "Action was UP");
-//                return true;
-//            case (MotionEvent.ACTION_CANCEL):
-//                Log.d("debug", "Action was CANCEL");
-//                return true;
-//            case (MotionEvent.ACTION_OUTSIDE):
-//                Log.d("debug", "Movement occurred outside bounds " +
-//                        "of current screen element");
-//                return true;
-//            default:
-//                return super.onTouchEvent(event);
-//        }
-//    }
 
     @Override
     public LifecycleRegistry getLifecycle() {

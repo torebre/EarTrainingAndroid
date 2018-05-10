@@ -6,7 +6,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
@@ -21,8 +20,8 @@ import com.kjipo.eartraining.CustomWebViewClient
 import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
+import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.recorder.Recorder
-import com.kjipo.eartraining.svg.SequenceToSvg
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -40,9 +39,10 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var midiPlayer: MidiPlayerInterface
     @Inject
-    lateinit var sequenceToSvg: SequenceToSvg
-    @Inject
     lateinit var recorder: Recorder
+
+    private var midiScript: MidiScript? = null
+    private var noteViewClient: CustomWebViewClient? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,28 +53,15 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         // TODO Is this necessary?
         WebView.setWebContentsDebuggingEnabled(true);
 
-
         val myWebView = findViewById<View>(R.id.score) as WebView
 
-        val noteViewClient = CustomWebViewClient()
-        noteViewClient.attachWebView(myWebView)
+        noteViewClient = CustomWebViewClient()
+        noteViewClient.let { it?.attachWebView(myWebView) }
+        setupSequence()
 
         val btnPlay = findViewById<Button>(R.id.btnPlay)
         btnPlay.setOnClickListener {
-            Log.i("Playing note", "Test")
-            midiPlayer.noteOn(60)
-
-            val script = "var s2 = Snap(1000, 1000);\n" +
-                    "var bigCircle = s2.circle(10, 10, 10);\n" +
-                    "bigCircle.attr({\n" +
-                    "    fill: \"#bada55\",\n" +
-                    "    stroke: \"#000\",\n" +
-                    "    strokeWidth: 5\n" +
-                    "});" +
-                    "console.log(\"Test20\");"
-
-            Log.i("Test", "Evaluating Javascript")
-            myWebView.evaluateJavascript(script) { value -> Log.i("Test2", "Received value: " + value) }
+            midiScript?.play()
         }
 
 
@@ -85,12 +72,17 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         val generateButton = findViewById<Button>(R.id.btnGenerate)
         generateButton.setOnClickListener {
-            val sequence = earTrainer.generateNextSequence()
-            noteViewClient.loadNoteSequence(sequenceToSvg.transformToSvg(sequence))
+            setupSequence()
         }
 
         midiPlayer.setup(applicationContext)
 
+    }
+
+    private fun setupSequence() {
+        val sequence = earTrainer.generateNextSequence()
+        midiScript = MidiScript(earTrainer.currentSequence, midiPlayer)
+        noteViewClient?.loadNoteSequence(sequence.renderingSequence)
     }
 
     override fun onStart() {
