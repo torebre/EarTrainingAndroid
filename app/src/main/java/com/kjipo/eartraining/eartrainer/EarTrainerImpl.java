@@ -19,7 +19,7 @@ public class EarTrainerImpl implements EarTrainer {
 
     @Override
     public Sequence generateNextSequence() {
-        sequenceGenerator.createNewSequence();
+        sequenceGenerator.createNewSequence(false);
         return sequenceGenerator.getCurrentSequence();
     }
 

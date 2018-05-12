@@ -24,9 +24,8 @@ class SequenceGenerator {
             Pair(NoteType.G, 2)
     )
 
-    fun createNewSequence(): Sequence {
-        val defaultSequenceSetup = createDefaultSetup()
-        var previousNote = 60
+
+    fun createNewSequence(debug: Boolean = false): Sequence {
         var id = 0
         var timeCounter = 0
         var currentBarEnd = 4 * DEFAULT_TEMPO_MILLISECONDS_PER_QUARTER_NOTE
@@ -35,7 +34,8 @@ class SequenceGenerator {
 
         // TODO This only works because there are only two types of notes used so far
 
-        val scoreBuilder = ScoreBuilder()
+        val defaultSequenceSetup = createDefaultSetup()
+        val scoreBuilder = ScoreBuilderImpl(debug)
         var bar = BAR(scoreBuilder)
 
         bar.clef = Clef.G
@@ -43,32 +43,35 @@ class SequenceGenerator {
 
         val noteOrder = NoteType.values()
         var currentNote = NoteType.C
-        var currentIndex = noteOrder.indexOf(currentNote)
+        var previousPitch = 60
 
         var beamGroupCounter = 1
 
         for (i in 0..4) {
-            val beatUpdate: Int
-            val currentPitch = previousNote
-            previousNote = nextPitch(previousNote)
-
+            var currentIndex = noteOrder.indexOf(currentNote)
             val step = random.nextInt(0..3)
             val stepDown = random.nextBoolean()
-            var nextPitch = currentPitch
+            var nextPitch = previousPitch
 
             for (j in 0 until step) {
                 if (stepDown) {
-                    nextPitch -= noteStep.getOrDefault(currentNote, 0)
+                    nextPitch -= noteStep.getOrElse(noteOrder[currentIndex], {
+                        Log.e("Sequence", "Note not found: $nextPitch")
+                        0
+                    })
                     --currentIndex
-                    if (currentIndex < 0) {
+                    if (currentIndex == -1) {
                         currentIndex = noteOrder.size - 1
                     }
                 } else {
                     ++currentIndex
-                    if (currentIndex >= noteOrder.size) {
+                    if (currentIndex == noteOrder.size) {
                         currentIndex = 0
                     }
-                    nextPitch += noteStep.getOrDefault(currentNote, 0)
+                    nextPitch += noteStep.getOrElse(noteOrder[currentIndex], {
+                        Log.e("Sequence", "Note not found: $nextPitch")
+                        0
+                    })
                 }
             }
 
@@ -86,9 +89,10 @@ class SequenceGenerator {
                 Duration.WHOLE -> 4 * DEFAULT_TEMPO_MILLISECONDS_PER_QUARTER_NOTE
             }
 
-            val currentOctave = currentPitch.div(12)
+            defaultSequenceSetup.addPitch(Pitch(id, timeCounter, timeCounter + durationMilliSeconds, nextPitch))
+            val currentOctave = nextPitch.div(12)
 
-            Log.d("Score", "Current pitch: $currentPitch. Current octave: $currentOctave")
+            Log.i("Sequence", "Next pitch: $nextPitch. Next pitch: $nextPitch. Current octave: $currentOctave")
 
             if (timeCounter < currentBarEnd && timeCounter + durationMilliSeconds > currentBarEnd) {
                 val beamGroup2 = beamGroupCounter++
@@ -125,8 +129,6 @@ class SequenceGenerator {
                 scoreBuilder.onNoteAdded(note)
             }
 
-            defaultSequenceSetup.addPitch(Pitch(id, timeCounter, timeCounter + durationMilliSeconds, currentPitch))
-
             beatCounter += when (duration2) {
                 Duration.QUARTER -> 1
                 Duration.HALF -> 2
@@ -134,14 +136,13 @@ class SequenceGenerator {
             }
             beatCounter %= 4
             timeCounter += durationMilliSeconds
+            previousPitch = nextPitch
         }
 
         scoreBuilder.onBarAdded(bar)
-        defaultSequenceSetup.addRenderingSequence(scoreBuilder.build())
-        val newSequence = defaultSequenceSetup.build()
 
-        currentSequence = newSequence
-        return newSequence
+        currentSequence = defaultSequenceSetup.addRenderingSequence(scoreBuilder.build()).build()
+        return currentSequence
     }
 
 
@@ -169,6 +170,7 @@ class SequenceGenerator {
     private fun Random.nextInt(range: IntRange): Int {
         return range.start + nextInt(range.last - range.start)
     }
+
 
     companion object {
 
