@@ -46,48 +46,6 @@ public class MidiStream implements MidiPlayerInterface {
     @Override
     public void setup(Context applicationContext) {
         synthesizer = new Synthesizer();
-
-
-//        MidiManager midiManager = (MidiManager) applicationContext.getSystemService(MIDI_SERVICE);
-//        MidiDeviceInfo[] infos = midiManager.getDevices();
-//
-//        Log.i("Test", "MIDI devices2: " + infos.length);
-//
-//        MidiDeviceInfo midiDeviceInfo = null;
-//        for (MidiDeviceInfo info: infos) {
-//            Bundle properties = info.getProperties();
-//            if("Mobileer".equals(properties.get(MidiDeviceInfo.PROPERTY_MANUFACTURER))
-//                && "SynthExample".equals(properties.get(MidiDeviceInfo.PROPERTY_PRODUCT))) {
-//                midiDeviceInfo = info;
-//                break;
-//            }
-//        }
-//
-//        if(midiDeviceInfo == null) {
-//            Log.e("Midi", "MIDI device not found");
-//            return;
-//        }
-
-
-//        CountDownLatch latch = new CountDownLatch(1);
-
-//        midiManager.openDevice(midiDeviceInfo, new MidiManager.OnDeviceOpenedListener() {
-//            @Override
-//            public void onDeviceOpened(MidiDevice device) {
-//                Log.i("Midi", "Opened device: " +device);
-//
-//                midiReceiver = device.openInputPort(0);
-//
-//                midiDeviceReference.set(device);
-//                MainActivity.this.playMidi(device);
-//            }
-//        }, new Handler(Looper.getMainLooper()));
-
-
-
-
-
-
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
+import com.kjipo.eartraining.midi.sonivox.SonivoxMidiPlayer
 import com.kjipo.eartraining.recorder.Recorder
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -36,8 +37,12 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var earTrainer: EarTrainer
-    @Inject
+//    @Inject
+//    lateinit var midiPlayer: MidiPlayerInterface
+
+
     lateinit var midiPlayer: MidiPlayerInterface
+
     @Inject
     lateinit var recorder: Recorder
 
@@ -49,6 +54,8 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.score_act)
+
+        midiPlayer = SonivoxMidiPlayer()
 
         // TODO Is this necessary?
         WebView.setWebContentsDebuggingEnabled(true);

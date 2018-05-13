@@ -133,4 +133,7 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     api 'com.github.torebre.eartraining:noteVisualizer:a39e08ebe5'
+
+
+    api 'com.github.billthefarmer:mididriver:v1.14'
 }
