@@ -30,7 +30,6 @@ class SequenceGenerator {
         var timeCounter = 0
         var currentBarEnd = 4 * DEFAULT_TEMPO_MILLISECONDS_PER_QUARTER_NOTE
         var beatCounter = 0
-        val random = Random()
 
         // TODO This only works because there are only two types of notes used so far
 
@@ -143,21 +142,6 @@ class SequenceGenerator {
 
         currentSequence = defaultSequenceSetup.addRenderingSequence(scoreBuilder.build()).build()
         return currentSequence
-    }
-
-
-    private fun nextPitch(previousPitch: Int): Int {
-        var pitch: Int
-        do {
-            pitch = previousPitch + random.nextInt(10) - 10
-        } while (pitch < 55 && pitch > 80)
-        return pitch
-    }
-
-    private fun nextDuration(): Int {
-        return if (Math.random() < 0.7) {
-            DEFAULT_TEMPO_MILLISECONDS_PER_QUARTER_NOTE
-        } else 2 * DEFAULT_TEMPO_MILLISECONDS_PER_QUARTER_NOTE
     }
 
     fun getCurrentSequence(): Sequence {
