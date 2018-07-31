@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 
-import com.kjipo.eartraining.eartrainer.EarTrainerUtilities;
 import com.kjipo.eartraining.recorder.Recorder;
 
 import javax.annotation.Nullable;
