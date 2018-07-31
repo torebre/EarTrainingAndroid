@@ -17,12 +17,13 @@
         tools:context=".score.ScoreActivity">
 
 
+        <!--app:setWebViewClient="@{customWebView.customWebViewClient}"-->
         <WebView
             android:id="@+id/score"
             android:layout_width="match_parent"
             android:layout_height="467dp"
             android:visibility="visible"
-            app:setWebViewClient="@{customWebView.customWebViewClient}"
+            app:setWebChromeClient="@{customWebView.customWebViewClient}"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
 

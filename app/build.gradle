@@ -134,6 +134,8 @@ dependencies {
 
     api 'com.github.torebre.eartraining:noteVisualizer:a39e08ebe5'
 
+//    implementation 'com.github.torebre.eartraining:webscore:master'
+
 
     api 'com.github.billthefarmer:mididriver:v1.14'
 }

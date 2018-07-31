@@ -22,10 +22,14 @@ import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.midi.sonivox.SonivoxMidiPlayer
+import com.kjipo.eartraining.midistream.MidiStream
 import com.kjipo.eartraining.recorder.Recorder
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import javax.inject.Inject
 
 
@@ -37,9 +41,6 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var earTrainer: EarTrainer
-//    @Inject
-//    lateinit var midiPlayer: MidiPlayerInterface
-
 
     lateinit var midiPlayer: MidiPlayerInterface
 
@@ -55,15 +56,17 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         setContentView(R.layout.score_act)
 
-        midiPlayer = SonivoxMidiPlayer()
+        midiPlayer = MidiStream()
+//        midiPlayer = SonivoxMidiPlayer()
 
-        // TODO Is this necessary?
-        WebView.setWebContentsDebuggingEnabled(true);
+
+        // This enables the possibility of debugging the webview from Chrome
+        WebView.setWebContentsDebuggingEnabled(true)
 
         val myWebView = findViewById<View>(R.id.score) as WebView
 
         noteViewClient = CustomWebViewClient()
-        noteViewClient.let { it?.attachWebView(myWebView) }
+        noteViewClient.let { it?.attachWebView(myWebView, this.assets) }
         setupSequence()
 
         val btnPlay = findViewById<Button>(R.id.btnPlay)
@@ -87,6 +90,35 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun setupSequence() {
+
+
+
+//        try {
+//            assetManager.open("index.html").use({ data ->
+//                BufferedReader(InputStreamReader(data)).use { bufferedReader ->
+//                    val inputData = StringBuilder()
+//                    var input: String
+//                    while ((input = bufferedReader.readLine()) != null) {
+//                        inputData.append(input)
+//                    }
+//
+//                    //            webView.loadUrl("about:blank");
+//                    webView.loadData(inputData.toString(), "text/html", "UTF-8")
+//
+//                    //            webView.loadData(htmlString, "text/html", "UTF-8");
+//
+//
+//                    val i = Intent(Intent.ACTION_VIEW)
+//                    i.data = Uri.parse("http://www.stackoverflow.com")
+//                    startActivity(i)
+//
+//                }
+//            })
+//        } catch (e: IOException) {
+//            Log.e("Webscore", e.message, e)
+//        }
+
+
         val sequence = earTrainer.generateNextSequence()
         midiScript = MidiScript(earTrainer.currentSequence, midiPlayer)
         noteViewClient?.loadNoteSequence(sequence.renderingSequence)
