@@ -9,7 +9,7 @@ import android.webkit.WebViewClient;
 public class ObjectModel extends BaseObservable {
 
 
-    public WebChromeClient getCustomWebViewClient() {
+    public WebViewClient getCustomWebViewClient() {
         return new CustomWebViewClient();
     }
 

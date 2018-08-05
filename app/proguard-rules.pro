@@ -15,3 +15,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.SerializationKt
+-keep,includedescriptorclasses class com.kjipo.**$$serializer { *; } # <-- change package name to your app's
+-keepclassmembers class com.kjipo.** { # <-- change package name to your app's
+    *** Companion;
+}
+-keepclasseswithmembers class com.kjipo.** { # <-- change package name to your app's
+    kotlinx.serialization.KSerializer serializer(...);
+}

@@ -131,11 +131,18 @@ dependencies {
 
     api 'com.android.support.constraint:constraint-layout:1.0.2'
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
 
-    api 'com.github.torebre.eartraining:noteVisualizer:a39e08ebe5'
+//    api 'com.github.torebre.eartraining:noteVisualizer:a39e08ebe5'
 
 //    implementation 'com.github.torebre.eartraining:webscore:master'
 
 
     api 'com.github.billthefarmer:mididriver:v1.14'
+
+    api 'com.kjipo:score-jvm:0.4-SNAPSHOT'
+
+
+
+
 }

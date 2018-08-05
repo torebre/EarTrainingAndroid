@@ -15,7 +15,7 @@ public class MidiGenerationTest {
     @Test
     public void createMidiTrack() {
         SequenceGenerator sequenceGenerator = new SequenceGenerator();
-        Sequence sequence = sequenceGenerator.createNewSequence();
+        Sequence sequence = sequenceGenerator.createNewSequence(false);
         String sequenceAsJson = MidiUtilities.transformSequenceToJson(sequence);
 
         // TODO

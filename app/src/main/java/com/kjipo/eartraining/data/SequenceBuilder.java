@@ -1,7 +1,7 @@
 package com.kjipo.eartraining.data;
 
 
-import com.kjipo.svg.RenderingSequence;
+import com.kjipo.score.RenderingSequence;
 
 public final class SequenceBuilder {
     private Sequence sequence;

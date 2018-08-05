@@ -1,7 +1,7 @@
 package com.kjipo.eartraining.data;
 
 
-import com.kjipo.svg.RenderingSequence;
+import com.kjipo.score.RenderingSequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public final class Sequence {
     private ClefType clef;
     private int timeSignatureNominator;
     private int timeSignatureDenominator;
-//    private List<Note> notes = new ArrayList<>();
+    //    private List<Note> notes = new ArrayList<>();
     private int durationOfBar;
     private int tempoInMillisecondsPerQuarterNote;
 

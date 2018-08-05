@@ -1,5 +1,6 @@
 package com.kjipo.eartraining.score
 
+import com.kjipo.score.*
 import com.kjipo.svg.*
 
 
@@ -56,7 +57,7 @@ object ScoreExample {
         println(testScore.renderingElements)
 
         var idCounter = 0
-        testScore.renderingElements.forEach { it.id = idCounter++ }
+        testScore.renderingElements.forEach { it.id = idCounter++.toString() }
 
         return testScore
 

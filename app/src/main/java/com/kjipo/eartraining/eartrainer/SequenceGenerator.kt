@@ -4,6 +4,7 @@ package com.kjipo.eartraining.eartrainer
 import android.util.Log
 import com.kjipo.eartraining.data.*
 import com.kjipo.eartraining.data.SequenceBuilder
+import com.kjipo.score.*
 import com.kjipo.svg.*
 import java.util.*
 import javax.annotation.concurrent.NotThreadSafe
