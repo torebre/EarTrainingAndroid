@@ -1,10 +1,9 @@
 package com.kjipo.eartraining;
 
 import android.arch.lifecycle.ViewModel;
-import android.webkit.WebViewClient;
 
-import com.kjipo.eartraining.data.Sequence;
 import com.kjipo.eartraining.eartrainer.EarTrainer;
+import com.kjipo.scoregenerator.Sequence;
 
 import javax.inject.Inject;
 

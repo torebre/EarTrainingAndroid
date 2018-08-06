@@ -2,8 +2,8 @@ package com.kjipo.eartraining.midi
 
 import android.util.Log
 import com.google.common.collect.Lists
-import com.kjipo.eartraining.data.Sequence
 import java.util.*
+import com.kjipo.scoregenerator.Sequence
 
 class MidiScript(val sequence: Sequence, val midiPlayer: MidiPlayerInterface) {
     private val pitchEvents = Lists.newArrayList<PitchEvent>()

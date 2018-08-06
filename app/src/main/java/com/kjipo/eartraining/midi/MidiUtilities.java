@@ -4,7 +4,7 @@ package com.kjipo.eartraining.midi;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.kjipo.eartraining.data.Sequence;
+import com.kjipo.scoregenerator.Sequence;
 
 import java.util.ArrayList;
 import java.util.List;

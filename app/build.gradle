@@ -141,6 +141,7 @@ dependencies {
     api 'com.github.billthefarmer:mididriver:v1.14'
 
     api 'com.kjipo:score-jvm:0.4-SNAPSHOT'
+    api 'com.kjipo:scoregenerator:0.4-SNAPSHOT'
 
 
 

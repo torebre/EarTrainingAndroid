@@ -1,7 +1,10 @@
 package com.kjipo.eartraining.eartrainer;
 
 
-import com.kjipo.eartraining.data.Sequence;
+
+
+import com.kjipo.scoregenerator.Sequence;
+import com.kjipo.scoregenerator.SequenceGenerator;
 
 import javax.inject.Singleton;
 
