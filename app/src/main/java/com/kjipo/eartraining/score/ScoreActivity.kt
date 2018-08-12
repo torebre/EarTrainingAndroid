@@ -23,6 +23,7 @@ import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.midi.sonivox.SonivoxMidiPlayer
 import com.kjipo.eartraining.recorder.Recorder
+import com.kjipo.handler.ScoreHandler
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -50,11 +51,14 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        earTrainer.sequenceGenerator.createNewSequence()
+        val scoreHandler = ScoreHandler()
+        scoreHandler.scoreBuilder = earTrainer.sequenceGenerator.scoreBuilder
+
         setContentView(R.layout.score_act)
 
 //        midiPlayer = MidiStream()
         midiPlayer = SonivoxMidiPlayer()
-
 
         // This enables the possibility of debugging the webview from Chrome
         WebView.setWebContentsDebuggingEnabled(true)
@@ -62,8 +66,10 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val myWebView = findViewById<View>(R.id.score) as WebView
 
         noteViewClient = CustomWebViewClient()
-        noteViewClient.let { it?.attachWebView(myWebView, this.assets) }
-        setupSequence()
+        noteViewClient?.let {
+            it.attachWebView(myWebView, this.assets, ScoreHandlerWrapper(scoreHandler))
+            it.loadNoteSequence()
+        }
 
         val btnPlay = findViewById<Button>(R.id.btnPlay)
         btnPlay.setOnClickListener {
@@ -83,12 +89,28 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         midiPlayer.setup(applicationContext)
 
+
     }
 
     private fun setupSequence() {
-        val sequence = earTrainer.generateNextSequence()
-        midiScript = MidiScript(earTrainer.currentSequence, midiPlayer)
-        noteViewClient?.loadNoteSequence(sequence.renderingSequence)
+        earTrainer.sequenceGenerator.createNewSequence()
+
+        midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
+        noteViewClient?.let {
+            val scoreHandler = ScoreHandler()
+            scoreHandler.scoreBuilder = earTrainer.sequenceGenerator.scoreBuilder
+            scoreHandler.updateScore()
+
+            it.scoreHandler?.scoreHandler = scoreHandler
+
+            it.webView?.post {
+                it.updateWebscore()
+            }
+
+
+        }
+
+
     }
 
     override fun onStart() {
@@ -156,23 +178,23 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         when (action) {
             MotionEvent.ACTION_DOWN -> {
-                Log.d("debug", "Action was DOWN")
+                Log.i("debug", "Action was DOWN")
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
-                Log.d("debug", "Action was MOVE")
+                Log.i("debug", "Action was MOVE")
                 return true
             }
             MotionEvent.ACTION_UP -> {
-                Log.d("debug", "Action was UP")
+                Log.i("debug", "Action was UP")
                 return true
             }
             MotionEvent.ACTION_CANCEL -> {
-                Log.d("debug", "Action was CANCEL")
+                Log.i("debug", "Action was CANCEL")
                 return true
             }
             MotionEvent.ACTION_OUTSIDE -> {
-                Log.d("debug", "Movement occurred outside bounds " + "of current screen element")
+                Log.i("debug", "Movement occurred outside bounds " + "of current screen element")
                 return true
             }
             else -> return super.onTouchEvent(event)

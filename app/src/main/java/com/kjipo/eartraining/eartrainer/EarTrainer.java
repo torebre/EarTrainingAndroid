@@ -1,13 +1,10 @@
 package com.kjipo.eartraining.eartrainer;
 
 
-import com.kjipo.scoregenerator.Sequence;
-
+import com.kjipo.scoregenerator.SequenceGenerator;
 
 public interface EarTrainer {
 
-    Sequence getCurrentSequence();
-
-    Sequence generateNextSequence();
+    SequenceGenerator getSequenceGenerator();
 
 }

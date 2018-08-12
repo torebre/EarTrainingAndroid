@@ -16,8 +16,4 @@ public class NoteViewModel extends ViewModel {
         this.earTrainer = earTrainer;
     }
 
-
-    public Sequence generateNextSequence() {
-        return earTrainer.generateNextSequence();
-    }
 }

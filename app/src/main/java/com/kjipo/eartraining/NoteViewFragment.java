@@ -51,7 +51,9 @@ public class NoteViewFragment extends Fragment implements Injectable {
                 parentViewGroup, false);
         WebView myWebView = (WebView) rootView.findViewById(R.id.noteView);
         noteViewClient = new CustomWebViewClient();
-        noteViewClient.attachWebView(myWebView, getContext().getAssets());
+
+        // TODO
+//        noteViewClient.attachWebView(myWebView, getContext().getAssets());
 
         Log.i("test", "onCreateView: " +dataBinding);
 

@@ -2,14 +2,15 @@ package com.kjipo.eartraining.midi
 
 import android.util.Log
 import com.google.common.collect.Lists
+import com.kjipo.scoregenerator.Pitch
 import java.util.*
 import com.kjipo.scoregenerator.Sequence
 
-class MidiScript(val sequence: Sequence, val midiPlayer: MidiPlayerInterface) {
+class MidiScript(val pitchSequence: List<Pitch>, val midiPlayer: MidiPlayerInterface) {
     private val pitchEvents = Lists.newArrayList<PitchEvent>()
 
     init {
-        for (note in sequence.pitchSequence) {
+        for (note in pitchSequence) {
             pitchEvents.add(PitchEvent(note.id, note.timeOff, false, note.pitch))
             pitchEvents.add(PitchEvent(note.id, note.timeOn, true, note.pitch))
         }
@@ -28,7 +29,7 @@ class MidiScript(val sequence: Sequence, val midiPlayer: MidiPlayerInterface) {
 
                 Log.i("Midi", "Pitch event: $it")
 
-                Log.i("Midi", "Sleeping for " +time.minus(timeCounter).toLong() +" milliseconds")
+                Log.i("Midi", "Sleeping for " + time.minus(timeCounter).toLong() + " milliseconds")
                 Thread.sleep(time.minus(timeCounter).toLong())
                 if (pitchEvent.on) {
                     Log.i("Midi", "Pitch on: ${pitchEvent.pitch}")

@@ -1,9 +1,6 @@
 package com.kjipo.eartraining.eartrainer;
 
 
-
-
-import com.kjipo.scoregenerator.Sequence;
 import com.kjipo.scoregenerator.SequenceGenerator;
 
 import javax.inject.Singleton;
@@ -19,17 +16,10 @@ public class EarTrainerImpl implements EarTrainer {
     }
 
 
-
     @Override
-    public Sequence generateNextSequence() {
-        sequenceGenerator.createNewSequence(false);
-        return sequenceGenerator.getCurrentSequence();
+    public SequenceGenerator getSequenceGenerator() {
+        return sequenceGenerator;
     }
 
-
-    @Override
-    public Sequence getCurrentSequence() {
-        return sequenceGenerator.getCurrentSequence();
-    }
 
 }

@@ -6,21 +6,23 @@ import android.content.res.AssetManager
 import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.kjipo.score.RenderingSequence
-import kotlinx.serialization.json.JSON
+import com.kjipo.eartraining.score.ScoreHandlerWrapper
+import com.kjipo.eartraining.score.WebScoreCallback
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
 
 class CustomWebViewClient : WebViewClient() {
-    private var webView: WebView? = null
+    var webView: WebView? = null
     private var assetManager: AssetManager? = null
-    private var renderingSequence: RenderingSequence? = null
+    //    private var renderingSequence: RenderingSequence? = null
+    var scoreHandler: ScoreHandlerWrapper? = null
+    var webScoreCallback: WebScoreCallback? = null
 
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun attachWebView(webView: WebView, assetManager: AssetManager) {
+    fun attachWebView(webView: WebView, assetManager: AssetManager, scoreHandlerWrapper: ScoreHandlerWrapper) {
         this.webView = webView
         this.assetManager = assetManager
 
@@ -30,14 +32,24 @@ class CustomWebViewClient : WebViewClient() {
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
 
-        val visualizerInterface = NoteVisualizerInterface()
-        webView.addJavascriptInterface(visualizerInterface, "Backend")
+//        webView.clearCache(true)
+//        val webSettings = webView.getSettings()
+//        webSettings.setDomStorageEnabled(true)
+//        webSettings.setAppCacheEnabled(false)
+
+//        webView.clearCache(true)
 
         webView.webViewClient = this
+
+
+        webScoreCallback = WebScoreCallback(webView)
+
+        this.scoreHandler = scoreHandlerWrapper
+
+
     }
 
-    fun loadNoteSequence(renderingSequence: RenderingSequence) {
-        this.renderingSequence = renderingSequence
+    fun loadNoteSequence() {
         try {
             assetManager!!.open("index.html").use { data ->
                 BufferedReader(InputStreamReader(data)).use { bufferedReader ->
@@ -49,25 +61,69 @@ class CustomWebViewClient : WebViewClient() {
                         input = bufferedReader.readLine()
                     }
 
-                    webView!!.loadDataWithBaseURL("file:///android_asset/web/", inputData.toString(), "text/html", "UTF-8", null)
+                    Log.i("Webscore", "Rendering")
 
-                    webView!!.loadUrl("javascript:" + "console.log(\"Test50\");\n")
+                    webView?.let {
+                        it.addJavascriptInterface(scoreHandler, "scoreHandler")
+                        it.addJavascriptInterface(webScoreCallback, "webscoreCallback")
+                        it.loadDataWithBaseURL("file:///android_asset/web/", inputData.toString(), "text/html", "UTF-8", null)
+
+                    }
 
                 }
             }
         } catch (e: IOException) {
             Log.e("Webscore", e.message, e)
         }
-
     }
 
 
     override fun onPageFinished(view: WebView, url: String) {
-        renderingSequence?.let {
-            val javaScript = """webscore.loadJson_61zpoe$("${JSON.stringify(it).replace("\"", "\\\"")}");"""
-            Log.i("Webscore", javaScript)
-            webView!!.evaluateJavascript(javaScript, { value -> Log.i("Webscore", value) })
+        super.onPageFinished(view, url)
+
+        Log.i("Webscore", "Score handler: ${scoreHandler}. Rendering2: $url")
+//        view.let {
+//            it.removeJavascriptInterface("scoreHandler")
+//            it.addJavascriptInterface(scoreHandler, "scoreHandler")
+//            it.removeJavascriptInterface("webscoreCallback")
+//            it.addJavascriptInterface(webScoreCallback, "webscoreCallback")
+//            it.evaluateJavascript("""var test = new webscore.WebScore(scoreHandler);
+//                webscoreCallback.reload();
+//                    """, {
+//                Log.i("Webscore", it)
+//            })
+//        }
+
+        view.let {
+//            it.addJavascriptInterface(scoreHandler, "scoreHandler")
+//            it.addJavascriptInterface(webScoreCallback, "webscoreCallback")
+
+            it.evaluateJavascript("""
+                var test = new webscore.WebScore(scoreHandler);
+
+                console.log("Test23");
+                    """, {
+                Log.i("Webscore", it)
+            })
+
+
         }
 
+
+
     }
+
+
+    fun updateWebscore() {
+        webView?.evaluateJavascript("""
+               test.reload();
+           """.trimIndent(), {
+            Log.i("Webscore", it)
+        })
+
+        webView?.invalidate()
+
+
+    }
+
 }
