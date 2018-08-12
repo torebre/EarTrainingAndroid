@@ -64,6 +64,8 @@ class CustomWebViewClient : WebViewClient() {
                     Log.i("Webscore", "Rendering")
 
                     webView?.let {
+
+
                         it.addJavascriptInterface(scoreHandler, "scoreHandler")
                         it.addJavascriptInterface(webScoreCallback, "webscoreCallback")
                         it.loadDataWithBaseURL("file:///android_asset/web/", inputData.toString(), "text/html", "UTF-8", null)

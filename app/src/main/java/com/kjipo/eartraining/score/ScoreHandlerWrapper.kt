@@ -6,6 +6,7 @@ import com.kjipo.handler.ScoreHandler
 import com.kjipo.handler.ScoreHandlerInterface
 
 class ScoreHandlerWrapper(var scoreHandler: ScoreHandler) : ScoreHandlerInterface {
+    val listeners = mutableListOf<ScoreHandlerListener>()
 
     @JavascriptInterface
     override fun getScoreAsJson(): String {
@@ -15,12 +16,22 @@ class ScoreHandlerWrapper(var scoreHandler: ScoreHandler) : ScoreHandlerInterfac
     }
 
     @JavascriptInterface
-    override fun moveNoteOneStep(id: String, up: Boolean) = scoreHandler.moveNoteOneStep(id, up)
+    override fun moveNoteOneStep(id: String, up: Boolean) {
+        scoreHandler.moveNoteOneStep(id, up)
+        listeners.forEach { it.moveNoteOneStep(id, up) }
+    }
 
     @JavascriptInterface
     override fun getIdOfFirstSelectableElement() = scoreHandler.getIdOfFirstSelectableElement()
 
     @JavascriptInterface
     override fun getNeighbouringElement(activeElement: String, lookLeft: Boolean) = scoreHandler.getNeighbouringElement(activeElement, lookLeft)
+
+}
+
+
+interface ScoreHandlerListener {
+
+    fun moveNoteOneStep(id: String, up: Boolean)
 
 }

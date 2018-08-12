@@ -24,6 +24,7 @@ import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.midi.sonivox.SonivoxMidiPlayer
 import com.kjipo.eartraining.recorder.Recorder
 import com.kjipo.handler.ScoreHandler
+import com.kjipo.score.NoteType
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -64,10 +65,68 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         WebView.setWebContentsDebuggingEnabled(true)
 
         val myWebView = findViewById<View>(R.id.score) as WebView
+        val scoreHandlerWrapper = ScoreHandlerWrapper(scoreHandler)
+        scoreHandlerWrapper.listeners.add(object : ScoreHandlerListener {
+            override fun moveNoteOneStep(id: String, up: Boolean) {
+                earTrainer.sequenceGenerator.pitchSequence
+                        .find { it.id == id }?.let { pitch ->
+
+                            Log.i("Webscore", "Updating MIDI")
+
+                            // TODO Only works because C major is the only key used so far
+                            val pitchChange = earTrainer.sequenceGenerator.scoreBuilder.findNote(id)?.let { noteElement ->
+                                when (noteElement.note) {
+                                    NoteType.A -> if (up) {
+                                        2
+                                    } else {
+                                        -2
+                                    }
+                                    NoteType.H -> if (up) {
+                                        1
+                                    } else {
+                                        -2
+                                    }
+                                    NoteType.C -> if (up) {
+                                        2
+                                    } else {
+                                        -1
+                                    }
+                                    NoteType.D -> if (up) {
+                                        2
+                                    } else {
+                                        -2
+                                    }
+                                    NoteType.E -> if (up) {
+                                        1
+                                    } else {
+                                        -2
+                                    }
+                                    NoteType.F -> if (up) {
+                                        2
+                                    } else {
+                                        -1
+                                    }
+                                    NoteType.G -> if (up) {
+                                        2
+                                    } else {
+                                        -2
+                                    }
+                                }
+                            }
+
+                            pitchChange?.let { it ->
+                                val index = earTrainer.sequenceGenerator.pitchSequence.indexOf(pitch)
+                                earTrainer.sequenceGenerator.pitchSequence.removeAt(index)
+                                earTrainer.sequenceGenerator.pitchSequence.add(index, pitch.copy(pitch = pitch.pitch + it))
+                                midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
+                            }
+                        }
+            }
+        })
 
         noteViewClient = CustomWebViewClient()
         noteViewClient?.let {
-            it.attachWebView(myWebView, this.assets, ScoreHandlerWrapper(scoreHandler))
+            it.attachWebView(myWebView, this.assets, scoreHandlerWrapper)
             it.loadNoteSequence()
         }
 

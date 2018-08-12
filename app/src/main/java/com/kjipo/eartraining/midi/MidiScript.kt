@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.common.collect.Lists
 import com.kjipo.scoregenerator.Pitch
 import java.util.*
-import com.kjipo.scoregenerator.Sequence
 
 class MidiScript(val pitchSequence: List<Pitch>, val midiPlayer: MidiPlayerInterface) {
     private val pitchEvents = Lists.newArrayList<PitchEvent>()
@@ -48,6 +47,6 @@ class MidiScript(val pitchSequence: List<Pitch>, val midiPlayer: MidiPlayerInter
 }
 
 
-data class PitchEvent(val id: Int, val time: Int, val on: Boolean, val pitch: Int) : Comparable<PitchEvent> {
+data class PitchEvent(val id: String, val time: Int, val on: Boolean, val pitch: Int) : Comparable<PitchEvent> {
     override fun compareTo(other: PitchEvent) = time.compareTo(other.time)
 }
