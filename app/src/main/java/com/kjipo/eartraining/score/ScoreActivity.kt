@@ -21,9 +21,9 @@ import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
-import com.kjipo.eartraining.midi.sonivox.SonivoxMidiPlayer
 import com.kjipo.eartraining.recorder.Recorder
 import com.kjipo.handler.ScoreHandler
+import com.kjipo.score.NoteElement
 import com.kjipo.score.NoteType
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -59,9 +59,6 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         setContentView(R.layout.score_act)
 
-//        midiPlayer = MidiStream()
-//        midiPlayer = SonivoxMidiPlayer()
-
         // This enables the possibility of debugging the webview from Chrome
         WebView.setWebContentsDebuggingEnabled(true)
 
@@ -72,47 +69,9 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 earTrainer.sequenceGenerator.pitchSequence
                         .find { it.id == id }?.let { pitch ->
 
-                            Log.i("Webscore", "Updating MIDI")
-
                             // TODO Only works because C major is the only key used so far
                             val pitchChange = earTrainer.sequenceGenerator.scoreBuilder.findNote(id)?.let { noteElement ->
-                                when (noteElement.note) {
-                                    NoteType.A -> if (up) {
-                                        2
-                                    } else {
-                                        -2
-                                    }
-                                    NoteType.H -> if (up) {
-                                        1
-                                    } else {
-                                        -2
-                                    }
-                                    NoteType.C -> if (up) {
-                                        2
-                                    } else {
-                                        -1
-                                    }
-                                    NoteType.D -> if (up) {
-                                        2
-                                    } else {
-                                        -2
-                                    }
-                                    NoteType.E -> if (up) {
-                                        1
-                                    } else {
-                                        -2
-                                    }
-                                    NoteType.F -> if (up) {
-                                        2
-                                    } else {
-                                        -1
-                                    }
-                                    NoteType.G -> if (up) {
-                                        2
-                                    } else {
-                                        -2
-                                    }
-                                }
+                                determinePitchStep(noteElement, up)
                             }
 
                             pitchChange?.let { it ->
@@ -148,8 +107,6 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
 
         midiPlayer.setup(applicationContext)
-
-
     }
 
     private fun setupSequence() {
@@ -162,15 +119,48 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
             scoreHandler.updateScore()
 
             it.scoreHandler?.scoreHandler = scoreHandler
-
-            it.webView?.post {
-                it.updateWebscore()
-            }
-
-
+            it.updateWebscore()
         }
+    }
 
-
+    private fun determinePitchStep(noteElement: NoteElement, up: Boolean): Int {
+        return when (noteElement.note) {
+            NoteType.A -> if (up) {
+                2
+            } else {
+                -2
+            }
+            NoteType.H -> if (up) {
+                1
+            } else {
+                -2
+            }
+            NoteType.C -> if (up) {
+                2
+            } else {
+                -1
+            }
+            NoteType.D -> if (up) {
+                2
+            } else {
+                -2
+            }
+            NoteType.E -> if (up) {
+                1
+            } else {
+                -2
+            }
+            NoteType.F -> if (up) {
+                2
+            } else {
+                -1
+            }
+            NoteType.G -> if (up) {
+                2
+            } else {
+                -2
+            }
+        }
     }
 
     override fun onStart() {
