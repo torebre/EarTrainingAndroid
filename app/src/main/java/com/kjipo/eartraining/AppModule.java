@@ -3,6 +3,7 @@ package com.kjipo.eartraining;
 import com.kjipo.eartraining.eartrainer.EarTrainer;
 import com.kjipo.eartraining.eartrainer.EarTrainerImpl;
 import com.kjipo.eartraining.midi.MidiPlayerInterface;
+import com.kjipo.eartraining.midi.sonivox.SonivoxMidiPlayer;
 import com.kjipo.eartraining.midistream.MidiStream;
 
 import dagger.Module;
@@ -19,7 +20,8 @@ public class AppModule {
 
     @Provides
     MidiPlayerInterface provideMidiPlayer() {
-        return new MidiStream();
+//        return new MidiStream();
+        return new SonivoxMidiPlayer();
     }
 
 

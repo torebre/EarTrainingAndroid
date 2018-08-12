@@ -40,6 +40,7 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var earTrainer: EarTrainer
 
+    @Inject
     lateinit var midiPlayer: MidiPlayerInterface
 
     @Inject
@@ -59,7 +60,7 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.score_act)
 
 //        midiPlayer = MidiStream()
-        midiPlayer = SonivoxMidiPlayer()
+//        midiPlayer = SonivoxMidiPlayer()
 
         // This enables the possibility of debugging the webview from Chrome
         WebView.setWebContentsDebuggingEnabled(true)
