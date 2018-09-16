@@ -45,15 +45,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-
         val earTrainingButton = findViewById<Button>(R.id.earTraining)
-        earTrainingButton.setOnClickListener { navigationController!!.startScoreActivity() }
-
-
-        //        if (savedInstanceState == null) {
-        //            navigationController.startScoreActivity();
-        //        }
-
+        earTrainingButton.setOnClickListener { navigationController.startScoreActivity() }
     }
 
 

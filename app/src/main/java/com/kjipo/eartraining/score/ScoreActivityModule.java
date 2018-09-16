@@ -10,5 +10,5 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class ScoreActivityModule {
 
     @ContributesAndroidInjector(modules = {AppModule.class, FragmentBuildersModule.class})
-    abstract ScoreActivity contributeMainActivity();
+    abstract ScoreActivity contributeScoreActivity();
 }

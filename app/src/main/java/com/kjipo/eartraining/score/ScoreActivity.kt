@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
 import android.widget.Button
@@ -23,8 +22,6 @@ import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.recorder.Recorder
 import com.kjipo.handler.ScoreHandler
-import com.kjipo.score.NoteElement
-import com.kjipo.score.NoteType
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -39,10 +36,8 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var earTrainer: EarTrainer
-
     @Inject
     lateinit var midiPlayer: MidiPlayerInterface
-
     @Inject
     lateinit var recorder: Recorder
 
@@ -54,33 +49,17 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
 
         earTrainer.sequenceGenerator.createNewSequence()
-        val scoreHandler = ScoreHandler()
-        scoreHandler.scoreBuilder = earTrainer.sequenceGenerator.scoreBuilder
-
         setContentView(R.layout.score_act)
 
         // This enables the possibility of debugging the webview from Chrome
         WebView.setWebContentsDebuggingEnabled(true)
 
         val myWebView = findViewById<View>(R.id.score) as WebView
-        val scoreHandlerWrapper = ScoreHandlerWrapper(scoreHandler)
+
+        val scoreHandlerWrapper = ScoreHandlerWrapper(earTrainer.sequenceGenerator)
         scoreHandlerWrapper.listeners.add(object : ScoreHandlerListener {
-            override fun moveNoteOneStep(id: String, up: Boolean) {
-                earTrainer.sequenceGenerator.pitchSequence
-                        .find { it.id == id }?.let { pitch ->
-
-                            // TODO Only works because C major is the only key used so far
-                            val pitchChange = earTrainer.sequenceGenerator.scoreBuilder.findNote(id)?.let { noteElement ->
-                                determinePitchStep(noteElement, up)
-                            }
-
-                            pitchChange?.let { it ->
-                                val index = earTrainer.sequenceGenerator.pitchSequence.indexOf(pitch)
-                                earTrainer.sequenceGenerator.pitchSequence.removeAt(index)
-                                earTrainer.sequenceGenerator.pitchSequence.add(index, pitch.copy(pitch = pitch.pitch + it))
-                                midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
-                            }
-                        }
+            override fun pitchSequenceChanged() {
+                midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
             }
         })
 
@@ -114,54 +93,12 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
         noteViewClient?.let {
-            val scoreHandler = ScoreHandler()
-            scoreHandler.scoreBuilder = earTrainer.sequenceGenerator.scoreBuilder
-            scoreHandler.updateScore()
-
-            it.scoreHandler?.scoreHandler = scoreHandler
+            earTrainer.sequenceGenerator.scoreHandler.updateScore()
+            it.scoreHandler?.scoreHandler = earTrainer.sequenceGenerator
             it.updateWebscore()
         }
     }
 
-    private fun determinePitchStep(noteElement: NoteElement, up: Boolean): Int {
-        return when (noteElement.note) {
-            NoteType.A -> if (up) {
-                2
-            } else {
-                -2
-            }
-            NoteType.H -> if (up) {
-                1
-            } else {
-                -2
-            }
-            NoteType.C -> if (up) {
-                2
-            } else {
-                -1
-            }
-            NoteType.D -> if (up) {
-                2
-            } else {
-                -2
-            }
-            NoteType.E -> if (up) {
-                1
-            } else {
-                -2
-            }
-            NoteType.F -> if (up) {
-                2
-            } else {
-                -1
-            }
-            NoteType.G -> if (up) {
-                2
-            } else {
-                -2
-            }
-        }
-    }
 
     override fun onStart() {
         super.onStart()
@@ -218,38 +155,5 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         Log.i("Record", "Calling recordAudio")
         recorder.recordAudio()
     }
-
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-
-        // TODO Just here to check when this event is triggered
-
-        val action = event.action
-
-        when (action) {
-            MotionEvent.ACTION_DOWN -> {
-                Log.i("debug", "Action was DOWN")
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                Log.i("debug", "Action was MOVE")
-                return true
-            }
-            MotionEvent.ACTION_UP -> {
-                Log.i("debug", "Action was UP")
-                return true
-            }
-            MotionEvent.ACTION_CANCEL -> {
-                Log.i("debug", "Action was CANCEL")
-                return true
-            }
-            MotionEvent.ACTION_OUTSIDE -> {
-                Log.i("debug", "Movement occurred outside bounds " + "of current screen element")
-                return true
-            }
-            else -> return super.onTouchEvent(event)
-        }
-    }
-
 
 }

@@ -2,11 +2,25 @@ package com.kjipo.eartraining.score
 
 import android.util.Log
 import android.webkit.JavascriptInterface
-import com.kjipo.handler.ScoreHandler
 import com.kjipo.handler.ScoreHandlerInterface
+import com.kjipo.scoregenerator.SequenceGenerator
 
-class ScoreHandlerWrapper(var scoreHandler: ScoreHandler) : ScoreHandlerInterface {
+class ScoreHandlerWrapper(var scoreHandler: SequenceGenerator) : ScoreHandlerInterface {
     val listeners = mutableListOf<ScoreHandlerListener>()
+
+    @JavascriptInterface
+    override fun updateDuration(id: String, keyPressed: Int) {
+        scoreHandler.updateDuration(id, keyPressed)
+        listeners.forEach { it.pitchSequenceChanged() }
+    }
+
+    @JavascriptInterface
+    override fun insertNote(activeElement: String, keyPressed: Int): String? {
+        return scoreHandler.insertNote(activeElement, keyPressed)?.let { idInsertedNote ->
+            listeners.forEach { it.pitchSequenceChanged() }
+            idInsertedNote
+        }
+    }
 
     @JavascriptInterface
     override fun getScoreAsJson(): String {
@@ -18,7 +32,7 @@ class ScoreHandlerWrapper(var scoreHandler: ScoreHandler) : ScoreHandlerInterfac
     @JavascriptInterface
     override fun moveNoteOneStep(id: String, up: Boolean) {
         scoreHandler.moveNoteOneStep(id, up)
-        listeners.forEach { it.moveNoteOneStep(id, up) }
+        listeners.forEach { it.pitchSequenceChanged() }
     }
 
     @JavascriptInterface
@@ -32,6 +46,6 @@ class ScoreHandlerWrapper(var scoreHandler: ScoreHandler) : ScoreHandlerInterfac
 
 interface ScoreHandlerListener {
 
-    fun moveNoteOneStep(id: String, up: Boolean)
+    fun pitchSequenceChanged()
 
 }

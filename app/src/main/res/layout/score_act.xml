@@ -16,9 +16,6 @@
         android:orientation="vertical"
         tools:context=".score.ScoreActivity">
 
-
-        <!--app:setWebChromeClient="@{customWebView.customWebViewClient}"-->
-
         <WebView
             android:id="@+id/score"
             android:layout_width="match_parent"
