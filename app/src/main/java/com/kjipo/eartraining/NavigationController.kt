@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class NavigationController @Inject
 constructor(mainActivity: MainActivity) {
-    private val containerId: Int = R.id.frame_container
+//    private val containerId: Int = R.id.
     private val mainActivity: MainActivity
     private val fragmentManager: FragmentManager
 
@@ -21,12 +21,12 @@ constructor(mainActivity: MainActivity) {
     }
 
 
-    fun navigateToNoteView() {
-        val noteViewFragment = NoteViewFragment()
-        fragmentManager.beginTransaction()
-                .replace(containerId, noteViewFragment)
-                .commitAllowingStateLoss()
-    }
+//    fun navigateToNoteView() {
+//        val noteViewFragment = NoteViewFragment()
+//        fragmentManager.beginTransaction()
+//                .replace(containerId, noteViewFragment)
+//                .commitAllowingStateLoss()
+//    }
 
     fun startScoreActivity() {
         val intent = Intent(mainActivity, ScoreActivity::class.java)
