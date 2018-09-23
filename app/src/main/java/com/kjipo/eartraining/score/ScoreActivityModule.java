@@ -1,14 +1,18 @@
 package com.kjipo.eartraining.score;
 
-import com.kjipo.eartraining.AppModule;
-import com.kjipo.eartraining.FragmentBuildersModule;
-
 import dagger.Module;
-import dagger.android.ContributesAndroidInjector;
+import dagger.Provides;
 
-@Module
+//@Module
 public abstract class ScoreActivityModule {
 
-    @ContributesAndroidInjector(modules = {AppModule.class, FragmentBuildersModule.class})
-    abstract ScoreActivity contributeScoreActivity();
+//    @Provides
+     public ScoreActivity contributeScoreActivity() {
+//        return new ScoreActivity();
+
+
+         return null;
+
+
+    }
 }

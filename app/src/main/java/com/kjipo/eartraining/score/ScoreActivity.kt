@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -21,18 +20,16 @@ import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.recorder.Recorder
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.AndroidInjection
+import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.score_act.*
 import javax.inject.Inject
 
 
-class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class ScoreActivity : AppCompatActivity() {
 
     private val AUDIO_ECHO_REQUEST = 0
 
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var earTrainer: EarTrainer
     @Inject
@@ -43,8 +40,11 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private var midiScript: MidiScript? = null
     private var noteViewClient: CustomWebViewClient? = null
 
+    private val disposable = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         earTrainer.sequenceGenerator.createNewSequence()
@@ -68,26 +68,20 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
             it.loadNoteSequence()
         }
 
-        val btnPlay = findViewById<Button>(R.id.btnPlay)
-        btnPlay.setOnClickListener {
-            midiScript?.play()
-        }
-
-
-
-
-
-        val recordButton = findViewById<Button>(R.id.btnRecord)
-        recordButton.setOnClickListener {
-            record()
-        }
-
-        val generateButton = findViewById<Button>(R.id.btnGenerate)
-        generateButton.setOnClickListener {
-            setupSequence()
-        }
+        btnPlay.setOnClickListener { playMidiScript() }
+        btnRecord.setOnClickListener { record() }
+        btnGenerate.setOnClickListener { setupSequence() }
 
         midiPlayer.setup(applicationContext)
+    }
+
+
+    private fun playMidiScript() {
+
+//        disposable.add()
+
+        midiScript?.play()
+
     }
 
     private fun setupSequence() {
@@ -132,10 +126,10 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        // TODO Why does returning the object without a cast not work?
-        return dispatchingAndroidInjector as AndroidInjector<Fragment>
-    }
+//    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+//        // TODO Why does returning the object without a cast not work?
+//        return dispatchingAndroidInjector as AndroidInjector<Fragment>
+//    }
 
 
     fun record() {

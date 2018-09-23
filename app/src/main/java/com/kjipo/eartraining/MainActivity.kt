@@ -4,33 +4,15 @@ package com.kjipo.eartraining
 import android.arch.lifecycle.LifecycleRegistry
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
-import javax.inject.Inject
-
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.main_act.*
 
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity() {
     val lifecycleRegistry = LifecycleRegistry(this)
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    @Inject
-    lateinit var navigationController: NavigationController
+    var navigationController: NavigationController = NavigationController(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +27,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val earTrainingButton = findViewById<Button>(R.id.earTraining)
-        earTrainingButton.setOnClickListener { navigationController.startScoreActivity() }
+        earTraining.setOnClickListener { navigationController.startScoreActivity() }
     }
 
 
@@ -58,7 +39,4 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return lifecycleRegistry
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
-        return dispatchingAndroidInjector
-    }
 }

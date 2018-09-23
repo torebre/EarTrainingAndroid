@@ -16,20 +16,19 @@ public class EarTrainingApplication extends Application implements HasActivityIn
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
-
     private static final String GLYPH_URL = "file:///android_asset/js/glyphs.json";
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+        DaggerEarTrainingApplicationComponent.create().inject(this);
 
-        AppInjector.init(this);
+
     }
 
-
     @Override
-    public AndroidInjector<Activity> activityInjector() {
+    public DispatchingAndroidInjector<Activity> activityInjector() {
         return dispatchingAndroidInjector;
     }
 }

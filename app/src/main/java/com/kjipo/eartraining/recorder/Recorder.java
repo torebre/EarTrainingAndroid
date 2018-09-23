@@ -1,16 +1,11 @@
 package com.kjipo.eartraining.recorder;
 
-import android.app.Fragment;
-import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
-public class Recorder extends Fragment {
+public class Recorder {
 
     static {
 //        System.loadLibrary("native-audio");
@@ -33,16 +28,7 @@ public class Recorder extends Fragment {
     private ParcelFileDescriptor.AutoCloseInputStream underlyingStream;
 
 
-    @Inject
-    public Recorder() {
-
-    }
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void start() {
         createEngine();
 
         int sampleRate = 0;

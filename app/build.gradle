@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven'
 
 
@@ -73,15 +75,15 @@ dependencies {
     // Architecture components
     api "android.arch.lifecycle:runtime:$rootProject.architectureComponentsVersion"
     api "android.arch.lifecycle:extensions:$rootProject.architectureComponentsVersion"
-    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.architectureComponentsVersion"
+    kapt "android.arch.lifecycle:compiler:$rootProject.architectureComponentsVersion"
     api "android.arch.persistence.room:runtime:$rootProject.architectureComponentsVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
     api "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
 
-    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
     api "com.google.dagger:dagger:$rootProject.daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     api "com.google.dagger:dagger-android:$rootProject.daggerVersion"
     api "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
