@@ -5,7 +5,7 @@ import com.google.common.collect.Lists
 import com.kjipo.scoregenerator.Pitch
 import java.util.*
 
-class MidiScript(val pitchSequence: List<Pitch>, val midiPlayer: MidiPlayerInterface) {
+class MidiScript(pitchSequence: List<Pitch>, val midiPlayer: MidiPlayerInterface) {
     private val pitchEvents = Lists.newArrayList<PitchEvent>()
 
     init {

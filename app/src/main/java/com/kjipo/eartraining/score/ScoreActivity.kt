@@ -21,7 +21,6 @@ import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.recorder.Recorder
-import com.kjipo.handler.ScoreHandler
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -73,6 +72,9 @@ class ScoreActivity : AppCompatActivity(), HasSupportFragmentInjector {
         btnPlay.setOnClickListener {
             midiScript?.play()
         }
+
+
+
 
 
         val recordButton = findViewById<Button>(R.id.btnRecord)
