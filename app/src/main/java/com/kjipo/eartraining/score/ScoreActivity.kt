@@ -21,8 +21,15 @@ import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.recorder.Recorder
 import dagger.android.AndroidInjection
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.score_act.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -36,6 +43,9 @@ class ScoreActivity : AppCompatActivity() {
     lateinit var midiPlayer: MidiPlayerInterface
     @Inject
     lateinit var recorder: Recorder
+
+    private lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModel: ScoreViewModel
 
     private var midiScript: MidiScript? = null
     private var noteViewClient: CustomWebViewClient? = null
@@ -70,6 +80,7 @@ class ScoreActivity : AppCompatActivity() {
 
         btnPlay.setOnClickListener { playMidiScript() }
         btnRecord.setOnClickListener { record() }
+
         btnGenerate.setOnClickListener { setupSequence() }
 
         midiPlayer.setup(applicationContext)
@@ -77,11 +88,12 @@ class ScoreActivity : AppCompatActivity() {
 
 
     private fun playMidiScript() {
-
-//        disposable.add()
-
-        midiScript?.play()
-
+        btnPlay.isEnabled = false
+        disposable.add(Completable.fromRunnable { midiScript?.play() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ btnPlay.isEnabled = true },
+                        { error -> Log.e("Score activity", "Error when playing MIDI", error) }))
     }
 
     private fun setupSequence() {
