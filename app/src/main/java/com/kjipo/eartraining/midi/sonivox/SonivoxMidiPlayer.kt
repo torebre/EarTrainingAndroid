@@ -18,11 +18,6 @@ class SonivoxMidiPlayer : MidiPlayerInterface {
         midiDriver.stop()
     }
 
-
-    override fun setup(applicationContext: Context?) {
-        // Do nothing
-    }
-
     override fun noteOn(pitch: Int) {
         val command = ByteArray(3)
         command[0] = MidiMessages.NOTE_ON.message.toByte()

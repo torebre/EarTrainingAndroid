@@ -78,6 +78,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$rootProject.architectureComponentsVersion"
     kapt "android.arch.persistence.room:compiler:$rootProject.architectureComponentsVersion"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rootProject.rxBindingVersion"
 
     kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 

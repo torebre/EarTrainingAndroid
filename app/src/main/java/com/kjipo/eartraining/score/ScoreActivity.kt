@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.Button
+import com.jakewharton.rxbinding2.view.RxView
 import com.kjipo.eartraining.CustomWebViewClient
 import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
@@ -39,8 +40,8 @@ class ScoreActivity : AppCompatActivity() {
 
     @Inject
     lateinit var earTrainer: EarTrainer
-    @Inject
-    lateinit var midiPlayer: MidiPlayerInterface
+    //    @Inject
+//    lateinit var midiPlayer: MidiPlayerInterface
     @Inject
     lateinit var recorder: Recorder
 
@@ -57,7 +58,10 @@ class ScoreActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        earTrainer.sequenceGenerator.createNewSequence()
+        viewModelFactory = ViewModelFactory(earTrainer)
+        viewModel = viewModelFactory.create(ScoreViewModel::class.java)
+
+        earTrainer.getSequenceGenerator().createNewSequence()
         setContentView(R.layout.score_act)
 
         // This enables the possibility of debugging the webview from Chrome
@@ -65,10 +69,10 @@ class ScoreActivity : AppCompatActivity() {
 
         val myWebView = findViewById<View>(R.id.score) as WebView
 
-        val scoreHandlerWrapper = ScoreHandlerWrapper(earTrainer.sequenceGenerator)
+        val scoreHandlerWrapper = ScoreHandlerWrapper(earTrainer.getSequenceGenerator())
         scoreHandlerWrapper.listeners.add(object : ScoreHandlerListener {
             override fun pitchSequenceChanged() {
-                midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
+                midiScript = MidiScript(earTrainer.getSequenceGenerator().pitchSequence, earTrainer.getMidiInterface())
             }
         })
 
@@ -78,12 +82,12 @@ class ScoreActivity : AppCompatActivity() {
             it.loadNoteSequence()
         }
 
-        btnPlay.setOnClickListener { playMidiScript() }
+//        btnPlay.setOnClickListener { playMidiScript() }
         btnRecord.setOnClickListener { record() }
 
         btnGenerate.setOnClickListener { setupSequence() }
 
-        midiPlayer.setup(applicationContext)
+        earTrainer.getMidiInterface()
     }
 
 
@@ -97,12 +101,13 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun setupSequence() {
-        earTrainer.sequenceGenerator.createNewSequence()
+        earTrainer.getSequenceGenerator().createNewSequence()
 
-        midiScript = MidiScript(earTrainer.sequenceGenerator.pitchSequence, midiPlayer)
+        midiScript = MidiScript(earTrainer.getSequenceGenerator().pitchSequence,
+                earTrainer.getMidiInterface())
         noteViewClient?.let {
-            earTrainer.sequenceGenerator.scoreHandler.updateScore()
-            it.scoreHandler?.scoreHandler = earTrainer.sequenceGenerator
+            earTrainer.getSequenceGenerator().scoreHandler.updateScore()
+            it.scoreHandler?.scoreHandler = earTrainer.getSequenceGenerator()
             it.updateWebscore()
         }
     }
@@ -110,12 +115,34 @@ class ScoreActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        midiPlayer.start()
+        earTrainer.getMidiInterface().start()
+
+        disposable.add(viewModel.states().subscribe(this::render))
+        viewModel.processIntent(intents())
+
+
+    }
+
+
+    fun intents(): Observable<ScoreIntent> {
+        return Observable.merge(initialIntent(), playIntent())
+    }
+
+    private fun playIntent(): Observable<ScoreIntent.PlayAction> {
+        return RxView.clicks(btnPlay).map {
+            ScoreIntent.PlayAction("play")
+        }
+    }
+
+
+    private fun initialIntent(): Observable<ScoreIntent.InitialIntent> {
+        return Observable.just(ScoreIntent.InitialIntent("initialTask"))
     }
 
     override fun onStop() {
         super.onStop()
-        midiPlayer.stop()
+        earTrainer.getMidiInterface().stop()
+        disposable.clear()
     }
 
     companion object {
@@ -137,13 +164,6 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
-
-//    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-//        // TODO Why does returning the object without a cast not work?
-//        return dispatchingAndroidInjector as AndroidInjector<Fragment>
-//    }
-
-
     fun record() {
         Log.i("Record", "Record button pressed")
 
@@ -162,6 +182,11 @@ class ScoreActivity : AppCompatActivity() {
 
         Log.i("Record", "Calling recordAudio")
         recorder.recordAudio()
+    }
+
+
+    fun render(state: ScoreViewState) {
+        btnPlay.isEnabled = !state.isPlaying
     }
 
 }
