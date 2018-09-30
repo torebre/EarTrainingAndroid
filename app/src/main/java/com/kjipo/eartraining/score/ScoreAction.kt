@@ -2,10 +2,10 @@ package com.kjipo.eartraining.score
 
 sealed class ScoreAction {
 
-    data class GenerateNewScore(val taskId: String?) : ScoreAction()
+    object GenerateNewScore : ScoreAction()
 
     data class PlayScore(val taskId: String?) : ScoreAction()
 
-    class Skip : ScoreAction()
+    object Skip : ScoreAction()
 
 }

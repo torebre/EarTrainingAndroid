@@ -12,11 +12,20 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
 
 
     private val generateScoreTaskProcessor =
-            ObservableTransformer<ScoreAction.GenerateNewScore, ScoreActionResult.GenerateScoreResult> {
-                // TODO
-
-                Observable.empty<ScoreActionResult.GenerateScoreResult>()
-
+            ObservableTransformer<ScoreAction.GenerateNewScore, ScoreActionResult.GenerateScoreResult> { actions ->
+                actions.flatMap { generateAction ->
+                    Single.fromCallable {
+                        earTrainer.getSequenceGenerator().createNewSequence()
+                        earTrainer.getSequenceGenerator().scoreHandler.updateScore()
+                        earTrainer.getSequenceGenerator()
+                    }.toObservable()
+                            .map { it -> ScoreActionResult.GenerateScoreResult.Success(it) }
+                            .cast(ScoreActionResult.GenerateScoreResult::class.java)
+                            .onErrorReturn(ScoreActionResult.GenerateScoreResult::Failure)
+                            .subscribeOn(schedulerProvider.io())
+                            .observeOn(schedulerProvider.ui())
+//                            .startWith(ScoreActionResult.GenerateScoreResult.InFlight)
+                }
             }
 
 

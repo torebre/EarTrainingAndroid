@@ -12,9 +12,7 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
 
 
     fun processIntent(intent: Observable<ScoreIntent>) {
-        intent
-                .doOnSubscribe { Log.i("Rx", "Test24") }
-                .subscribe(intentsSubject)
+        intent.subscribe(intentsSubject)
     }
 
     private val intentFilter: ObservableTransformer<ScoreIntent, ScoreIntent>
@@ -36,41 +34,28 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
         when (result) {
             is ScoreActionResult.GenerateScoreResult -> when (result) {
                 is ScoreActionResult.GenerateScoreResult.Success -> {
-                    // TODO
-                    previousState
-
+                    previousState.copy(false, result.sequenceGenerator,
+                            if (previousState.scoreCounter == null) {
+                                0
+                            } else {
+                                previousState.scoreCounter + 1
+                            })
                 }
                 is ScoreActionResult.GenerateScoreResult.Failure -> {
-                    // TODO
-
                     previousState
                 }
-
             }
             is ScoreActionResult.PlayAction -> when (result) {
                 is ScoreActionResult.PlayAction.Success -> previousState.copy(false)
                 is ScoreActionResult.PlayAction.Failure -> previousState.copy(false)
                 is ScoreActionResult.PlayAction.InFlight -> previousState.copy(true)
             }
-
-
         }
-
-
-
-
 
     }
 
-
-
     private fun compose(): Observable<ScoreViewState> {
         return intentsSubject.compose<ScoreIntent>(intentFilter)
-                .doOnEach {
-
-                    Log.i("Rx", "Test23")
-
-                }
                 .map(this::actionFromIntent)
                 .filter { action -> action !is ScoreAction.Skip }
                 .compose(actionProcessorHolder.actionProcessor)
@@ -78,38 +63,19 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 .distinctUntilChanged()
                 .replay(1)
                 .autoConnect(0)
-
-
-//                .compose<ScoreViewState>()
-//                .map<AddEditTaskAction>(this::actionFromIntent)
-//                // Special case where we do not want to pass this event down the stream
-//                .filter { action -> action !is AddEditTaskAction.SkipMe }
-//                .compose(actionProcessorHolder.actionProcessor)
-//                // Cache each state and pass it to the reducer to create a new state from
-//                // the previous cached one and the latest Result emitted from the action processor.
-//                // The Scan operator is used here for the caching.
-//                .scan(AddEditTaskViewState.idle(), reducer)
-//                // When a reducer just emits previousState, there's no reason to call render. In fact,
-//                // redrawing the UI in cases like this can cause jank (e.g. messing up snackbar animations
-//                // by showing the same snackbar twice in rapid succession).
-//                .distinctUntilChanged()
-//                // Emit the last one event of the stream on subscription
-//                // Useful when a View rebinds to the ViewModel after rotation.
-//                .replay(1)
-//                // Create the stream on creation without waiting for anyone to subscribe
-//                // This allows the stream to stay alive even when the UI disconnects and
-//                // match the stream's lifecycle to the ViewModel's one.
-//                .autoConnect(0)
     }
 
 
     private fun actionFromIntent(intent: ScoreIntent): ScoreAction {
         return when (intent) {
             is ScoreIntent.InitialIntent -> {
-                ScoreAction.GenerateNewScore(intent.taskId)
+                ScoreAction.Skip
             }
             is ScoreIntent.PlayAction -> {
                 ScoreAction.PlayScore(intent.taskId)
+            }
+            is ScoreIntent.GenerateIntent -> {
+                ScoreAction.GenerateNewScore
             }
         }
     }
@@ -122,8 +88,6 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
 
     private val intentsSubject: PublishSubject<ScoreIntent> = PublishSubject.create()
     private val states: Observable<ScoreViewState> = compose()
-
-
 
 
 }

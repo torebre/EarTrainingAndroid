@@ -13,24 +13,16 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
-import android.widget.Button
 import com.jakewharton.rxbinding2.view.RxView
 import com.kjipo.eartraining.CustomWebViewClient
 import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
-import com.kjipo.eartraining.midi.MidiPlayerInterface
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.recorder.Recorder
 import dagger.android.AndroidInjection
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.score_act.*
-import java.util.*
 import javax.inject.Inject
 
 
@@ -40,8 +32,6 @@ class ScoreActivity : AppCompatActivity() {
 
     @Inject
     lateinit var earTrainer: EarTrainer
-    //    @Inject
-//    lateinit var midiPlayer: MidiPlayerInterface
     @Inject
     lateinit var recorder: Recorder
 
@@ -82,36 +72,8 @@ class ScoreActivity : AppCompatActivity() {
             it.loadNoteSequence()
         }
 
-//        btnPlay.setOnClickListener { playMidiScript() }
         btnRecord.setOnClickListener { record() }
-
-        btnGenerate.setOnClickListener { setupSequence() }
-
-        earTrainer.getMidiInterface()
     }
-
-
-    private fun playMidiScript() {
-        btnPlay.isEnabled = false
-        disposable.add(Completable.fromRunnable { midiScript?.play() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ btnPlay.isEnabled = true },
-                        { error -> Log.e("Score activity", "Error when playing MIDI", error) }))
-    }
-
-    private fun setupSequence() {
-        earTrainer.getSequenceGenerator().createNewSequence()
-
-        midiScript = MidiScript(earTrainer.getSequenceGenerator().pitchSequence,
-                earTrainer.getMidiInterface())
-        noteViewClient?.let {
-            earTrainer.getSequenceGenerator().scoreHandler.updateScore()
-            it.scoreHandler?.scoreHandler = earTrainer.getSequenceGenerator()
-            it.updateWebscore()
-        }
-    }
-
 
     override fun onStart() {
         super.onStart()
@@ -125,12 +87,18 @@ class ScoreActivity : AppCompatActivity() {
 
 
     fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(initialIntent(), playIntent())
+        return Observable.merge(initialIntent(), playIntent(), generateIntent())
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
         return RxView.clicks(btnPlay).map {
             ScoreIntent.PlayAction("play")
+        }
+    }
+
+    private fun generateIntent(): Observable<ScoreIntent.GenerateIntent> {
+        return RxView.clicks(btnGenerate).map {
+            ScoreIntent.GenerateIntent()
         }
     }
 
@@ -187,6 +155,14 @@ class ScoreActivity : AppCompatActivity() {
 
     fun render(state: ScoreViewState) {
         btnPlay.isEnabled = !state.isPlaying
+
+        state.sequenceGenerator?.let { sequenceGenerator ->
+            noteViewClient?.let {
+                it.scoreHandler?.scoreHandler = sequenceGenerator
+                it.updateWebscore()
+            }
+        }
+
     }
 
 }

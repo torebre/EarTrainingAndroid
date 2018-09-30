@@ -6,4 +6,6 @@ sealed class ScoreIntent {
 
     data class PlayAction(val taskId: String?) : ScoreIntent()
 
+    class GenerateIntent : ScoreIntent()
+
 }
