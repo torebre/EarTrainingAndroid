@@ -8,4 +8,6 @@ sealed class ScoreIntent {
 
     class GenerateIntent : ScoreIntent()
 
+    class SubmitIntent : ScoreIntent()
+
 }

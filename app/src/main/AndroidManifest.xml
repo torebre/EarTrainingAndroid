@@ -23,9 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity android:name=".OptionsActivity"></activity>-->
-
         <activity android:name="com.kjipo.eartraining.score.ScoreActivity" />
+        <activity android:name="com.kjipo.eartraining.recorder.RecordActivity" />
 
     </application>
 

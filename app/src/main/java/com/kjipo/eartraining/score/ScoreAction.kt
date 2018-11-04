@@ -6,6 +6,8 @@ sealed class ScoreAction {
 
     data class PlayScore(val taskId: String?) : ScoreAction()
 
+    object Submit : ScoreAction()
+
     object Skip : ScoreAction()
 
 }

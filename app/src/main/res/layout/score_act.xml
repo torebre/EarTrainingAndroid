@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="customWebView"
-            type="com.kjipo.eartraining.ObjectModel" />
-    </data>
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/scoreLayout"
         android:layout_width="match_parent"
@@ -20,44 +14,44 @@
             android:id="@+id/score"
             android:layout_width="match_parent"
             android:layout_height="467dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/btnPlay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.472"
-            app:setWebViewClient="@{customWebView.customWebViewClient}" />
+            app:layout_constraintVertical_bias="0.472" />
 
         <Button
             android:id="@+id/btnGenerate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:text="Generate"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
             android:text="Play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/btnRecord"
-            app:layout_constraintRight_toLeftOf="@+id/btnGenerate" />
+            app:layout_constraintStart_toEndOf="@+id/btnGenerate" />
 
         <Button
-            android:id="@+id/btnRecord"
+            android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Record"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/btnPlay"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_marginStart="36dp"
+            android:text="Submit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnPlay" />
 
     </android.support.constraint.ConstraintLayout>
 

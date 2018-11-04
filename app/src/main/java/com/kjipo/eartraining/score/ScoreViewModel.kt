@@ -1,11 +1,10 @@
 package com.kjipo.eartraining.score
 
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.subjects.PublishSubject
 import io.reactivex.functions.BiFunction
+import io.reactivex.subjects.PublishSubject
 
 
 class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHolder) : ViewModel() {
@@ -32,18 +31,28 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
     private val reducer = BiFunction { previousState: ScoreViewState,
                                        result: ScoreActionResult ->
         when (result) {
-            is ScoreActionResult.GenerateScoreResult -> when (result) {
-                is ScoreActionResult.GenerateScoreResult.Success -> {
-                    previousState.copy(false, result.sequenceGenerator,
-                            if (previousState.scoreCounter == null) {
-                                0
-                            } else {
-                                previousState.scoreCounter + 1
-                            })
-                }
-                is ScoreActionResult.GenerateScoreResult.Failure -> {
-                    previousState
-                }
+            is ScoreActionResult.GenerateScoreResult.Success -> {
+                previousState.copy(false, result.sequenceGenerator,
+                        if (previousState.scoreCounter == null) {
+                            0
+                        } else {
+                            previousState.scoreCounter + 1
+                        })
+            }
+            is ScoreActionResult.GenerateScoreResult.Failure -> {
+                previousState
+            }
+            is ScoreActionResult.SubmitAction.Success -> {
+                previousState.copy(false,
+                        result.sequenceGenerator,
+                        if (previousState.scoreCounter == null) {
+                            0
+                        } else {
+                            previousState.scoreCounter + 1
+                        })
+            }
+            is ScoreActionResult.SubmitAction.Failure -> {
+                previousState
             }
             is ScoreActionResult.PlayAction -> when (result) {
                 is ScoreActionResult.PlayAction.Success -> previousState.copy(false)
@@ -76,6 +85,9 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
             }
             is ScoreIntent.GenerateIntent -> {
                 ScoreAction.GenerateNewScore
+            }
+            is ScoreIntent.SubmitIntent -> {
+                ScoreAction.Submit
             }
         }
     }
