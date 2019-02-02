@@ -7,6 +7,10 @@ import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
 import com.kjipo.eartraining.storage.StoredSequence
 import com.kjipo.eartraining.storage.SubmittedSequence
+import com.kjipo.score.Duration
+import com.kjipo.scoregenerator.NoteSequenceElement
+import com.kjipo.scoregenerator.SimpleNoteSequence
+import com.kjipo.scoregenerator.SimpleSequenceGenerator
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
@@ -21,12 +25,20 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
             ObservableTransformer<ScoreAction.GenerateNewScore, ScoreActionResult.GenerateScoreResult> { actions ->
                 actions.flatMap { generateAction ->
                     Single.fromCallable {
-                        earTrainer.getSequenceGenerator().createNewSequence()
+                        val simpleSequence = SimpleSequenceGenerator.createSequence()
+                        earTrainer.getSequenceGenerator().loadSimpleNoteSequence(simpleSequence)
                         currentScoreId = database.generatedSequenceDao().insertGeneratedSequence(StoredSequence())
-                        earTrainer.getSequenceGenerator().scoreHandler.updateScore()
-                        earTrainer.getSequenceGenerator()
+
+                        val start = SimpleNoteSequence(listOf(NoteSequenceElement.RestElement(Duration.QUARTER),
+                                NoteSequenceElement.RestElement(Duration.QUARTER),
+                                NoteSequenceElement.RestElement(Duration.QUARTER),
+                                NoteSequenceElement.RestElement(Duration.QUARTER)))
+
+                        earTrainer.getSequenceGenerator().loadSimpleNoteSequence(start)
+
+                        ScoreActionResult.GenerateScoreResult.Success(earTrainer.getSequenceGenerator(), simpleSequence)
                     }.toObservable()
-                            .map { it -> ScoreActionResult.GenerateScoreResult.Success(it) }
+//                            .map { it -> ScoreActionResult.GenerateScoreResult.Success(it) }
                             .cast(ScoreActionResult.GenerateScoreResult::class.java)
                             .onErrorReturn(ScoreActionResult.GenerateScoreResult::Failure)
                             .subscribeOn(schedulerProvider.io())
@@ -57,15 +69,15 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
     private val submitProcessor = ObservableTransformer<ScoreAction, ScoreActionResult.SubmitAction> { actions ->
         actions.flatMap { submitAction ->
             Single.fromCallable {
-//                Log.i("Database", "Stored sequences:")
-//                database.generatedSequenceDao().getAllStoredSequences().forEach {
-//                    Log.i("Database", "Stored sequence: $it")
-//                }
-//
-//                Log.i("Database", "Submitted sequences:")
-//                database.generatedSequenceDao().getAllSubmittedSequences().forEach {
-//                    Log.i("Database", "Submitted sequence: $it")
-//                }
+                Log.i("Database", "Stored sequences:")
+                database.generatedSequenceDao().getAllStoredSequences().forEach {
+                    Log.i("Database", "Stored sequence: $it")
+                }
+
+                Log.i("Database", "Submitted sequences:")
+                database.generatedSequenceDao().getAllSubmittedSequences().forEach {
+                    Log.i("Database", "Submitted sequence: $it")
+                }
 
                 database.generatedSequenceDao().insertSubmittedSequence(SubmittedSequence(null, currentScoreId))
 
