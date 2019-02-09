@@ -6,6 +6,7 @@ import com.kjipo.handler.ScoreHandlerInterface
 import com.kjipo.scoregenerator.SequenceGenerator
 
 class ScoreHandlerWrapper(var scoreHandler: SequenceGenerator) : ScoreHandlerInterface {
+
     val listeners = mutableListOf<ScoreHandlerListener>()
 
     @JavascriptInterface
@@ -40,6 +41,9 @@ class ScoreHandlerWrapper(var scoreHandler: SequenceGenerator) : ScoreHandlerInt
 
     @JavascriptInterface
     override fun getNeighbouringElement(activeElement: String, lookLeft: Boolean) = scoreHandler.getNeighbouringElement(activeElement, lookLeft)
+
+    @JavascriptInterface
+    override fun switchBetweenNoteAndRest(idOfElementToReplace: String, keyPressed: Int) = scoreHandler.switchBetweenNoteAndRest(idOfElementToReplace, keyPressed)
 
 }
 

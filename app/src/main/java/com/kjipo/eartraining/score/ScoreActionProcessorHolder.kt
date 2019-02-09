@@ -25,18 +25,10 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
             ObservableTransformer<ScoreAction.GenerateNewScore, ScoreActionResult.GenerateScoreResult> { actions ->
                 actions.flatMap { generateAction ->
                     Single.fromCallable {
-                        val simpleSequence = SimpleSequenceGenerator.createSequence()
-                        earTrainer.getSequenceGenerator().loadSimpleNoteSequence(simpleSequence)
+                        earTrainer.createNewTrainingSequence()
                         currentScoreId = database.generatedSequenceDao().insertGeneratedSequence(StoredSequence())
 
-                        val start = SimpleNoteSequence(listOf(NoteSequenceElement.RestElement(Duration.QUARTER),
-                                NoteSequenceElement.RestElement(Duration.QUARTER),
-                                NoteSequenceElement.RestElement(Duration.QUARTER),
-                                NoteSequenceElement.RestElement(Duration.QUARTER)))
-
-                        earTrainer.getSequenceGenerator().loadSimpleNoteSequence(start)
-
-                        ScoreActionResult.GenerateScoreResult.Success(earTrainer.getSequenceGenerator(), simpleSequence)
+                        ScoreActionResult.GenerateScoreResult.Success(earTrainer.getSequenceGenerator(), earTrainer.currentTargetSequence)
                     }.toObservable()
 //                            .map { it -> ScoreActionResult.GenerateScoreResult.Success(it) }
                             .cast(ScoreActionResult.GenerateScoreResult::class.java)
