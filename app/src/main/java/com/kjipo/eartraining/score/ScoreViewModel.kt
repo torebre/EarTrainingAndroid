@@ -32,37 +32,39 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                                        result: ScoreActionResult ->
         when (result) {
             is ScoreActionResult.GenerateScoreResult.Success -> {
-                previousState.copy(false, result.sequenceGenerator,
-                        if (previousState.scoreCounter == null) {
+                previousState.copy(isPlaying = false, sequenceGenerator = result.sequenceGenerator,
+                        scoreCounter = if (previousState.scoreCounter == null) {
                             0
                         } else {
                             previousState.scoreCounter + 1
-                        })
+                        }, submitted = false)
             }
             is ScoreActionResult.GenerateScoreResult.Failure -> {
                 previousState
             }
             is ScoreActionResult.SubmitAction.Success -> {
-                previousState.copy(false,
-                        result.sequenceGenerator,
-                        if (previousState.scoreCounter == null) {
+                previousState.copy(isPlaying = false,
+                        sequenceGenerator = result.sequenceGenerator,
+                        scoreCounter = if (previousState.scoreCounter == null) {
                             0
                         } else {
                             previousState.scoreCounter + 1
-                        })
+                        },
+                        submitted = true,
+                        addTargetScore = true)
             }
             is ScoreActionResult.SubmitAction.Failure -> {
                 previousState
             }
             is ScoreActionResult.PlayAction -> when (result) {
-                is ScoreActionResult.PlayAction.Success -> previousState.copy(false)
-                is ScoreActionResult.PlayAction.Failure -> previousState.copy(false)
-                is ScoreActionResult.PlayAction.InFlight -> previousState.copy(true)
+                is ScoreActionResult.PlayAction.Success -> previousState.copy(isPlaying = false)
+                is ScoreActionResult.PlayAction.Failure -> previousState.copy(isPlaying = false)
+                is ScoreActionResult.PlayAction.InFlight -> previousState.copy(isPlaying = true)
             }
             is ScoreActionResult.TargetPlayAction -> when (result) {
-                is ScoreActionResult.TargetPlayAction.Success -> previousState.copy(false)
-                is ScoreActionResult.TargetPlayAction.Failure -> previousState.copy(false)
-                is ScoreActionResult.TargetPlayAction.InFlight -> previousState.copy(true)
+                is ScoreActionResult.TargetPlayAction.Success -> previousState.copy(isPlaying = false)
+                is ScoreActionResult.TargetPlayAction.Failure -> previousState.copy(isPlaying = false)
+                is ScoreActionResult.TargetPlayAction.InFlight -> previousState.copy(isPlaying = true)
             }
         }
 

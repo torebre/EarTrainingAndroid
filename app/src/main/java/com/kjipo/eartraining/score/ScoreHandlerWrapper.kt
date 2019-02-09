@@ -2,10 +2,11 @@ package com.kjipo.eartraining.score
 
 import android.util.Log
 import android.webkit.JavascriptInterface
+import com.kjipo.handler.ScoreHandler
 import com.kjipo.handler.ScoreHandlerInterface
 import com.kjipo.scoregenerator.SequenceGenerator
 
-class ScoreHandlerWrapper(var scoreHandler: SequenceGenerator) : ScoreHandlerInterface {
+class ScoreHandlerWrapper(var scoreHandler: ScoreHandlerInterface) : ScoreHandlerInterface {
 
     val listeners = mutableListOf<ScoreHandlerListener>()
 

@@ -15,5 +15,4 @@ interface EarTrainer {
 
     fun createNewTrainingSequence()
 
-
 }

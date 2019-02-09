@@ -17,6 +17,7 @@ import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
+import com.kjipo.scoregenerator.SequenceGenerator
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -51,7 +52,6 @@ class ScoreActivity : AppCompatActivity() {
         viewModelFactory = ViewModelFactory(earTrainer, database)
         viewModel = viewModelFactory.create(ScoreViewModel::class.java)
 
-        earTrainer.getSequenceGenerator().createNewSequence()
         setContentView(R.layout.score_act)
 
         // This enables the possibility of debugging the webview from Chrome
@@ -59,6 +59,7 @@ class ScoreActivity : AppCompatActivity() {
 
         val myWebView = findViewById<View>(R.id.score) as WebView
 
+        earTrainer.createNewTrainingSequence()
         val scoreHandlerWrapper = ScoreHandlerWrapper(earTrainer.getSequenceGenerator())
         scoreHandlerWrapper.listeners.add(object : ScoreHandlerListener {
             override fun pitchSequenceChanged() {
@@ -141,11 +142,21 @@ class ScoreActivity : AppCompatActivity() {
 
     fun render(state: ScoreViewState) {
         btnPlay.isEnabled = !state.isPlaying
+        btnSubmit.isEnabled = !state.submitted
 
         state.sequenceGenerator?.let { sequenceGenerator ->
             noteViewClient?.let {
                 it.scoreHandler?.scoreHandler = sequenceGenerator
                 it.updateWebscore()
+            }
+        }
+
+        if (state.addTargetScore) {
+            val sequenceGenerator = SequenceGenerator()
+            sequenceGenerator.loadSimpleNoteSequence(earTrainer.currentTargetSequence)
+            val targetSequenceWrapper = ScoreHandlerWrapper(sequenceGenerator)
+            noteViewClient?.let {
+                it.loadSecondScore(targetSequenceWrapper, "targetSequence")
             }
         }
 
