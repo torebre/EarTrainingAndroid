@@ -23,15 +23,14 @@ class EarTrainerImpl : EarTrainer {
 
     override fun createNewTrainingSequence() {
         currentTargetSequence = SimpleSequenceGenerator.createSequence()
-        resetUserInputSequence()
-        sequenceGeneratorInternal.loadSimpleNoteSequence(currentTargetSequence)
+        sequenceGeneratorInternal.loadSimpleNoteSequence(createEmptySequence())
     }
 
-    private fun resetUserInputSequence() {
-        currentTargetSequence = SimpleNoteSequence(listOf(NoteSequenceElement.RestElement(Duration.QUARTER),
+    private fun createEmptySequence() =
+        SimpleNoteSequence(listOf(NoteSequenceElement.RestElement(Duration.QUARTER),
                 NoteSequenceElement.RestElement(Duration.QUARTER),
                 NoteSequenceElement.RestElement(Duration.QUARTER),
                 NoteSequenceElement.RestElement(Duration.QUARTER)))
-    }
+
 
 }

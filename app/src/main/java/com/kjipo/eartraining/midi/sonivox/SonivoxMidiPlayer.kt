@@ -1,6 +1,5 @@
 package com.kjipo.eartraining.midi.sonivox
 
-import android.content.Context
 import com.kjipo.eartraining.midi.MidiMessages
 import com.kjipo.eartraining.midi.MidiPlayerInterface
 import org.billthefarmer.mididriver.MidiDriver

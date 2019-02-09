@@ -7,10 +7,6 @@ import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
 import com.kjipo.eartraining.storage.StoredSequence
 import com.kjipo.eartraining.storage.SubmittedSequence
-import com.kjipo.score.Duration
-import com.kjipo.scoregenerator.NoteSequenceElement
-import com.kjipo.scoregenerator.SimpleNoteSequence
-import com.kjipo.scoregenerator.SimpleSequenceGenerator
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
@@ -23,7 +19,7 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
 
     private val generateScoreTaskProcessor =
             ObservableTransformer<ScoreAction.GenerateNewScore, ScoreActionResult.GenerateScoreResult> { actions ->
-                actions.flatMap { generateAction ->
+                actions.flatMap {
                     Single.fromCallable {
                         earTrainer.createNewTrainingSequence()
                         currentScoreId = database.generatedSequenceDao().insertGeneratedSequence(StoredSequence())
@@ -42,13 +38,13 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
 
     private val playScoreProcessor =
             ObservableTransformer<ScoreAction, ScoreActionResult.PlayAction> { actions ->
-                actions.flatMap { playAction ->
+                actions.flatMap {
                     Single.fromCallable {
                         val midiScript = MidiScript(earTrainer.getSequenceGenerator().pitchSequence, earTrainer.getMidiInterface())
                         midiScript.play()
                         true
                     }.toObservable()
-                            .map { it -> ScoreActionResult.PlayAction.Success }
+                            .map { ScoreActionResult.PlayAction.Success }
                             .cast(ScoreActionResult.PlayAction::class.java)
                             .onErrorReturn(ScoreActionResult.PlayAction::Failure)
                             .subscribeOn(schedulerProvider.io())
@@ -57,9 +53,27 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                 }
             }
 
+    private val targetPlayProcessor =
+            ObservableTransformer<ScoreAction, ScoreActionResult.TargetPlayAction> { actions ->
+                actions.flatMap {
+                    Single.fromCallable {
+                        val midiScript = MidiScript(earTrainer.currentTargetSequence.transformToPitchSequence(), earTrainer.getMidiInterface())
+                        midiScript.play()
+                        true
+                    }.toObservable()
+                            .map { it -> ScoreActionResult.TargetPlayAction.Success }
+                            .cast(ScoreActionResult.TargetPlayAction::class.java)
+                            .onErrorReturn(ScoreActionResult.TargetPlayAction::Failure)
+                            .subscribeOn(schedulerProvider.io())
+                            .observeOn(schedulerProvider.ui())
+                            .startWith(ScoreActionResult.TargetPlayAction.InFlight)
+                }
+
+            }
+
 
     private val submitProcessor = ObservableTransformer<ScoreAction, ScoreActionResult.SubmitAction> { actions ->
-        actions.flatMap { submitAction ->
+        actions.flatMap {
             Single.fromCallable {
                 Log.i("Database", "Stored sequences:")
                 database.generatedSequenceDao().getAllStoredSequences().forEach {
@@ -90,11 +104,14 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                             shared.ofType(ScoreAction.GenerateNewScore::class.java)
                                     .compose(generateScoreTaskProcessor),
                             shared.ofType(ScoreAction.Submit::class.java)
-                                    .compose(submitProcessor))
+                                    .compose(submitProcessor),
+                            shared.ofType(ScoreAction.TargetPlay::class.java)
+                                    .compose(targetPlayProcessor))
                             .mergeWith(shared.filter { v ->
                                 v !is ScoreAction.PlayScore
                                         && v !is ScoreAction.GenerateNewScore
                                         && v !is ScoreAction.Submit
+                                        && v !is ScoreAction.TargetPlay
                             }.flatMap { action ->
                                 Observable.error<ScoreActionResult>(
                                         IllegalArgumentException("Unknown action: $action")

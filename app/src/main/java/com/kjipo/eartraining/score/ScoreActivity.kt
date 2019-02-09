@@ -84,29 +84,35 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(initialIntent(), playIntent(), generateIntent(), submitIntent())
+        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent()))
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
         return RxView.clicks(btnPlay).map {
-            ScoreIntent.PlayAction("play")
+            ScoreIntent.PlayAction
+        }
+    }
+
+    private fun targetIntent(): Observable<ScoreIntent.TargetAction> {
+        return RxView.clicks(btnTarget).map {
+            ScoreIntent.TargetAction
         }
     }
 
     private fun generateIntent(): Observable<ScoreIntent.GenerateIntent> {
         return RxView.clicks(btnGenerate).map {
-            ScoreIntent.GenerateIntent()
+            ScoreIntent.GenerateIntent
         }
     }
 
     private fun submitIntent(): Observable<ScoreIntent.SubmitIntent> {
         return RxView.clicks(btnSubmit).map {
-            ScoreIntent.SubmitIntent()
+            ScoreIntent.SubmitIntent
         }
     }
 
     private fun initialIntent(): Observable<ScoreIntent.InitialIntent> {
-        return Observable.just(ScoreIntent.InitialIntent("initialTask"))
+        return Observable.just(ScoreIntent.InitialIntent)
     }
 
     override fun onStop() {

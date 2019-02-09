@@ -6,7 +6,6 @@ import android.app.Application;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 
@@ -15,8 +14,6 @@ public class EarTrainingApplication extends Application implements HasActivityIn
 
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
-
-    private static final String GLYPH_URL = "file:///android_asset/js/glyphs.json";
 
 
     @Override

@@ -59,6 +59,11 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 is ScoreActionResult.PlayAction.Failure -> previousState.copy(false)
                 is ScoreActionResult.PlayAction.InFlight -> previousState.copy(true)
             }
+            is ScoreActionResult.TargetPlayAction -> when (result) {
+                is ScoreActionResult.TargetPlayAction.Success -> previousState.copy(false)
+                is ScoreActionResult.TargetPlayAction.Failure -> previousState.copy(false)
+                is ScoreActionResult.TargetPlayAction.InFlight -> previousState.copy(true)
+            }
         }
 
     }
@@ -81,13 +86,16 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 ScoreAction.Skip
             }
             is ScoreIntent.PlayAction -> {
-                ScoreAction.PlayScore(intent.taskId)
+                ScoreAction.PlayScore
             }
             is ScoreIntent.GenerateIntent -> {
                 ScoreAction.GenerateNewScore
             }
             is ScoreIntent.SubmitIntent -> {
                 ScoreAction.Submit
+            }
+            is ScoreIntent.TargetAction -> {
+                ScoreAction.TargetPlay
             }
         }
     }

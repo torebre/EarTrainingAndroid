@@ -2,12 +2,14 @@ package com.kjipo.eartraining.score
 
 sealed class ScoreIntent {
 
-    data class InitialIntent(val taskId: String?) : ScoreIntent()
+    object InitialIntent : ScoreIntent()
 
-    data class PlayAction(val taskId: String?) : ScoreIntent()
+    object PlayAction : ScoreIntent()
 
-    class GenerateIntent : ScoreIntent()
+    object TargetAction: ScoreIntent()
 
-    class SubmitIntent : ScoreIntent()
+    object GenerateIntent : ScoreIntent()
+
+    object SubmitIntent : ScoreIntent()
 
 }

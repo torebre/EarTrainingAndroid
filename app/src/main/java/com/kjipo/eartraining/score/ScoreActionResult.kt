@@ -16,6 +16,12 @@ sealed class ScoreActionResult {
         object InFlight : PlayAction()
     }
 
+    sealed class TargetPlayAction: ScoreActionResult() {
+        object Success: TargetPlayAction()
+        data class Failure(val error: Throwable): TargetPlayAction()
+        object InFlight: TargetPlayAction()
+    }
+
     sealed class SubmitAction : ScoreActionResult() {
         data class Success(val sequenceGenerator: SequenceGenerator) : SubmitAction()
         data class Failure(val error: Throwable) : SubmitAction()

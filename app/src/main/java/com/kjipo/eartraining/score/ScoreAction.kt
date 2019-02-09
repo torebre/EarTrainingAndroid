@@ -4,7 +4,9 @@ sealed class ScoreAction {
 
     object GenerateNewScore : ScoreAction()
 
-    data class PlayScore(val taskId: String?) : ScoreAction()
+    object PlayScore : ScoreAction()
+
+    object TargetPlay: ScoreAction()
 
     object Submit : ScoreAction()
 
