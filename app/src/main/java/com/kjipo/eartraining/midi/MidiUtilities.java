@@ -68,8 +68,8 @@ public final class MidiUtilities {
 
 
     public static double pitchToFrequency(double pitch) {
-        double semitones = pitch - MidiConstants.CONCERT_A_PITCH;
-        return MidiConstants.CONCERT_A_FREQUENCY * Math.pow(2.0, semitones / 12.0);
+        double semitones = pitch - MidiConstants.INSTANCE.getCONCERT_A_PITCH();
+        return MidiConstants.INSTANCE.getCONCERT_A_FREQUENCY() * Math.pow(2.0, semitones / 12.0);
     }
 
 

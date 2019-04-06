@@ -7,13 +7,11 @@ import com.kjipo.scoregenerator.NoteSequenceElement
 import com.kjipo.scoregenerator.SequenceGenerator
 import com.kjipo.scoregenerator.SimpleNoteSequence
 import com.kjipo.scoregenerator.SimpleSequenceGenerator
-import javax.inject.Singleton
 
 
-@Singleton
 class EarTrainerImpl : EarTrainer {
-    var sequenceGeneratorInternal = SequenceGenerator()
-    var midiPlayer = SonivoxMidiPlayer()
+    private var sequenceGeneratorInternal = SequenceGenerator()
+    private var midiPlayer = SonivoxMidiPlayer()
 
     override var currentTargetSequence = SimpleNoteSequence(emptyList())
 
@@ -27,10 +25,10 @@ class EarTrainerImpl : EarTrainer {
     }
 
     private fun createEmptySequence() =
-        SimpleNoteSequence(listOf(NoteSequenceElement.RestElement(Duration.QUARTER),
-                NoteSequenceElement.RestElement(Duration.QUARTER),
-                NoteSequenceElement.RestElement(Duration.QUARTER),
-                NoteSequenceElement.RestElement(Duration.QUARTER)))
+            SimpleNoteSequence(listOf(NoteSequenceElement.RestElement(Duration.QUARTER),
+                    NoteSequenceElement.RestElement(Duration.QUARTER),
+                    NoteSequenceElement.RestElement(Duration.QUARTER),
+                    NoteSequenceElement.RestElement(Duration.QUARTER)))
 
 
 }

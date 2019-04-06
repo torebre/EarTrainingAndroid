@@ -7,7 +7,6 @@ apply plugin: 'maven'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId 'com.kjipo.eartraining'
@@ -56,13 +55,9 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:$rootProject.architectureComponentsVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rootProject.rxBindingVersion"
 
-    kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
-
-    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    implementation "com.google.dagger:dagger-android:$rootProject.daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
+
+    compile 'org.koin:koin-android:2.0.0-rc-2'
 
     // RxJava
     api "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"

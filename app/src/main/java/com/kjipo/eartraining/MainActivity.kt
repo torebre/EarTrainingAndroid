@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.main_act.*
 
 
 class MainActivity : AppCompatActivity() {
-    val lifecycleRegistry = LifecycleRegistry(this)
-    var navigationController: NavigationController = NavigationController(this)
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    private var navigationController: NavigationController = NavigationController(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

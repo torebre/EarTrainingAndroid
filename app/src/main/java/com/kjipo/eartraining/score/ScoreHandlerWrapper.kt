@@ -7,7 +7,6 @@ import com.kjipo.handler.ScoreHandlerInterface
 import com.kjipo.scoregenerator.SequenceGenerator
 
 class ScoreHandlerWrapper(var scoreHandler: ScoreHandlerInterface) : ScoreHandlerInterface {
-
     val listeners = mutableListOf<ScoreHandlerListener>()
 
     @JavascriptInterface
@@ -45,6 +44,10 @@ class ScoreHandlerWrapper(var scoreHandler: ScoreHandlerInterface) : ScoreHandle
 
     @JavascriptInterface
     override fun switchBetweenNoteAndRest(idOfElementToReplace: String, keyPressed: Int) = scoreHandler.switchBetweenNoteAndRest(idOfElementToReplace, keyPressed)
+
+    @JavascriptInterface
+    override fun deleteElement(id: String) = scoreHandler.deleteElement(id)
+
 
 }
 

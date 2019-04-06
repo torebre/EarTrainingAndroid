@@ -18,19 +18,14 @@ import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
 import com.kjipo.scoregenerator.SequenceGenerator
-import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.score_act.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 
 class ScoreActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var earTrainer: EarTrainer
-
-
+    private val earTrainer: EarTrainer by inject()
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: ScoreViewModel
 
@@ -41,7 +36,6 @@ class ScoreActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         val database = Room.databaseBuilder(applicationContext,
@@ -122,24 +116,6 @@ class ScoreActivity : AppCompatActivity() {
         disposable.clear()
     }
 
-    companion object {
-
-        fun start(activity: Activity, options: ActivityOptionsCompat) {
-            val starter = getStartIntent(activity)
-            ActivityCompat.startActivity(activity, starter, options.toBundle())
-        }
-
-        fun start(context: Context) {
-            val starter = getStartIntent(context)
-            context.startActivity(starter)
-
-        }
-
-        internal fun getStartIntent(context: Context): Intent {
-            return Intent(context, ScoreActivity::class.java)
-        }
-    }
-
     fun render(state: ScoreViewState) {
         btnPlay.isEnabled = !state.isPlaying
         btnSubmit.isEnabled = !state.submitted
@@ -161,5 +137,24 @@ class ScoreActivity : AppCompatActivity() {
         }
 
     }
+
+    companion object {
+
+        fun start(activity: Activity, options: ActivityOptionsCompat) {
+            val starter = getStartIntent(activity)
+            ActivityCompat.startActivity(activity, starter, options.toBundle())
+        }
+
+        fun start(context: Context) {
+            val starter = getStartIntent(context)
+            context.startActivity(starter)
+
+        }
+
+        internal fun getStartIntent(context: Context): Intent {
+            return Intent(context, ScoreActivity::class.java)
+        }
+    }
+
 
 }
