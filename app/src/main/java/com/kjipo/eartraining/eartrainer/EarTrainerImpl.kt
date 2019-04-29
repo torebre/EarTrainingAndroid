@@ -21,6 +21,11 @@ class EarTrainerImpl : EarTrainer {
 
     override fun createNewTrainingSequence() {
         currentTargetSequence = SimpleSequenceGenerator.createSequence()
+
+        // TODO Add a clear method
+//        sequenceGeneratorInternal.loadSimpleNoteSequence(createEmptySequence())
+
+        sequenceGeneratorInternal = SequenceGenerator()
         sequenceGeneratorInternal.loadSimpleNoteSequence(createEmptySequence())
     }
 

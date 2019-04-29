@@ -116,7 +116,7 @@ class ScoreActivity : AppCompatActivity() {
         disposable.clear()
     }
 
-    fun render(state: ScoreViewState) {
+    private fun render(state: ScoreViewState) {
         btnPlay.isEnabled = !state.isPlaying
         btnSubmit.isEnabled = !state.submitted
 

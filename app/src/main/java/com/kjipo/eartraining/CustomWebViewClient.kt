@@ -78,7 +78,7 @@ class CustomWebViewClient : WebViewClient() {
 
     fun updateWebscore() {
         webView.evaluateJavascript("""
-               test.reload();
+               test_score.reload();
            """) {
             Log.i("Webscore", it)
         }

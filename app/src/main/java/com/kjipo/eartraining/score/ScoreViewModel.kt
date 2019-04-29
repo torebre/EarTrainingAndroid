@@ -32,12 +32,14 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                                        result: ScoreActionResult ->
         when (result) {
             is ScoreActionResult.GenerateScoreResult.Success -> {
-                previousState.copy(isPlaying = false, sequenceGenerator = result.sequenceGenerator,
+                previousState.copy(isPlaying = false,
+                        sequenceGenerator = result.sequenceGenerator,
                         scoreCounter = if (previousState.scoreCounter == null) {
                             0
                         } else {
                             previousState.scoreCounter + 1
-                        }, submitted = false)
+                        }, submitted = false,
+                        addTargetScore = false)
             }
             is ScoreActionResult.GenerateScoreResult.Failure -> {
                 previousState

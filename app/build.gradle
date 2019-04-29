@@ -57,7 +57,7 @@ dependencies {
 
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    compile 'org.koin:koin-android:2.0.0-rc-2'
+    implementation 'org.koin:koin-android:2.0.0-rc-2'
 
     // RxJava
     api "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
