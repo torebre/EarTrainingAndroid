@@ -14,6 +14,3 @@ val appModule = module {
     factory { EarTrainerImpl() as EarTrainer }
 
 }
-
-
-

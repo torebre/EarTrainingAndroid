@@ -7,7 +7,6 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.kjipo.eartraining.score.ScoreHandlerWrapper
-import com.kjipo.handler.ScoreHandlerInterface
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -18,7 +17,7 @@ class CustomWebViewClient : WebViewClient() {
     private var inputData = ""
     private var assetManager: AssetManager? = null
     var scoreHandler: ScoreHandlerWrapper? = null
-    private var webscoresToLoad = mutableMapOf(Pair("scoreHandler", "score"))
+    private var webscoresToLoad = mutableMapOf(Pair("scoreHandler", Pair("score", true)))
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -65,7 +64,7 @@ class CustomWebViewClient : WebViewClient() {
         super.onPageFinished(view, url)
 
         val javaScriptToEvaluate = webscoresToLoad.map {
-            """var test_${it.value} = new webscore.WebScore(${it.key}, "${it.value}");"""
+            """var test_${it.value.first} = new webscore.WebScore(${it.key}, "${it.value}", ${it.value.second});"""
         }.joinToString("")
 
         Log.i("Webscore", "JavaScript to evaluate: $javaScriptToEvaluate")
@@ -91,7 +90,7 @@ class CustomWebViewClient : WebViewClient() {
         webView.addJavascriptInterface(scoreHandler, "$name")
         webView.loadDataWithBaseURL("file:///android_asset/web/", inputData, "text/html", "UTF-8", null)
 
-        webscoresToLoad[name] = name
+        webscoresToLoad[name] = Pair(name, false)
     }
 
 }
