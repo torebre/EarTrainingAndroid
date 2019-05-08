@@ -95,10 +95,30 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
         }
     }
 
+
+    private val changeActiveElementTypeProcessor = ObservableTransformer<ScoreAction, ScoreActionResult.ChangeActiveElementAction> { actions ->
+        actions.flatMap {
+            when (it) {
+                is ScoreAction.ChangeActiveElementType -> {
+                    Observable.just(ScoreActionResult.ChangeActiveElementAction.Success)
+                }
+                else -> {
+                    Observable.just(ScoreActionResult.ChangeActiveElementAction.InFlight)
+                }
+
+            }
+        }
+                .cast(ScoreActionResult.ChangeActiveElementAction::class.java)
+                .onErrorReturn(ScoreActionResult.ChangeActiveElementAction::Failure)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .startWith(ScoreActionResult.ChangeActiveElementAction.Success)
+    }
+
     internal var actionProcessor =
             ObservableTransformer<ScoreAction, ScoreActionResult> { actions ->
                 actions.publish { shared ->
-                    Observable.merge<ScoreActionResult>(
+                    Observable.merge<ScoreActionResult>(listOf(
                             shared.ofType(ScoreAction.PlayScore::class.java)
                                     .compose(playScoreProcessor),
                             shared.ofType(ScoreAction.GenerateNewScore::class.java)
@@ -106,12 +126,15 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                             shared.ofType(ScoreAction.Submit::class.java)
                                     .compose(submitProcessor),
                             shared.ofType(ScoreAction.TargetPlay::class.java)
-                                    .compose(targetPlayProcessor))
+                                    .compose(targetPlayProcessor),
+                            shared.ofType(ScoreAction.ChangeActiveElementType::class.java)
+                                    .compose(changeActiveElementTypeProcessor)))
                             .mergeWith(shared.filter { v ->
                                 v !is ScoreAction.PlayScore
                                         && v !is ScoreAction.GenerateNewScore
                                         && v !is ScoreAction.Submit
                                         && v !is ScoreAction.TargetPlay
+                                        && v !is ScoreAction.ChangeActiveElementType
                             }.flatMap { action ->
                                 Observable.error<ScoreActionResult>(
                                         IllegalArgumentException("Unknown action: $action")

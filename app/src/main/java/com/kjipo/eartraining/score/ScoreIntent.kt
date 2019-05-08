@@ -6,10 +6,12 @@ sealed class ScoreIntent {
 
     object PlayAction : ScoreIntent()
 
-    object TargetAction: ScoreIntent()
+    object TargetAction : ScoreIntent()
 
     object GenerateIntent : ScoreIntent()
 
     object SubmitIntent : ScoreIntent()
+
+    object ChangeActiveElementType : ScoreIntent()
 
 }

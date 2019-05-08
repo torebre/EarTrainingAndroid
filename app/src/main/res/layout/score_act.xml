@@ -19,18 +19,17 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/btnPlay"
+            app:layout_constraintBottom_toTopOf="@+id/btnChangeActive"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.472" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnGenerate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             android:text="Generate"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,37 +39,40 @@
             android:id="@+id/btnPlay"
             android:layout_width="92dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:text="Play"
-            app:layout_constraintBottom_toTopOf="@+id/btnGenerate"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnGenerate" />
 
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:text="Submit"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
-            app:layout_constraintStart_toEndOf="@+id/btnGenerate" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btnTarget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:text="Target"
-            app:layout_constraintBottom_toTopOf="@+id/btnSubmit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
-            app:layout_constraintStart_toEndOf="@+id/btnPlay" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnSubmit" />
+
+        <Button
+            android:id="@+id/btnChangeActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:text="Quarter"
+            app:layout_constraintBottom_toTopOf="@+id/btnGenerate"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -68,6 +68,11 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 is ScoreActionResult.TargetPlayAction.Failure -> previousState.copy(isPlaying = false)
                 is ScoreActionResult.TargetPlayAction.InFlight -> previousState.copy(isPlaying = true)
             }
+            is ScoreActionResult.ChangeActiveElementAction -> when (result) {
+                is ScoreActionResult.ChangeActiveElementAction.Success -> previousState.copy(chooseTargetMenu = false)
+                is ScoreActionResult.ChangeActiveElementAction.Failure -> previousState.copy(chooseTargetMenu = false)
+                is ScoreActionResult.ChangeActiveElementAction.InFlight -> previousState.copy(chooseTargetMenu = true)
+            }
         }
 
     }
@@ -100,6 +105,9 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
             }
             is ScoreIntent.TargetAction -> {
                 ScoreAction.TargetPlay
+            }
+            is ScoreIntent.ChangeActiveElementType -> {
+                ScoreAction.ChangeActiveElementType
             }
         }
     }

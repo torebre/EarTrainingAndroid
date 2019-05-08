@@ -6,10 +6,12 @@ sealed class ScoreAction {
 
     object PlayScore : ScoreAction()
 
-    object TargetPlay: ScoreAction()
+    object TargetPlay : ScoreAction()
 
     object Submit : ScoreAction()
 
     object Skip : ScoreAction()
+
+    object ChangeActiveElementType : ScoreAction()
 
 }

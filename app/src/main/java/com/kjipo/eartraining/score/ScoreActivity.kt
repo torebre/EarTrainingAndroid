@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.webkit.WebView
+import android.widget.PopupMenu
 import com.jakewharton.rxbinding2.view.RxView
 import com.kjipo.eartraining.CustomWebViewClient
 import com.kjipo.eartraining.R
@@ -79,7 +80,7 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent()))
+        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType()))
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
@@ -110,6 +111,10 @@ class ScoreActivity : AppCompatActivity() {
         return Observable.just(ScoreIntent.InitialIntent)
     }
 
+    private fun changeActiveElementType(): Observable<ScoreIntent.ChangeActiveElementType> {
+        return RxView.clicks(btnChangeActive).map { ScoreIntent.ChangeActiveElementType }
+    }
+
     override fun onStop() {
         super.onStop()
         earTrainer.getMidiInterface().stop()
@@ -125,6 +130,12 @@ class ScoreActivity : AppCompatActivity() {
                 it.scoreHandler?.scoreHandler = sequenceGenerator
                 it.updateWebscore()
             }
+        }
+
+        if (state.chooseTargetMenu) {
+            val popupMenu = PopupMenu(this, btnChangeActive)
+            popupMenu.menuInflater.inflate(R.menu.choose_input_type, popupMenu.menu)
+            popupMenu.show()
         }
 
         if (state.addTargetScore) {
