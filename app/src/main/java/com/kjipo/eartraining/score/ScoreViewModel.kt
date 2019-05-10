@@ -69,9 +69,11 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 is ScoreActionResult.TargetPlayAction.InFlight -> previousState.copy(isPlaying = true)
             }
             is ScoreActionResult.ChangeActiveElementAction -> when (result) {
-                is ScoreActionResult.ChangeActiveElementAction.Success -> previousState.copy(chooseTargetMenu = false)
+                is ScoreActionResult.ChangeActiveElementAction.ShowMenu -> previousState.copy(chooseTargetMenu = true)
+                is ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide -> previousState.copy(chooseTargetMenu = false, activeDuration = result.duration
+                        ?: previousState.activeDuration, isNote = result.duration?.let { result.isNote }
+                        ?: previousState.isNote)
                 is ScoreActionResult.ChangeActiveElementAction.Failure -> previousState.copy(chooseTargetMenu = false)
-                is ScoreActionResult.ChangeActiveElementAction.InFlight -> previousState.copy(chooseTargetMenu = true)
             }
         }
 
@@ -106,8 +108,14 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
             is ScoreIntent.TargetAction -> {
                 ScoreAction.TargetPlay
             }
-            is ScoreIntent.ChangeActiveElementType -> {
-                ScoreAction.ChangeActiveElementType
+            is ScoreIntent.ChangeActiveElementType.OpenMenu -> {
+                ScoreAction.ChangeActiveElementType.ShowMenu
+            }
+            is ScoreIntent.ChangeActiveElementType.UpdateValue -> {
+                ScoreAction.ChangeActiveElementType.UpdateValue(intent.duration, intent.isNote)
+            }
+            is ScoreIntent.ChangeActiveElementType.CloseMenu -> {
+                ScoreAction.ChangeActiveElementType.UpdateValue(null, true)
             }
         }
     }

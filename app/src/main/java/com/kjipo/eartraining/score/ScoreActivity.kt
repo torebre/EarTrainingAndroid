@@ -18,9 +18,12 @@ import com.kjipo.eartraining.R
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
+import com.kjipo.score.Duration
 import com.kjipo.scoregenerator.SequenceGenerator
 import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.score_act.*
 import org.koin.android.ext.android.inject
 
@@ -34,6 +37,8 @@ class ScoreActivity : AppCompatActivity() {
     private var noteViewClient: CustomWebViewClient? = null
 
     private val disposable = CompositeDisposable()
+
+    private val changeElementTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElementType>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +85,7 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType()))
+        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject))
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
@@ -112,7 +117,7 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun changeActiveElementType(): Observable<ScoreIntent.ChangeActiveElementType> {
-        return RxView.clicks(btnChangeActive).map { ScoreIntent.ChangeActiveElementType }
+        return RxView.clicks(btnChangeActive).map { ScoreIntent.ChangeActiveElementType.OpenMenu }
     }
 
     override fun onStop() {
@@ -136,6 +141,21 @@ class ScoreActivity : AppCompatActivity() {
             val popupMenu = PopupMenu(this, btnChangeActive)
             popupMenu.menuInflater.inflate(R.menu.choose_input_type, popupMenu.menu)
             popupMenu.show()
+
+            popupMenu.setOnDismissListener({ changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(null, true)) })
+
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.test_item -> {
+                        changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.HALF, true))
+                    }
+                    R.id.test_item2 -> {
+                        changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.QUARTER, true))
+                    }
+                }
+                popupMenu.dismiss()
+                true
+            }
         }
 
         if (state.addTargetScore) {

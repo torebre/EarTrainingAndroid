@@ -1,5 +1,6 @@
 package com.kjipo.eartraining.score
 
+import com.kjipo.score.Duration
 import com.kjipo.scoregenerator.SequenceGenerator
 
 data class ScoreViewState(val isPlaying: Boolean,
@@ -7,7 +8,9 @@ data class ScoreViewState(val isPlaying: Boolean,
                           val scoreCounter: Int?,
                           val submitted: Boolean,
                           val addTargetScore: Boolean = false,
-                          val chooseTargetMenu: Boolean = false) {
+                          val chooseTargetMenu: Boolean = false,
+                          val activeDuration: Duration = Duration.QUARTER,
+                          val isNote: Boolean = true) {
 
     companion object {
         fun idle(): ScoreViewState {

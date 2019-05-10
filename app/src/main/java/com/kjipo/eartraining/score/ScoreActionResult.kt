@@ -1,5 +1,6 @@
 package com.kjipo.eartraining.score
 
+import com.kjipo.score.Duration
 import com.kjipo.scoregenerator.SequenceGenerator
 import com.kjipo.scoregenerator.SimpleNoteSequence
 
@@ -28,9 +29,9 @@ sealed class ScoreActionResult {
     }
 
     sealed class ChangeActiveElementAction : ScoreActionResult() {
-        object Success : ChangeActiveElementAction()
+        object ShowMenu : ChangeActiveElementAction()
+        data class UpdateValueAndHide(val duration: Duration?, val isNote: Boolean) : ChangeActiveElementAction()
         data class Failure(val error: Throwable) : ChangeActiveElementAction()
-        object InFlight : ChangeActiveElementAction()
     }
 
 }

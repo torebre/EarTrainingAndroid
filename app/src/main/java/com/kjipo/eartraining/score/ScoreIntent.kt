@@ -1,5 +1,7 @@
 package com.kjipo.eartraining.score
 
+import com.kjipo.score.Duration
+
 sealed class ScoreIntent {
 
     object InitialIntent : ScoreIntent()
@@ -12,6 +14,10 @@ sealed class ScoreIntent {
 
     object SubmitIntent : ScoreIntent()
 
-    object ChangeActiveElementType : ScoreIntent()
+    sealed class ChangeActiveElementType : ScoreIntent() {
+        object OpenMenu : ChangeActiveElementType()
+        object CloseMenu : ChangeActiveElementType()
+        data class UpdateValue(val duration: Duration?, val isNote: Boolean) : ChangeActiveElementType()
+    }
 
 }

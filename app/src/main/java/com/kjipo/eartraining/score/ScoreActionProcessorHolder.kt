@@ -96,23 +96,24 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
     }
 
 
-    private val changeActiveElementTypeProcessor = ObservableTransformer<ScoreAction, ScoreActionResult.ChangeActiveElementAction> { actions ->
+    private val changeActiveElementTypeProcessor = ObservableTransformer<ScoreAction.ChangeActiveElementType, ScoreActionResult.ChangeActiveElementAction> { actions ->
         actions.flatMap {
             when (it) {
-                is ScoreAction.ChangeActiveElementType -> {
-                    Observable.just(ScoreActionResult.ChangeActiveElementAction.Success)
+                is ScoreAction.ChangeActiveElementType.ShowMenu -> {
+                    Observable.just(ScoreActionResult.ChangeActiveElementAction.ShowMenu)
+                }
+                is ScoreAction.ChangeActiveElementType.UpdateValue -> {
+                    Observable.just(ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide(it.selectedElement, it.isNote))
                 }
                 else -> {
-                    Observable.just(ScoreActionResult.ChangeActiveElementAction.InFlight)
+                    Observable.just(ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide(null, true))
                 }
-
             }
         }
                 .cast(ScoreActionResult.ChangeActiveElementAction::class.java)
                 .onErrorReturn(ScoreActionResult.ChangeActiveElementAction::Failure)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .startWith(ScoreActionResult.ChangeActiveElementAction.Success)
     }
 
     internal var actionProcessor =

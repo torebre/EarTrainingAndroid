@@ -1,5 +1,8 @@
 package com.kjipo.eartraining.score
 
+import com.kjipo.score.Duration
+
+
 sealed class ScoreAction {
 
     object GenerateNewScore : ScoreAction()
@@ -12,6 +15,10 @@ sealed class ScoreAction {
 
     object Skip : ScoreAction()
 
-    object ChangeActiveElementType : ScoreAction()
+    sealed class ChangeActiveElementType : ScoreAction() {
+        object ShowMenu : ChangeActiveElementType()
+        object HideMenu : ChangeActiveElementType()
+        class UpdateValue(val selectedElement: Duration?, val isNote: Boolean) : ChangeActiveElementType()
+    }
 
 }
