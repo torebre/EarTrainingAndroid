@@ -4,6 +4,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import com.kjipo.handler.ScoreHandler
 import com.kjipo.handler.ScoreHandlerInterface
+import com.kjipo.score.Duration
 import com.kjipo.scoregenerator.SequenceGenerator
 
 class ScoreHandlerWrapper(var scoreHandler: ScoreHandlerInterface) : ScoreHandlerInterface {
@@ -48,6 +49,11 @@ class ScoreHandlerWrapper(var scoreHandler: ScoreHandlerInterface) : ScoreHandle
     @JavascriptInterface
     override fun deleteElement(id: String) = scoreHandler.deleteElement(id)
 
+    @JavascriptInterface
+    override fun insertNote(activeElement: String, duration: Duration, pitch: Int): String? = scoreHandler.insertNote(activeElement, duration, pitch)
+
+    @JavascriptInterface
+    override fun insertRest(activeElement: String, duration: Duration): String? = scoreHandler.insertRest(activeElement, duration)
 
 }
 

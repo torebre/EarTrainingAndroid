@@ -20,10 +20,13 @@ import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
 import com.kjipo.score.Duration
 import com.kjipo.scoregenerator.SequenceGenerator
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.score_act.*
 import org.koin.android.ext.android.inject
 
@@ -34,7 +37,7 @@ class ScoreActivity : AppCompatActivity() {
     private lateinit var viewModel: ScoreViewModel
 
     private var midiScript: MidiScript? = null
-    private var noteViewClient: CustomWebViewClient? = null
+    private lateinit var noteViewClient: CustomWebViewClient
 
     private val disposable = CompositeDisposable()
 
@@ -85,7 +88,7 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject))
+        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject, insertElement()))
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
@@ -118,6 +121,20 @@ class ScoreActivity : AppCompatActivity() {
 
     private fun changeActiveElementType(): Observable<ScoreIntent.ChangeActiveElementType> {
         return RxView.clicks(btnChangeActive).map { ScoreIntent.ChangeActiveElementType.OpenMenu }
+    }
+
+    private fun insertElement(): Observable<ScoreIntent.InsertElementIntent> {
+        return RxView.clicks(btnInsert).flatMap {
+            Observable.create(
+                    ObservableOnSubscribe<ScoreIntent.InsertElementIntent> { subscriber ->
+                        noteViewClient.getIdOfActiveElement {
+                            if (!subscriber.isDisposed) {
+                                subscriber.onNext(ScoreIntent.InsertElementIntent(it))
+                                subscriber.onComplete()
+                            }
+                        }
+                    })
+        }
     }
 
     override fun onStop() {
@@ -166,7 +183,6 @@ class ScoreActivity : AppCompatActivity() {
                 it.loadSecondScore(targetSequenceWrapper, "targetSequence")
             }
         }
-
     }
 
     companion object {

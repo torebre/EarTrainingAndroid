@@ -75,6 +75,14 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                         ?: previousState.isNote)
                 is ScoreActionResult.ChangeActiveElementAction.Failure -> previousState.copy(chooseTargetMenu = false)
             }
+            is ScoreActionResult.ScoreUpdated -> {
+                previousState.copy(sequenceGenerator = result.sequenceGenerator,
+                        scoreCounter = if (previousState.scoreCounter == null) {
+                            0
+                        } else {
+                            previousState.scoreCounter + 1
+                        })
+            }
         }
 
     }
@@ -116,6 +124,13 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
             }
             is ScoreIntent.ChangeActiveElementType.CloseMenu -> {
                 ScoreAction.ChangeActiveElementType.UpdateValue(null, true)
+            }
+            is ScoreIntent.InsertElementIntent -> {
+                if (intent.activeElement == null) {
+                    ScoreAction.Skip
+                } else {
+                    ScoreAction.InsertElement(intent.activeElement)
+                }
             }
         }
     }

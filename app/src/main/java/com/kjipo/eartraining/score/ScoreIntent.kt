@@ -20,4 +20,6 @@ sealed class ScoreIntent {
         data class UpdateValue(val duration: Duration?, val isNote: Boolean) : ChangeActiveElementType()
     }
 
+    data class InsertElementIntent(val activeElement: String?) : ScoreIntent()
+
 }

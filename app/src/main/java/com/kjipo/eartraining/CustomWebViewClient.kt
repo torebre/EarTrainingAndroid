@@ -85,12 +85,24 @@ class CustomWebViewClient : WebViewClient() {
         webView.invalidate()
     }
 
-
     fun loadSecondScore(scoreHandler: ScoreHandlerWrapper, name: String) {
         webView.addJavascriptInterface(scoreHandler, "$name")
         webView.loadDataWithBaseURL("file:///android_asset/web/", inputData, "text/html", "UTF-8", null)
 
         webscoresToLoad[name] = Pair(name, false)
+    }
+
+
+    fun getIdOfActiveElement(callback: (String?) -> Unit) {
+        webView.evaluateJavascript("""
+            (function() { return test_score.activeElement; })();
+        """.trimIndent()) {
+
+            Log.i("Webscore", "Callback called: $it")
+
+            callback(it.substring(1, it.lastIndex))
+        }
+
     }
 
 }

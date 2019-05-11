@@ -21,4 +21,6 @@ sealed class ScoreAction {
         class UpdateValue(val selectedElement: Duration?, val isNote: Boolean) : ChangeActiveElementType()
     }
 
+    data class InsertElement(val activeElement: String) : ScoreAction()
+
 }

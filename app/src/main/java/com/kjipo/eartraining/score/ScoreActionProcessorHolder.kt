@@ -7,6 +7,7 @@ import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
 import com.kjipo.eartraining.storage.StoredSequence
 import com.kjipo.eartraining.storage.SubmittedSequence
+import com.kjipo.score.Duration
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
@@ -15,6 +16,8 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                                  private val database: EarTrainingDatabase,
                                  private val schedulerProvider: BaseSchedulerProvider) {
     private var currentScoreId = 0L
+    private var currentActiveDuration: Duration? = Duration.QUARTER
+    private var isNote = true
 
 
     private val generateScoreTaskProcessor =
@@ -103,6 +106,8 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                     Observable.just(ScoreActionResult.ChangeActiveElementAction.ShowMenu)
                 }
                 is ScoreAction.ChangeActiveElementType.UpdateValue -> {
+                    currentActiveDuration = it.selectedElement
+                    isNote = it.isNote
                     Observable.just(ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide(it.selectedElement, it.isNote))
                 }
                 else -> {
@@ -112,6 +117,17 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
         }
                 .cast(ScoreActionResult.ChangeActiveElementAction::class.java)
                 .onErrorReturn(ScoreActionResult.ChangeActiveElementAction::Failure)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+    }
+
+    private val insertElementProcessor = ObservableTransformer<ScoreAction.InsertElement, ScoreActionResult.ScoreUpdated> { actions ->
+        actions.flatMap {
+            // TODO Hardcoded pitch only for testing
+            earTrainer.getSequenceGenerator().insertNote(it.activeElement, currentActiveDuration?.let { it }
+                    ?: Duration.QUARTER, 60)
+            Observable.just(ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator()))
+        }
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
     }
@@ -129,13 +145,15 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                             shared.ofType(ScoreAction.TargetPlay::class.java)
                                     .compose(targetPlayProcessor),
                             shared.ofType(ScoreAction.ChangeActiveElementType::class.java)
-                                    .compose(changeActiveElementTypeProcessor)))
+                                    .compose(changeActiveElementTypeProcessor),
+                            shared.ofType(ScoreAction.InsertElement::class.java).compose(insertElementProcessor)))
                             .mergeWith(shared.filter { v ->
                                 v !is ScoreAction.PlayScore
                                         && v !is ScoreAction.GenerateNewScore
                                         && v !is ScoreAction.Submit
                                         && v !is ScoreAction.TargetPlay
                                         && v !is ScoreAction.ChangeActiveElementType
+                                        && v !is ScoreAction.InsertElement
                             }.flatMap { action ->
                                 Observable.error<ScoreActionResult>(
                                         IllegalArgumentException("Unknown action: $action")
