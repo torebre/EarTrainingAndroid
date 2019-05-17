@@ -34,6 +34,6 @@ sealed class ScoreActionResult {
         data class Failure(val error: Throwable) : ChangeActiveElementAction()
     }
 
-    class ScoreUpdated(val sequenceGenerator: SequenceGenerator) : ScoreActionResult()
+    class ScoreUpdated(val sequenceGenerator: SequenceGenerator, val activeElementId : String?) : ScoreActionResult()
 
 }

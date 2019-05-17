@@ -88,7 +88,7 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject, insertElement()))
+        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject, insertElement(), selectRight()))
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
@@ -137,6 +137,32 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
+    private fun moveNoteUp(): Observable<ScoreIntent.InsertElementIntent> {
+        return RxView.clicks(btnUp).flatMap {
+            Observable.create(ObservableOnSubscribe<ScoreIntent.InsertElementIntent> { subscriber ->
+                noteViewClient.getIdOfActiveElement {
+                    if (!subscriber.isDisposed) {
+                        subscriber.onNext(ScoreIntent.InsertElementIntent(it))
+                        subscriber.onComplete()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun selectRight(): Observable<ScoreIntent.ChangeActiveElement> {
+        return RxView.clicks(btnRight).flatMap {
+            Observable.create(ObservableOnSubscribe<ScoreIntent.ChangeActiveElement> { subscriber ->
+                noteViewClient.getIdOfActiveElement { activeElementId ->
+                    if (!subscriber.isDisposed && activeElementId != null) {
+                        subscriber.onNext(ScoreIntent.ChangeActiveElement(activeElementId, false))
+                        subscriber.onComplete()
+                    }
+                }
+            })
+        }
+    }
+
     override fun onStop() {
         super.onStop()
         earTrainer.getMidiInterface().stop()
@@ -148,7 +174,7 @@ class ScoreActivity : AppCompatActivity() {
         btnSubmit.isEnabled = !state.submitted
 
         state.sequenceGenerator?.let { sequenceGenerator ->
-            noteViewClient?.let {
+            noteViewClient.let {
                 it.scoreHandler?.scoreHandler = sequenceGenerator
                 it.updateWebscore()
             }
@@ -179,10 +205,13 @@ class ScoreActivity : AppCompatActivity() {
             val sequenceGenerator = SequenceGenerator()
             sequenceGenerator.loadSimpleNoteSequence(earTrainer.currentTargetSequence)
             val targetSequenceWrapper = ScoreHandlerWrapper(sequenceGenerator)
-            noteViewClient?.let {
-                it.loadSecondScore(targetSequenceWrapper, "targetSequence")
-            }
+            noteViewClient.loadSecondScore(targetSequenceWrapper, "targetSequence")
         }
+
+        if (state.activeElement != null) {
+            noteViewClient.setActiveElement(state.activeElement)
+        }
+
     }
 
     companion object {

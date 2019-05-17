@@ -10,7 +10,8 @@ data class ScoreViewState(val isPlaying: Boolean,
                           val addTargetScore: Boolean = false,
                           val chooseTargetMenu: Boolean = false,
                           val activeDuration: Duration = Duration.QUARTER,
-                          val isNote: Boolean = true) {
+                          val isNote: Boolean = true,
+                          val activeElement: String? = null) {
 
     companion object {
         fun idle(): ScoreViewState {

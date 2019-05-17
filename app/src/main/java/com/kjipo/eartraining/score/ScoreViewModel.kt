@@ -39,7 +39,8 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                         } else {
                             previousState.scoreCounter + 1
                         }, submitted = false,
-                        addTargetScore = false)
+                        addTargetScore = false,
+                        activeElement = null)
             }
             is ScoreActionResult.GenerateScoreResult.Failure -> {
                 previousState
@@ -53,15 +54,16 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                             previousState.scoreCounter + 1
                         },
                         submitted = true,
-                        addTargetScore = true)
+                        addTargetScore = true,
+                        activeElement = null)
             }
             is ScoreActionResult.SubmitAction.Failure -> {
                 previousState
             }
             is ScoreActionResult.PlayAction -> when (result) {
-                is ScoreActionResult.PlayAction.Success -> previousState.copy(isPlaying = false)
-                is ScoreActionResult.PlayAction.Failure -> previousState.copy(isPlaying = false)
-                is ScoreActionResult.PlayAction.InFlight -> previousState.copy(isPlaying = true)
+                is ScoreActionResult.PlayAction.Success -> previousState.copy(isPlaying = false, activeElement = null)
+                is ScoreActionResult.PlayAction.Failure -> previousState.copy(isPlaying = false, activeElement = null)
+                is ScoreActionResult.PlayAction.InFlight -> previousState.copy(isPlaying = true, activeElement = null)
             }
             is ScoreActionResult.TargetPlayAction -> when (result) {
                 is ScoreActionResult.TargetPlayAction.Success -> previousState.copy(isPlaying = false)
@@ -69,11 +71,12 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 is ScoreActionResult.TargetPlayAction.InFlight -> previousState.copy(isPlaying = true)
             }
             is ScoreActionResult.ChangeActiveElementAction -> when (result) {
-                is ScoreActionResult.ChangeActiveElementAction.ShowMenu -> previousState.copy(chooseTargetMenu = true)
+                is ScoreActionResult.ChangeActiveElementAction.ShowMenu -> previousState.copy(chooseTargetMenu = true, activeElement = null)
                 is ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide -> previousState.copy(chooseTargetMenu = false, activeDuration = result.duration
                         ?: previousState.activeDuration, isNote = result.duration?.let { result.isNote }
-                        ?: previousState.isNote)
-                is ScoreActionResult.ChangeActiveElementAction.Failure -> previousState.copy(chooseTargetMenu = false)
+                        ?: previousState.isNote,
+                        activeElement = null)
+                is ScoreActionResult.ChangeActiveElementAction.Failure -> previousState.copy(chooseTargetMenu = false, activeElement = null)
             }
             is ScoreActionResult.ScoreUpdated -> {
                 previousState.copy(sequenceGenerator = result.sequenceGenerator,
@@ -81,7 +84,8 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                             0
                         } else {
                             previousState.scoreCounter + 1
-                        })
+                        },
+                        activeElement = result.activeElementId)
             }
         }
 
@@ -131,6 +135,9 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 } else {
                     ScoreAction.InsertElement(intent.activeElement)
                 }
+            }
+            is ScoreIntent.ChangeActiveElement -> {
+                ScoreAction.ActiveElementSelect(intent.activeElement, intent.left)
             }
         }
     }

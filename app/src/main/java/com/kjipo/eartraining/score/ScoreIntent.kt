@@ -22,4 +22,6 @@ sealed class ScoreIntent {
 
     data class InsertElementIntent(val activeElement: String?) : ScoreIntent()
 
+    data class ChangeActiveElement(val activeElement: String, val left: Boolean) : ScoreIntent()
+
 }

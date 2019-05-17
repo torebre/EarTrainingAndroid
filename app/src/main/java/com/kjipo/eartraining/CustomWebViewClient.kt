@@ -102,7 +102,14 @@ class CustomWebViewClient : WebViewClient() {
 
             callback(it.substring(1, it.lastIndex))
         }
+    }
 
+    fun setActiveElement(activeElement: String?) {
+        webView.evaluateJavascript("""
+            test_score.activeElement = ${activeElement?.let { """ "$it" """ } ?: null};
+        """.trimIndent()) {
+            // Do nothing
+        }
     }
 
 }

@@ -126,8 +126,38 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
             // TODO Hardcoded pitch only for testing
             earTrainer.getSequenceGenerator().insertNote(it.activeElement, currentActiveDuration?.let { it }
                     ?: Duration.QUARTER, 60)
-            Observable.just(ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator()))
+            Observable.just(ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null))
         }
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+    }
+
+    private val activeElementMoveProcessor = ObservableTransformer<ScoreAction.ActiveElementSelect, ScoreActionResult.ScoreUpdated> { actions ->
+        actions.flatMap {activeElementSelectAction ->
+            val scoreHandlerElements = earTrainer.getSequenceGenerator().scoreHandler.getScoreHandlerElements()
+                    scoreHandlerElements.find { it.id == activeElementSelectAction.activeElement }?.let {
+                val index = scoreHandlerElements.indexOf(it)
+                        Observable.just(if(index == -1) {
+                            ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
+                        }
+                        else if(activeElementSelectAction.left) {
+                            if(index == 0) {
+                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
+                            }
+                            else {
+                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), scoreHandlerElements[index - 1].id)
+                            }
+                        }
+                        else {
+                            if(index == scoreHandlerElements.lastIndex) {
+                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
+                            }
+                            else {
+                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), scoreHandlerElements[index + 1].id)
+                            }
+                        })
+
+        }}
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
     }
@@ -146,7 +176,8 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                                     .compose(targetPlayProcessor),
                             shared.ofType(ScoreAction.ChangeActiveElementType::class.java)
                                     .compose(changeActiveElementTypeProcessor),
-                            shared.ofType(ScoreAction.InsertElement::class.java).compose(insertElementProcessor)))
+                            shared.ofType(ScoreAction.InsertElement::class.java).compose(insertElementProcessor),
+                            shared.ofType(ScoreAction.ActiveElementSelect::class.java).compose(activeElementMoveProcessor)))
                             .mergeWith(shared.filter { v ->
                                 v !is ScoreAction.PlayScore
                                         && v !is ScoreAction.GenerateNewScore
@@ -154,6 +185,7 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                                         && v !is ScoreAction.TargetPlay
                                         && v !is ScoreAction.ChangeActiveElementType
                                         && v !is ScoreAction.InsertElement
+                                        && v !is ScoreAction.ActiveElementSelect
                             }.flatMap { action ->
                                 Observable.error<ScoreActionResult>(
                                         IllegalArgumentException("Unknown action: $action")
