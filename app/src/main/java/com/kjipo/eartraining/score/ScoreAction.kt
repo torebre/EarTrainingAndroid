@@ -23,6 +23,8 @@ sealed class ScoreAction {
 
     data class InsertElement(val activeElement: String) : ScoreAction()
 
-    data class ActiveElementSelect(val activeElement: String, val left: Boolean): ScoreAction()
+    data class ActiveElementSelect(val activeElement: String, val left: Boolean) : ScoreAction()
+
+    data class MoveNote(val selectedElement: String, val up: Boolean) : ScoreAction()
 
 }

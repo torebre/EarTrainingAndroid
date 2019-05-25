@@ -133,31 +133,43 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
     }
 
     private val activeElementMoveProcessor = ObservableTransformer<ScoreAction.ActiveElementSelect, ScoreActionResult.ScoreUpdated> { actions ->
-        actions.flatMap {activeElementSelectAction ->
+        actions.flatMap { activeElementSelectAction ->
             val scoreHandlerElements = earTrainer.getSequenceGenerator().scoreHandler.getScoreHandlerElements()
-                    scoreHandlerElements.find { it.id == activeElementSelectAction.activeElement }?.let {
+            scoreHandlerElements.find { it.id == activeElementSelectAction.activeElement }?.let {
                 val index = scoreHandlerElements.indexOf(it)
-                        Observable.just(if(index == -1) {
-                            ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
-                        }
-                        else if(activeElementSelectAction.left) {
-                            if(index == 0) {
-                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
-                            }
-                            else {
-                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), scoreHandlerElements[index - 1].id)
-                            }
-                        }
-                        else {
-                            if(index == scoreHandlerElements.lastIndex) {
-                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
-                            }
-                            else {
-                                ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), scoreHandlerElements[index + 1].id)
-                            }
-                        })
+                Observable.just(if (index == -1) {
+                    ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
+                } else if (activeElementSelectAction.left) {
+                    if (index == 0) {
+                        ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
+                    } else {
+                        ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), scoreHandlerElements[index - 1].id)
+                    }
+                } else {
+                    if (index == scoreHandlerElements.lastIndex) {
+                        ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), null)
+                    } else {
+                        ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), scoreHandlerElements[index + 1].id)
+                    }
+                })
 
-        }}
+            }
+        }
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+    }
+
+
+    private val moveNoteProcessor = ObservableTransformer<ScoreAction.MoveNote, ScoreActionResult.ScoreUpdated> { actions ->
+        actions.flatMap { moveNoteAction ->
+            val scoreHandlerElements = earTrainer.getSequenceGenerator().scoreHandler.getScoreHandlerElements()
+            scoreHandlerElements.find { it.id == moveNoteAction.selectedElement }?.let {
+                if (it.isNote) {
+                    earTrainer.getSequenceGenerator().moveNoteOneStep(moveNoteAction.selectedElement, moveNoteAction.up)
+                }
+            }
+            Observable.just(ScoreActionResult.ScoreUpdated(earTrainer.getSequenceGenerator(), moveNoteAction.selectedElement))
+        }
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
     }
@@ -177,7 +189,8 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                             shared.ofType(ScoreAction.ChangeActiveElementType::class.java)
                                     .compose(changeActiveElementTypeProcessor),
                             shared.ofType(ScoreAction.InsertElement::class.java).compose(insertElementProcessor),
-                            shared.ofType(ScoreAction.ActiveElementSelect::class.java).compose(activeElementMoveProcessor)))
+                            shared.ofType(ScoreAction.ActiveElementSelect::class.java).compose(activeElementMoveProcessor),
+                            shared.ofType(ScoreAction.MoveNote::class.java).compose(moveNoteProcessor)))
                             .mergeWith(shared.filter { v ->
                                 v !is ScoreAction.PlayScore
                                         && v !is ScoreAction.GenerateNewScore
@@ -186,6 +199,7 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                                         && v !is ScoreAction.ChangeActiveElementType
                                         && v !is ScoreAction.InsertElement
                                         && v !is ScoreAction.ActiveElementSelect
+                                        && v !is ScoreAction.MoveNote
                             }.flatMap { action ->
                                 Observable.error<ScoreActionResult>(
                                         IllegalArgumentException("Unknown action: $action")

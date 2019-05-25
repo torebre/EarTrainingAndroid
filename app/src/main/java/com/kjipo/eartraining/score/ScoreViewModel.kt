@@ -139,6 +139,9 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
             is ScoreIntent.ChangeActiveElement -> {
                 ScoreAction.ActiveElementSelect(intent.activeElement, intent.left)
             }
+            is ScoreIntent.MoveNote -> {
+                ScoreAction.MoveNote(intent.activeElement, intent.up)
+            }
         }
     }
 

@@ -24,4 +24,6 @@ sealed class ScoreIntent {
 
     data class ChangeActiveElement(val activeElement: String, val left: Boolean) : ScoreIntent()
 
+    data class MoveNote(val activeElement: String, val up: Boolean) : ScoreIntent()
+
 }

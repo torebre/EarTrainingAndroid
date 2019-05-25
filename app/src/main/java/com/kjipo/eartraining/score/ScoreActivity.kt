@@ -20,13 +20,10 @@ import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
 import com.kjipo.score.Duration
 import com.kjipo.scoregenerator.SequenceGenerator
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.score_act.*
 import org.koin.android.ext.android.inject
 
@@ -42,6 +39,8 @@ class ScoreActivity : AppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     private val changeElementTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElementType>()
+
+//    private var submittedLatch = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +87,7 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun intents(): Observable<ScoreIntent> {
-        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject, insertElement(), selectRight()))
+        return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject, insertElement(), selectLeft(), selectRight(), moveNoteUp(), moveNoteDown()))
     }
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> {
@@ -137,12 +136,25 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveNoteUp(): Observable<ScoreIntent.InsertElementIntent> {
+    private fun moveNoteUp(): Observable<ScoreIntent.MoveNote> {
         return RxView.clicks(btnUp).flatMap {
-            Observable.create(ObservableOnSubscribe<ScoreIntent.InsertElementIntent> { subscriber ->
+            Observable.create(ObservableOnSubscribe<ScoreIntent.MoveNote> { subscriber ->
                 noteViewClient.getIdOfActiveElement {
-                    if (!subscriber.isDisposed) {
-                        subscriber.onNext(ScoreIntent.InsertElementIntent(it))
+                    if (!subscriber.isDisposed && it != null) {
+                        subscriber.onNext(ScoreIntent.MoveNote(it, true))
+                        subscriber.onComplete()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun moveNoteDown(): Observable<ScoreIntent.MoveNote> {
+        return RxView.clicks(btnDown).flatMap {
+            Observable.create(ObservableOnSubscribe<ScoreIntent.MoveNote> { subscriber ->
+                noteViewClient.getIdOfActiveElement {
+                    if (!subscriber.isDisposed && it != null) {
+                        subscriber.onNext(ScoreIntent.MoveNote(it, false))
                         subscriber.onComplete()
                     }
                 }
@@ -163,6 +175,19 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
+    private fun selectLeft(): Observable<ScoreIntent.ChangeActiveElement> {
+        return RxView.clicks(btnLeft).flatMap {
+            Observable.create(ObservableOnSubscribe<ScoreIntent.ChangeActiveElement> { subscriber ->
+                noteViewClient.getIdOfActiveElement { activeElementId ->
+                    if (!subscriber.isDisposed && activeElementId != null) {
+                        subscriber.onNext(ScoreIntent.ChangeActiveElement(activeElementId, true))
+                        subscriber.onComplete()
+                    }
+                }
+            })
+        }
+    }
+
     override fun onStop() {
         super.onStop()
         earTrainer.getMidiInterface().stop()
@@ -173,12 +198,20 @@ class ScoreActivity : AppCompatActivity() {
         btnPlay.isEnabled = !state.isPlaying
         btnSubmit.isEnabled = !state.submitted
 
+//        if(state.submitted && !submittedLatch) {
+//            submittedLatch = true
+//        }
+
+//        if(!state.submitted && submittedLatch) {
         state.sequenceGenerator?.let { sequenceGenerator ->
             noteViewClient.let {
                 it.scoreHandler?.scoreHandler = sequenceGenerator
                 it.updateWebscore()
             }
         }
+//            submittedLatch = false
+//        }
+
 
         if (state.chooseTargetMenu) {
             val popupMenu = PopupMenu(this, btnChangeActive)
