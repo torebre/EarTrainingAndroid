@@ -44,10 +44,7 @@ class CustomWebViewClient : WebViewClient() {
                         inputData.append(input)
                         input = bufferedReader.readLine()
                     }
-
                     return@use inputData.toString()
-
-
                 }
             }
         } catch (e: IOException) {

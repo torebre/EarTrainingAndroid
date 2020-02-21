@@ -27,6 +27,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/napier.kotlin_module'
+        exclude 'META-INF/kotlinx-serialization-runtime.kotlin_module'
     }
     productFlavors {
     }
@@ -111,11 +112,8 @@ dependencies {
 
 //    implementation 'com.github.torebre.eartraining:webscore:master'
 
-
     implementation 'com.github.billthefarmer:mididriver:v1.14'
 
-    implementation 'com.kjipo:score-jvm:0.4-SNAPSHOT'
-    implementation 'com.kjipo:scoregenerator:0.4-SNAPSHOT'
-
-
+    implementation 'com.kjipo:score-multimodule-jvm:0.5-SNAPSHOT'
+    implementation 'com.kjipo:scoregenerator-common-jvm:0.6-SNAPSHOT'
 }
