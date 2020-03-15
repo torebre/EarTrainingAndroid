@@ -9,12 +9,16 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.MotionEvent
+import android.view.VelocityTracker
 import android.view.View
 import android.webkit.WebView
 import android.widget.PopupMenu
 import com.jakewharton.rxbinding2.view.RxView
 import com.kjipo.eartraining.CustomWebViewClient
 import com.kjipo.eartraining.R
+import com.kjipo.eartraining.ScoreWebView
 import com.kjipo.eartraining.eartrainer.EarTrainer
 import com.kjipo.eartraining.midi.MidiScript
 import com.kjipo.eartraining.storage.EarTrainingDatabase
@@ -40,6 +44,8 @@ class ScoreActivity : AppCompatActivity() {
 
     private val changeElementTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElementType>()
 
+    private var velocityTracker: VelocityTracker? = null
+
 //    private var submittedLatch = false
 
 
@@ -59,7 +65,7 @@ class ScoreActivity : AppCompatActivity() {
         // This enables the possibility of debugging the webview from Chrome
         WebView.setWebContentsDebuggingEnabled(true)
 
-        val myWebView = findViewById<View>(R.id.score) as WebView
+        val myWebView = findViewById<View>(R.id.score) as ScoreWebView
 
         earTrainer.createNewTrainingSequence()
         val scoreHandlerWrapper = ScoreHandlerWrapper(earTrainer.getSequenceGenerator())
@@ -69,8 +75,7 @@ class ScoreActivity : AppCompatActivity() {
             }
         })
 
-        noteViewClient = CustomWebViewClient()
-        noteViewClient?.let {
+        noteViewClient = CustomWebViewClient().also {
             it.attachWebView(myWebView, this.assets, scoreHandlerWrapper)
             it.loadNoteSequence()
         }
@@ -84,6 +89,35 @@ class ScoreActivity : AppCompatActivity() {
 
         disposable.add(viewModel.states().subscribe(this::render))
         viewModel.processIntent(intents())
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when(event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                velocityTracker?.clear()
+                velocityTracker = velocityTracker ?: VelocityTracker.obtain()
+                velocityTracker?.addMovement(event)
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                velocityTracker?.apply {
+                    val pointerId: Int = event.getPointerId(event.actionIndex)
+                    addMovement(event)
+                    computeCurrentVelocity(1000)
+
+                    Log.i("Mouse", "X velocity: ${getXVelocity(pointerId)}")
+                    Log.i("Mouse", "Y velocity: ${getYVelocity(pointerId)}")
+                }
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                velocityTracker?.recycle()
+                velocityTracker = null
+            }
+
+        }
+
+        return true
     }
 
     private fun intents(): Observable<ScoreIntent> {
