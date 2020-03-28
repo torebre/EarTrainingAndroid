@@ -44,7 +44,7 @@ class ScoreActivity : AppCompatActivity() {
 
     private val changeElementTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElementType>()
 
-    private var velocityTracker: VelocityTracker? = null
+//    private var velocityTracker: VelocityTracker? = null
 
 //    private var submittedLatch = false
 
@@ -81,6 +81,8 @@ class ScoreActivity : AppCompatActivity() {
         }
 
 
+
+
     }
 
     override fun onStart() {
@@ -91,34 +93,34 @@ class ScoreActivity : AppCompatActivity() {
         viewModel.processIntent(intents())
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        when(event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
-                velocityTracker?.clear()
-                velocityTracker = velocityTracker ?: VelocityTracker.obtain()
-                velocityTracker?.addMovement(event)
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                velocityTracker?.apply {
-                    val pointerId: Int = event.getPointerId(event.actionIndex)
-                    addMovement(event)
-                    computeCurrentVelocity(1000)
-
-                    Log.i("Mouse", "X velocity: ${getXVelocity(pointerId)}")
-                    Log.i("Mouse", "Y velocity: ${getYVelocity(pointerId)}")
-                }
-            }
-
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                velocityTracker?.recycle()
-                velocityTracker = null
-            }
-
-        }
-
-        return true
-    }
+//    override fun onTouchEvent(event: MotionEvent): Boolean {
+//        when(event.actionMasked) {
+//            MotionEvent.ACTION_DOWN -> {
+//                velocityTracker?.clear()
+//                velocityTracker = velocityTracker ?: VelocityTracker.obtain()
+//                velocityTracker?.addMovement(event)
+//            }
+//
+//            MotionEvent.ACTION_MOVE -> {
+//                velocityTracker?.apply {
+//                    val pointerId: Int = event.getPointerId(event.actionIndex)
+//                    addMovement(event)
+//                    computeCurrentVelocity(1000)
+//
+//                    Log.i("Mouse", "X velocity: ${getXVelocity(pointerId)}")
+//                    Log.i("Mouse", "Y velocity: ${getYVelocity(pointerId)}")
+//                }
+//            }
+//
+//            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+//                velocityTracker?.recycle()
+//                velocityTracker = null
+//            }
+//
+//        }
+//
+//        return true
+//    }
 
     private fun intents(): Observable<ScoreIntent> {
         return Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(), changeActiveElementType(), changeElementTypeSubject, insertElement(), selectLeft(), selectRight(), moveNoteUp(), moveNoteDown()))

@@ -4,6 +4,8 @@ package com.kjipo.eartraining
 import android.annotation.SuppressLint
 import android.content.res.AssetManager
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.kjipo.eartraining.score.ScoreHandlerWrapper
@@ -12,7 +14,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 
-class CustomWebViewClient : WebViewClient() {
+class CustomWebViewClient : WebViewClient() { //, View.OnTouchListener {
     private lateinit var webView: WebView
     private var inputData = ""
     private var assetManager: AssetManager? = null
@@ -31,6 +33,8 @@ class CustomWebViewClient : WebViewClient() {
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
         webView.webViewClient = this
+
+//        webView.setOnTouchListener(this)
     }
 
     fun loadNoteSequence() {
@@ -51,9 +55,9 @@ class CustomWebViewClient : WebViewClient() {
             Log.e("Webscore", e.message, e)
         }
 
-        webView.let {
-            it.addJavascriptInterface(scoreHandler, "scoreHandler")
-            it.loadDataWithBaseURL("file:///android_asset/web/", inputData, "text/html", "UTF-8", null)
+        with(webView) {
+            addJavascriptInterface(scoreHandler, "scoreHandler")
+            loadDataWithBaseURL("file:///android_asset/web/", inputData, "text/html", "UTF-8", null)
         }
     }
 
@@ -108,5 +112,13 @@ class CustomWebViewClient : WebViewClient() {
             // Do nothing
         }
     }
+
+//    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//        Log.i("WebClient", "Got event$event")
+//
+//        return true
+//
+//
+//    }
 
 }
