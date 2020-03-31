@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#62def8"
     android:id="@+id/noteChooser">
 
-    <Button
-        android:id="@+id/quarterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnWhole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/whole"
+            app:layout_constraintEnd_toStartOf="@+id/btnHalf"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnHalf" />
+
+        <Button
+            android:id="@+id/btnHalf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/half"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.496"
+            tools:layout_editor_absoluteX="119dp" />
+
+        <Button
+            android:id="@+id/btnQuarter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quarter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.857"
+            app:layout_constraintStart_toEndOf="@+id/btnHalf"
+            app:layout_constraintTop_toTopOf="@+id/btnHalf" />
+    </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

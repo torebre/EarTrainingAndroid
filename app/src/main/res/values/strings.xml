@@ -21,5 +21,8 @@
     <string name="submit">Submit</string>
     <string name="record">Record</string>
     <string name="recordText">Record</string>
+    <string name="whole">Whole</string>
+    <string name="half">Half</string>
+    <string name="quarter">Quarter</string>
 
 </resources>

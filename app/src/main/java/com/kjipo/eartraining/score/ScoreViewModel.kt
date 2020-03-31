@@ -10,9 +10,10 @@ import io.reactivex.subjects.PublishSubject
 class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHolder) : ViewModel() {
 
 
-    fun processIntent(intent: Observable<ScoreIntent>) {
-        intent.subscribe(intentsSubject)
-    }
+
+
+    fun processIntent(intent: Observable<ScoreIntent>) = intent.subscribe(intentsSubject)
+
 
     private val intentFilter: ObservableTransformer<ScoreIntent, ScoreIntent>
         get() = ObservableTransformer { intents ->
@@ -91,8 +92,7 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
 
     }
 
-    private fun compose(): Observable<ScoreViewState> {
-        return intentsSubject.compose<ScoreIntent>(intentFilter)
+    private fun compose(): Observable<ScoreViewState> = intentsSubject.compose<ScoreIntent>(intentFilter)
                 .map(this::actionFromIntent)
                 .filter { action -> action !is ScoreAction.Skip }
                 .compose(actionProcessorHolder.actionProcessor)
@@ -100,7 +100,7 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 .distinctUntilChanged()
                 .replay(1)
                 .autoConnect(0)
-    }
+
 
 
     private fun actionFromIntent(intent: ScoreIntent): ScoreAction {
@@ -151,8 +151,8 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
         return filter { !clazz.isInstance(it) }
     }
 
+
     private val intentsSubject: PublishSubject<ScoreIntent> = PublishSubject.create()
     private val states: Observable<ScoreViewState> = compose()
-
 
 }
