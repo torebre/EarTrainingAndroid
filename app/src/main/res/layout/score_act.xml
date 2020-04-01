@@ -114,6 +114,13 @@
             app:layout_constraintTop_toBottomOf="@+id/arrowButtons">
 
             <Button
+                android:id="@+id/btnChooseElement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Element" />
+
+            <Button
                 android:id="@+id/btnInsert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

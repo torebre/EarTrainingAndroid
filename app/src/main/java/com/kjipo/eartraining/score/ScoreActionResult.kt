@@ -30,6 +30,7 @@ sealed class ScoreActionResult {
 
     sealed class ChangeActiveElementAction : ScoreActionResult() {
         object ShowMenu : ChangeActiveElementAction()
+        object HideMenu : ChangeActiveElementAction()
         data class UpdateValueAndHide(val duration: Duration?, val isNote: Boolean) : ChangeActiveElementAction()
         data class Failure(val error: Throwable) : ChangeActiveElementAction()
     }

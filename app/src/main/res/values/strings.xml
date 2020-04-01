@@ -24,5 +24,6 @@
     <string name="whole">Whole</string>
     <string name="half">Half</string>
     <string name="quarter">Quarter</string>
+    <string name="halfNote">Half note</string>
 
 </resources>

@@ -58,13 +58,13 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
 
     private val targetPlayProcessor =
             ObservableTransformer<ScoreAction, ScoreActionResult.TargetPlayAction> { actions ->
-                actions.flatMap {
+                actions.flatMap { _ ->
                     Single.fromCallable {
                         val midiScript = MidiScript(earTrainer.currentTargetSequence.transformToPitchSequence(), earTrainer.getMidiInterface())
                         midiScript.play()
                         true
                     }.toObservable()
-                            .map { it -> ScoreActionResult.TargetPlayAction.Success }
+                            .map { _ -> ScoreActionResult.TargetPlayAction.Success }
                             .cast(ScoreActionResult.TargetPlayAction::class.java)
                             .onErrorReturn(ScoreActionResult.TargetPlayAction::Failure)
                             .subscribeOn(schedulerProvider.io())
@@ -110,8 +110,8 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
                     isNote = it.isNote
                     Observable.just(ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide(it.selectedElement, it.isNote))
                 }
-                else -> {
-                    Observable.just(ScoreActionResult.ChangeActiveElementAction.UpdateValueAndHide(null, true))
+                is ScoreAction.ChangeActiveElementType.HideMenu -> {
+                    Observable.just(ScoreActionResult.ChangeActiveElementAction.HideMenu)
                 }
             }
         }

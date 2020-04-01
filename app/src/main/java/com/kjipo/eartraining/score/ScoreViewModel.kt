@@ -78,6 +78,7 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                         ?: previousState.isNote,
                         activeElement = null)
                 is ScoreActionResult.ChangeActiveElementAction.Failure -> previousState.copy(chooseTargetMenu = false, activeElement = null)
+                is ScoreActionResult.ChangeActiveElementAction.HideMenu -> previousState.copy(chooseTargetMenu = false)
             }
             is ScoreActionResult.ScoreUpdated -> {
                 previousState.copy(sequenceGenerator = result.sequenceGenerator,
@@ -103,8 +104,8 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
 
 
 
-    private fun actionFromIntent(intent: ScoreIntent): ScoreAction {
-        return when (intent) {
+    private fun actionFromIntent(intent: ScoreIntent) =
+        when (intent) {
             is ScoreIntent.InitialIntent -> {
                 ScoreAction.Skip
             }
@@ -127,7 +128,7 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 ScoreAction.ChangeActiveElementType.UpdateValue(intent.duration, intent.isNote)
             }
             is ScoreIntent.ChangeActiveElementType.CloseMenu -> {
-                ScoreAction.ChangeActiveElementType.UpdateValue(null, true)
+                ScoreAction.ChangeActiveElementType.HideMenu
             }
             is ScoreIntent.InsertElementIntent -> {
                 if (intent.activeElement == null) {
@@ -143,7 +144,6 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
                 ScoreAction.MoveNote(intent.activeElement, intent.up)
             }
         }
-    }
 
 
     fun <T : Any, U : Any> Observable<T>.notOfType(clazz: Class<U>): Observable<T> {

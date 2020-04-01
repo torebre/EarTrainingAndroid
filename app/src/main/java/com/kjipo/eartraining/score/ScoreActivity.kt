@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.jakewharton.rxbinding2.view.RxView
@@ -46,8 +47,6 @@ class ScoreActivity : AppCompatActivity() {
     private var popupWindow: PopupWindow? = null
 
     val changeElementTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElementType>()
-
-//    private var velocityTracker: VelocityTracker? = null
 
 //    private var submittedLatch = false
 
@@ -82,8 +81,6 @@ class ScoreActivity : AppCompatActivity() {
             it.attachWebView(myWebView, this.assets, scoreHandlerWrapper)
             it.loadNoteSequence()
         }
-
-
     }
 
     override fun onStart() {
@@ -94,38 +91,18 @@ class ScoreActivity : AppCompatActivity() {
         viewModel.processIntent(intents())
     }
 
-//    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        when(event.actionMasked) {
-//            MotionEvent.ACTION_DOWN -> {
-//                velocityTracker?.clear()
-//                velocityTracker = velocityTracker ?: VelocityTracker.obtain()
-//                velocityTracker?.addMovement(event)
-//            }
-//
-//            MotionEvent.ACTION_MOVE -> {
-//                velocityTracker?.apply {
-//                    val pointerId: Int = event.getPointerId(event.actionIndex)
-//                    addMovement(event)
-//                    computeCurrentVelocity(1000)
-//
-//                    Log.i("Mouse", "X velocity: ${getXVelocity(pointerId)}")
-//                    Log.i("Mouse", "Y velocity: ${getYVelocity(pointerId)}")
-//                }
-//            }
-//
-//            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-//                velocityTracker?.recycle()
-//                velocityTracker = null
-//            }
-//
-//        }
-//
-//        return true
-//    }
-
-    private fun intents(): Observable<ScoreIntent> = Observable.merge(listOf(initialIntent(), playIntent(), generateIntent(), submitIntent(), targetIntent(),
-            changeElementTypeSubject, insertElement(), selectLeft(), selectRight(), moveNoteUp(), moveNoteDown())
-    )
+    private fun intents(): Observable<ScoreIntent> = Observable.merge(listOf(initialIntent(),
+            playIntent(),
+            generateIntent(),
+            submitIntent(),
+            targetIntent(),
+            changeElementTypeSubject,
+            chooseElementIntent(),
+            insertElement(),
+            selectLeft(),
+            selectRight(),
+            moveNoteUp(),
+            moveNoteDown()))
 
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> = RxView.clicks(btnPlay).map {
@@ -146,6 +123,9 @@ class ScoreActivity : AppCompatActivity() {
         ScoreIntent.SubmitIntent
     }
 
+    private fun chooseElementIntent() = RxView.clicks(btnChooseElement).map {
+        ScoreIntent.ChangeActiveElementType.OpenMenu
+    }
 
     private fun initialIntent(): Observable<ScoreIntent.InitialIntent> = Observable.just(ScoreIntent.InitialIntent)
 
@@ -231,19 +211,19 @@ class ScoreActivity : AppCompatActivity() {
             val popupView: View = inflater.inflate(R.layout.note_chooser, null)
 
             popupView.findViewById<Button>(R.id.btnQuarter)?.run {
-                setOnClickListener { _ ->
+                setOnClickListener {
                     changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.QUARTER, true))
                 }
             }
 
-            popupView.findViewById<Button>(R.id.btnHalf)?.run {
-                setOnClickListener { _ ->
+            popupView.findViewById<ImageButton>(R.id.btnHalf)?.run {
+                setOnClickListener {
                     changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.HALF, true))
                 }
             }
 
             popupView.findViewById<Button>(R.id.btnWhole)?.run {
-                setOnClickListener { _ ->
+                setOnClickListener {
                     changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.WHOLE, true))
                 }
             }
@@ -265,31 +245,11 @@ class ScoreActivity : AppCompatActivity() {
         else {
             if(popupWindow != null) {
                 popupWindow?.dismiss()
+                changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.CloseMenu)
                 popupWindow = null
             }
 
         }
-
-//        if (state.chooseTargetMenu) {
-//            val popupMenu = PopupMenu(this, btnChangeActive)
-//            popupMenu.menuInflater.inflate(R.menu.choose_input_type, popupMenu.menu)
-//            popupMenu.show()
-//
-//            popupMenu.setOnDismissListener({ changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(null, true)) })
-//
-//            popupMenu.setOnMenuItemClickListener {
-//                when (it.itemId) {
-//                    R.id.test_item -> {
-//                        changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.HALF, true))
-//                    }
-//                    R.id.test_item2 -> {
-//                        changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.QUARTER, true))
-//                    }
-//                }
-//                popupMenu.dismiss()
-//                true
-//            }
-//        }
 
         if (state.addTargetScore) {
             val sequenceGenerator = SequenceGenerator()
