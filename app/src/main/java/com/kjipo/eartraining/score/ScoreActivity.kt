@@ -47,6 +47,8 @@ class ScoreActivity : AppCompatActivity() {
     private var popupWindow: PopupWindow? = null
 
     val changeElementTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElementType>()
+    private val moveSelectionTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElement>()
+    private val moveNoteTypeSubject = BehaviorSubject.create<ScoreIntent.MoveNote>()
 
 //    private var submittedLatch = false
 
@@ -102,7 +104,9 @@ class ScoreActivity : AppCompatActivity() {
             selectLeft(),
             selectRight(),
             moveNoteUp(),
-            moveNoteDown()))
+            moveNoteDown(),
+            moveSelectionTypeSubject,
+            moveNoteTypeSubject))
 
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> = RxView.clicks(btnPlay).map {
@@ -164,6 +168,14 @@ class ScoreActivity : AppCompatActivity() {
         })
     }
 
+    fun moveNote(up: Boolean) {
+        noteViewClient.getIdOfActiveElement {
+            it?.let {
+                moveNoteTypeSubject.onNext(ScoreIntent.MoveNote(it, up))
+            }
+        }
+    }
+
 
     private fun selectRight(): Observable<ScoreIntent.ChangeActiveElement> = RxView.clicks(btnRight).flatMap {
         Observable.create(ObservableOnSubscribe<ScoreIntent.ChangeActiveElement> { subscriber ->
@@ -175,6 +187,15 @@ class ScoreActivity : AppCompatActivity() {
             }
         })
     }
+
+    fun moveSelection(selectLeft: Boolean) {
+        noteViewClient.getIdOfActiveElement { activeElementId ->
+            if (activeElementId != null) {
+                moveSelectionTypeSubject.onNext(ScoreIntent.ChangeActiveElement(activeElementId, selectLeft))
+            }
+        }
+    }
+
 
     private fun selectLeft(): Observable<ScoreIntent.ChangeActiveElement> = RxView.clicks(btnLeft).flatMap {
         Observable.create(ObservableOnSubscribe<ScoreIntent.ChangeActiveElement> { subscriber ->
@@ -241,9 +262,8 @@ class ScoreActivity : AppCompatActivity() {
                     true
                 }
             }
-        }
-        else {
-            if(popupWindow != null) {
+        } else {
+            if (popupWindow != null) {
                 popupWindow?.dismiss()
                 changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.CloseMenu)
                 popupWindow = null
