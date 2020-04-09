@@ -10,8 +10,6 @@ import io.reactivex.subjects.PublishSubject
 class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHolder) : ViewModel() {
 
 
-
-
     fun processIntent(intent: Observable<ScoreIntent>) = intent.subscribe(intentsSubject)
 
 
@@ -94,56 +92,58 @@ class ScoreViewModel(private val actionProcessorHolder: ScoreActionProcessorHold
     }
 
     private fun compose(): Observable<ScoreViewState> = intentsSubject.compose<ScoreIntent>(intentFilter)
-                .map(this::actionFromIntent)
-                .filter { action -> action !is ScoreAction.Skip }
-                .compose(actionProcessorHolder.actionProcessor)
-                .scan(ScoreViewState.idle(), reducer)
-                .distinctUntilChanged()
-                .replay(1)
-                .autoConnect(0)
-
+            .map(this::actionFromIntent)
+            .filter { action -> action !is ScoreAction.Skip }
+            .compose(actionProcessorHolder.actionProcessor)
+            .scan(ScoreViewState.idle(), reducer)
+            .distinctUntilChanged()
+            .replay(1)
+            .autoConnect(0)
 
 
     private fun actionFromIntent(intent: ScoreIntent) =
-        when (intent) {
-            is ScoreIntent.InitialIntent -> {
-                ScoreAction.Skip
-            }
-            is ScoreIntent.PlayAction -> {
-                ScoreAction.PlayScore
-            }
-            is ScoreIntent.GenerateIntent -> {
-                ScoreAction.GenerateNewScore
-            }
-            is ScoreIntent.SubmitIntent -> {
-                ScoreAction.Submit
-            }
-            is ScoreIntent.TargetAction -> {
-                ScoreAction.TargetPlay
-            }
-            is ScoreIntent.ChangeActiveElementType.OpenMenu -> {
-                ScoreAction.ChangeActiveElementType.ShowMenu
-            }
-            is ScoreIntent.ChangeActiveElementType.UpdateValue -> {
-                ScoreAction.ChangeActiveElementType.UpdateValue(intent.duration, intent.isNote)
-            }
-            is ScoreIntent.ChangeActiveElementType.CloseMenu -> {
-                ScoreAction.ChangeActiveElementType.HideMenu
-            }
-            is ScoreIntent.InsertElementIntent -> {
-                if (intent.activeElement == null) {
+            when (intent) {
+                is ScoreIntent.InitialIntent -> {
                     ScoreAction.Skip
-                } else {
-                    ScoreAction.InsertElement(intent.activeElement)
+                }
+                is ScoreIntent.PlayAction -> {
+                    ScoreAction.PlayScore
+                }
+                is ScoreIntent.GenerateIntent -> {
+                    ScoreAction.GenerateNewScore
+                }
+                is ScoreIntent.SubmitIntent -> {
+                    ScoreAction.Submit
+                }
+                is ScoreIntent.TargetAction -> {
+                    ScoreAction.TargetPlay
+                }
+                is ScoreIntent.ChangeActiveElementType.OpenMenu -> {
+                    ScoreAction.ChangeActiveElementType.ShowMenu
+                }
+                is ScoreIntent.ChangeActiveElementType.UpdateValue -> {
+                    ScoreAction.ChangeActiveElementType.UpdateValue(intent.duration, intent.isNote)
+                }
+                is ScoreIntent.ChangeActiveElementType.CloseMenu -> {
+                    ScoreAction.ChangeActiveElementType.HideMenu
+                }
+                is ScoreIntent.InsertElementIntent -> {
+                    if (intent.activeElement == null) {
+                        ScoreAction.Skip
+                    } else {
+                        ScoreAction.InsertElement(intent.activeElement)
+                    }
+                }
+                is ScoreIntent.ChangeActiveElement -> {
+                    ScoreAction.ActiveElementSelect(intent.activeElement, intent.left)
+                }
+                is ScoreIntent.MoveNote -> {
+                    ScoreAction.MoveNote(intent.activeElement, intent.up)
+                }
+                is ScoreIntent.DeleteElement -> {
+                    ScoreAction.DeleteNote(intent.activeElement)
                 }
             }
-            is ScoreIntent.ChangeActiveElement -> {
-                ScoreAction.ActiveElementSelect(intent.activeElement, intent.left)
-            }
-            is ScoreIntent.MoveNote -> {
-                ScoreAction.MoveNote(intent.activeElement, intent.up)
-            }
-        }
 
 
     fun <T : Any, U : Any> Observable<T>.notOfType(clazz: Class<U>): Observable<T> {

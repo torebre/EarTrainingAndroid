@@ -106,7 +106,8 @@ class ScoreActivity : AppCompatActivity() {
             moveNoteUp(),
             moveNoteDown(),
             moveSelectionTypeSubject,
-            moveNoteTypeSubject))
+            moveNoteTypeSubject,
+            deleteElement()))
 
 
     private fun playIntent(): Observable<ScoreIntent.PlayAction> = RxView.clicks(btnPlay).map {
@@ -168,6 +169,19 @@ class ScoreActivity : AppCompatActivity() {
         })
     }
 
+    private fun deleteElement(): Observable<ScoreIntent.DeleteElement> = RxView.clicks(btnDelete).flatMap {
+        Observable.create(ObservableOnSubscribe<ScoreIntent.DeleteElement> { subscriber ->
+            noteViewClient.getIdOfActiveElement { idActiveElement ->
+                idActiveElement?.let {
+                    if (!subscriber.isDisposed) {
+                        subscriber.onNext(ScoreIntent.DeleteElement(it))
+                        subscriber.onComplete()
+                    }
+                }
+            }
+        })
+    }
+
     fun moveNote(up: Boolean) {
         noteViewClient.getIdOfActiveElement {
             it?.let {
@@ -189,13 +203,12 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     fun moveSelection(selectLeft: Boolean) {
-        noteViewClient.getIdOfActiveElement { activeElementId ->
-            if (activeElementId != null) {
-                moveSelectionTypeSubject.onNext(ScoreIntent.ChangeActiveElement(activeElementId, selectLeft))
+        noteViewClient.getIdOfActiveElement {
+            it?.let {
+                moveSelectionTypeSubject.onNext(ScoreIntent.ChangeActiveElement(it, selectLeft))
             }
         }
     }
-
 
     private fun selectLeft(): Observable<ScoreIntent.ChangeActiveElement> = RxView.clicks(btnLeft).flatMap {
         Observable.create(ObservableOnSubscribe<ScoreIntent.ChangeActiveElement> { subscriber ->

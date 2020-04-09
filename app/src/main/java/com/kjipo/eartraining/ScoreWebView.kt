@@ -12,10 +12,6 @@ class ScoreWebView(context: Context?, attrs: AttributeSet?) : WebView(context, a
     private var xStart: Int = 0
     private var yStart: Int = 0
 
-
-//    private var velocityTracker: VelocityTracker? = null
-
-
     companion object {
         const val X_DIFF = 30
         const val Y_DIFF = 30

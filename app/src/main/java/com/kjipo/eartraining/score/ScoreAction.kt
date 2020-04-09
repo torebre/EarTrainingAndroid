@@ -27,4 +27,6 @@ sealed class ScoreAction {
 
     data class MoveNote(val selectedElement: String, val up: Boolean) : ScoreAction()
 
+    data class DeleteNote(val selectedElement: String) : ScoreAction()
+
 }
