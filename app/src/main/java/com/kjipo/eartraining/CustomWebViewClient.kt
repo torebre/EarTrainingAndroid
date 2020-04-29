@@ -70,9 +70,7 @@ class CustomWebViewClient : WebViewClient() {
 
         val javaScriptToEvaluate = webscoresToLoad.map {
             """var test_${it.value.first} = new webscore.WebScore(${it.key}, "${it.value}", ${it.value.second});"""
-        }.joinToString("\n")
-
-        Log.i("Webscore", "JavaScript to evaluate: $javaScriptToEvaluate")
+        }.joinToString("\n") + "test_targetScore.setVisible(true);"
 
         view.evaluateJavascript(javaScriptToEvaluate) {
             Log.i("Webscore", it)
@@ -83,6 +81,7 @@ class CustomWebViewClient : WebViewClient() {
     fun updateWebscore() {
         webView.evaluateJavascript("""
                test_score.reload();
+               test_targetScore.setVisible(false);
            """) {
             Log.i("Webscore", it)
         }
@@ -95,6 +94,7 @@ class CustomWebViewClient : WebViewClient() {
             it.scoreHandler = scoreHandler
             webView.evaluateJavascript("""
                test_targetScore.reload();
+               test_targetScore.setVisible(true);
            """) {
                 Log.i("Webscore", it)
             }

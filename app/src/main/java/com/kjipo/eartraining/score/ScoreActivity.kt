@@ -280,13 +280,11 @@ class ScoreActivity : AppCompatActivity() {
                 changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.CloseMenu)
                 popupWindow = null
             }
-
         }
 
         if (state.addTargetScore) {
             val sequenceGenerator = SequenceGenerator()
             sequenceGenerator.loadSimpleNoteSequence(earTrainer.currentTargetSequence)
-//            val targetSequenceWrapper = ScoreHandlerWrapper(sequenceGenerator)
             noteViewClient.loadSecondScore(sequenceGenerator)
         }
 
