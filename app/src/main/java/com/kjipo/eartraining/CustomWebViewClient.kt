@@ -4,37 +4,40 @@ package com.kjipo.eartraining
 import android.annotation.SuppressLint
 import android.content.res.AssetManager
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.kjipo.eartraining.score.ScoreHandlerWrapper
+import com.kjipo.scoregenerator.SequenceGenerator
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
 
-class CustomWebViewClient : WebViewClient() { //, View.OnTouchListener {
+class CustomWebViewClient : WebViewClient() {
     private lateinit var webView: WebView
     private var inputData = ""
     private var assetManager: AssetManager? = null
-    var scoreHandler: ScoreHandlerWrapper? = null
-    private var webscoresToLoad = mutableMapOf(Pair("scoreHandler", Pair("score", true)))
+    lateinit var scoreHandler: ScoreHandlerWrapper
+    lateinit var targetScoreHandler: ScoreHandlerWrapper
+
+    private val scoreHandlerName = "scoreHandler"
+    private val targetSequenceName = "targetSequence"
+    private var webscoresToLoad = mutableMapOf(Pair(scoreHandlerName, Pair("score", true)),
+            Pair(targetSequenceName, Pair("targetScore", true)))
 
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun attachWebView(webView: WebView, assetManager: AssetManager, scoreHandlerWrapper: ScoreHandlerWrapper) {
+    fun attachWebView(webView: WebView, assetManager: AssetManager, scoreHandlerWrapper: ScoreHandlerWrapper, targetScoreHandlerWrapper: ScoreHandlerWrapper) {
         this.webView = webView
         this.assetManager = assetManager
         this.scoreHandler = scoreHandlerWrapper
+        this.targetScoreHandler = targetScoreHandlerWrapper
 
         webView.settings.javaScriptEnabled = true
         // This is to fit the entire page on the screen
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
         webView.webViewClient = this
-
-//        webView.setOnTouchListener(this)
     }
 
     fun loadNoteSequence() {
@@ -56,7 +59,8 @@ class CustomWebViewClient : WebViewClient() { //, View.OnTouchListener {
         }
 
         with(webView) {
-            addJavascriptInterface(scoreHandler, "scoreHandler")
+            addJavascriptInterface(scoreHandler, scoreHandlerName)
+            addJavascriptInterface(targetScoreHandler, targetSequenceName)
             loadDataWithBaseURL("file:///android_asset/web/", inputData, "text/html", "UTF-8", null)
         }
     }
@@ -66,7 +70,7 @@ class CustomWebViewClient : WebViewClient() { //, View.OnTouchListener {
 
         val javaScriptToEvaluate = webscoresToLoad.map {
             """var test_${it.value.first} = new webscore.WebScore(${it.key}, "${it.value}", ${it.value.second});"""
-        }.joinToString("")
+        }.joinToString("\n")
 
         Log.i("Webscore", "JavaScript to evaluate: $javaScriptToEvaluate")
 
@@ -86,13 +90,16 @@ class CustomWebViewClient : WebViewClient() { //, View.OnTouchListener {
         webView.invalidate()
     }
 
-    fun loadSecondScore(scoreHandler: ScoreHandlerWrapper, name: String) {
-        webView.addJavascriptInterface(scoreHandler, "$name")
-        webView.loadDataWithBaseURL("file:///android_asset/web/", inputData, "text/html", "UTF-8", null)
-
-        webscoresToLoad[name] = Pair(name, false)
+    fun loadSecondScore(scoreHandler: SequenceGenerator) {
+        targetScoreHandler?.let {
+            it.scoreHandler = scoreHandler
+            webView.evaluateJavascript("""
+               test_targetScore.reload();
+           """) {
+                Log.i("Webscore", it)
+            }
+        }
     }
-
 
     fun getIdOfActiveElement(callback: (String?) -> Unit) {
         webView.evaluateJavascript("""
@@ -112,13 +119,5 @@ class CustomWebViewClient : WebViewClient() { //, View.OnTouchListener {
             // Do nothing
         }
     }
-
-//    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-//        Log.i("WebClient", "Got event$event")
-//
-//        return true
-//
-//
-//    }
 
 }

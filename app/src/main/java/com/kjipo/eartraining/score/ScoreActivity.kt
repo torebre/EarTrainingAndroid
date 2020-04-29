@@ -50,8 +50,6 @@ class ScoreActivity : AppCompatActivity() {
     private val moveSelectionTypeSubject = BehaviorSubject.create<ScoreIntent.ChangeActiveElement>()
     private val moveNoteTypeSubject = BehaviorSubject.create<ScoreIntent.MoveNote>()
 
-//    private var submittedLatch = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +78,8 @@ class ScoreActivity : AppCompatActivity() {
         })
 
         noteViewClient = CustomWebViewClient().also {
-            it.attachWebView(myWebView, this.assets, scoreHandlerWrapper)
+            it.attachWebView(myWebView, this.assets, scoreHandlerWrapper,
+                    ScoreHandlerWrapper(SequenceGenerator().also { it.loadSimpleNoteSequence(earTrainer.currentTargetSequence) }))
             it.loadNoteSequence()
         }
     }
@@ -287,8 +286,8 @@ class ScoreActivity : AppCompatActivity() {
         if (state.addTargetScore) {
             val sequenceGenerator = SequenceGenerator()
             sequenceGenerator.loadSimpleNoteSequence(earTrainer.currentTargetSequence)
-            val targetSequenceWrapper = ScoreHandlerWrapper(sequenceGenerator)
-            noteViewClient.loadSecondScore(targetSequenceWrapper, "targetSequence")
+//            val targetSequenceWrapper = ScoreHandlerWrapper(sequenceGenerator)
+            noteViewClient.loadSecondScore(sequenceGenerator)
         }
 
         if (state.activeElement != null) {
