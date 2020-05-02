@@ -22,8 +22,9 @@ class CustomWebViewClient : WebViewClient() {
 
     private val scoreHandlerName = "scoreHandler"
     private val targetSequenceName = "targetSequence"
-    private var webscoresToLoad = mutableMapOf(Pair(scoreHandlerName, Pair("score", true)),
-            Pair(targetSequenceName, Pair("targetScore", true)))
+
+    private val inputWebscoreSetup = Pair("score", true)
+    private val targetWebscoreSetup = Pair("targetScore", true)
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -68,9 +69,14 @@ class CustomWebViewClient : WebViewClient() {
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
 
-        val javaScriptToEvaluate = webscoresToLoad.map {
-            """var test_${it.value.first} = new webscore.WebScore(${it.key}, "${it.value}", ${it.value.second});"""
-        }.joinToString("\n") + "test_targetScore.setVisible(true);"
+        val javaScriptToEvaluate = """
+            var ${scoreHandlerName}_score = new webscore.WebScore(${scoreHandlerName}, "${inputWebscoreSetup.first}", ${inputWebscoreSetup.second});
+            var ${targetSequenceName}_score = new webscore.WebScore(${targetSequenceName}, "${targetWebscoreSetup.first}", ${targetWebscoreSetup.second});
+            ${targetSequenceName}_score.setVisible(false);
+        """.trimIndent()
+
+
+        Log.i("Webscore", javaScriptToEvaluate)
 
         view.evaluateJavascript(javaScriptToEvaluate) {
             Log.i("Webscore", it)
@@ -80,8 +86,8 @@ class CustomWebViewClient : WebViewClient() {
 
     fun updateWebscore() {
         webView.evaluateJavascript("""
-               test_score.reload();
-               test_targetScore.setVisible(false);
+               ${scoreHandlerName}_score .reload();
+               ${targetSequenceName}_score.setVisible(false);
            """) {
             Log.i("Webscore", it)
         }
@@ -93,8 +99,8 @@ class CustomWebViewClient : WebViewClient() {
         targetScoreHandler?.let {
             it.scoreHandler = scoreHandler
             webView.evaluateJavascript("""
-               test_targetScore.reload();
-               test_targetScore.setVisible(true);
+               ${targetSequenceName}_score.reload();
+               ${targetSequenceName}_score.setVisible(true);
            """) {
                 Log.i("Webscore", it)
             }
@@ -103,7 +109,7 @@ class CustomWebViewClient : WebViewClient() {
 
     fun getIdOfActiveElement(callback: (String?) -> Unit) {
         webView.evaluateJavascript("""
-            (function() { return test_score.activeElement; })();
+            (function() { return ${scoreHandlerName}_score.activeElement; })();
         """.trimIndent()) {
 
             Log.i("Webscore", "Callback called: $it")
@@ -114,7 +120,7 @@ class CustomWebViewClient : WebViewClient() {
 
     fun setActiveElement(activeElement: String?) {
         webView.evaluateJavascript("""
-            test_score.activeElement = ${activeElement?.let { """ "$it" """ } ?: null};
+            ${scoreHandlerName}_score.activeElement = ${activeElement?.let { """ "$it" """ } ?: null};
         """.trimIndent()) {
             // Do nothing
         }
