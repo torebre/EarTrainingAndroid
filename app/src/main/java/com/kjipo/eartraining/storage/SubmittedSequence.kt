@@ -9,4 +9,5 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "submitted_sequence")
 @ForeignKey(entity = StoredSequence::class, parentColumns = ["id"], childColumns = ["referencedSequence"])
 data class SubmittedSequence(@PrimaryKey var id: Long?,
-                             @ColumnInfo(name = "referencedSequence") var referencedSequence: Long)
+                             @ColumnInfo(name = "referencedSequence") var referencedSequence: Long,
+                             @ColumnInfo(name = "pitchSequence") val encodedSubmittedSequence: String)

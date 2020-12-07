@@ -34,10 +34,13 @@ class CustomWebViewClient : WebViewClient() {
         this.scoreHandler = scoreHandlerWrapper
         this.targetScoreHandler = targetScoreHandlerWrapper
 
-        webView.settings.javaScriptEnabled = true
-        // This is to fit the entire page on the screen
-        webView.settings.loadWithOverviewMode = true
-        webView.settings.useWideViewPort = true
+
+        with(webView) {
+            settings.javaScriptEnabled = true
+            // This is to fit the entire page on the screen
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+        }
         webView.webViewClient = this
     }
 
@@ -74,7 +77,6 @@ class CustomWebViewClient : WebViewClient() {
             var ${targetSequenceName}_score = new webscore.WebScore(${targetSequenceName}, "${targetWebscoreSetup.first}", ${targetWebscoreSetup.second});
             ${targetSequenceName}_score.setVisible(false);
         """.trimIndent()
-
 
         Log.i("Webscore", javaScriptToEvaluate)
 

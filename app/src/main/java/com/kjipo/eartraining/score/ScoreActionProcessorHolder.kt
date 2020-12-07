@@ -82,19 +82,8 @@ class ScoreActionProcessorHolder(private val earTrainer: EarTrainer,
     private val submitProcessor = ObservableTransformer<ScoreAction, ScoreActionResult.SubmitAction> { actions ->
         actions.flatMap {
             Single.fromCallable {
-                Log.i("Database", "Stored sequences:")
-                database.generatedSequenceDao().getAllStoredSequences().forEach {
-                    Log.i("Database", "Stored sequence: $it")
-                }
-
-                Log.i("Database", "Submitted sequences:")
-                database.generatedSequenceDao().getAllSubmittedSequences().forEach {
-                    Log.i("Database", "Submitted sequence: $it")
-                }
-
-                database.generatedSequenceDao().insertSubmittedSequence(SubmittedSequence(null, currentScoreId))
-
-            }.toObservable().map { it -> ScoreActionResult.SubmitAction.Success(earTrainer.getSequenceGenerator()) }
+                database.generatedSequenceDao().insertSubmittedSequence(SubmittedSequence(null, currentScoreId, transformPitchSequenceToFormatForDatabase(earTrainer.getSequenceGenerator().pitchSequence)))
+            }.toObservable().map { ScoreActionResult.SubmitAction.Success(earTrainer.getSequenceGenerator()) }
                     .cast(ScoreActionResult.SubmitAction::class.java)
                     .onErrorReturn(ScoreActionResult.SubmitAction::Failure)
                     .subscribeOn(schedulerProvider.io())
