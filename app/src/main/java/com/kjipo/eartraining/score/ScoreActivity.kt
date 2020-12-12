@@ -243,7 +243,7 @@ class ScoreActivity : AppCompatActivity() {
             val inflater = webView.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val popupView: View = inflater.inflate(R.layout.note_chooser, null)
 
-            popupView.findViewById<Button>(R.id.btnQuarter)?.run {
+            popupView.findViewById<ImageButton>(R.id.btnQuarter)?.run {
                 setOnClickListener {
                     changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.QUARTER, true))
                 }
@@ -255,7 +255,7 @@ class ScoreActivity : AppCompatActivity() {
                 }
             }
 
-            popupView.findViewById<Button>(R.id.btnWhole)?.run {
+            popupView.findViewById<ImageButton>(R.id.btnWhole)?.run {
                 setOnClickListener {
                     changeElementTypeSubject.onNext(ScoreIntent.ChangeActiveElementType.UpdateValue(Duration.WHOLE, true))
                 }

@@ -12,36 +12,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnWhole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="70dp"
+            android:contentDescription="@string/whole_note"
             android:text="@string/whole"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btnQuarter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:text="@string/quarter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnHalf" />
+            app:layout_constraintEnd_toStartOf="@+id/btnHalf"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/whole_note" />
 
         <ImageButton
             android:id="@+id/btnHalf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="33dp"
-            android:layout_marginTop="4dp"
             android:contentDescription="@string/halfNote"
             app:layout_constraintEnd_toStartOf="@+id/btnQuarter"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/btnWhole"
-            app:layout_constraintTop_toTopOf="@+id/btnWhole"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/half_note" />
+
+        <ImageButton
+            android:id="@+id/btnQuarter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/quarter_note"
+            android:text="@string/quarter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/quarter_note" />
 
     </android.support.constraint.ConstraintLayout>
